@@ -150,7 +150,7 @@ public class FallingController extends WorldController implements ContactListene
             obj.setName("wall1");
             addObject(obj);
 
-            obj = new PolygonObstacle(walljv.get(1).asFloatArray(), 0, 0);
+            /*obj = new PolygonObstacle(walljv.get(1).asFloatArray(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(defaults.getFloat( "density", 0 ));
             obj.setFriction(defaults.getFloat( "friction", 0 ));
@@ -158,7 +158,7 @@ public class FallingController extends WorldController implements ContactListene
             obj.setDrawScale(scale);
             obj.setTexture(earthTile);
             obj.setName("wall2");
-            addObject(obj);
+            addObject(obj);*/
 
             /*obj = new PolygonObstacle(walljv.get(2).asFloatArray(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
@@ -386,4 +386,18 @@ public class FallingController extends WorldController implements ContactListene
                 sound.stop(sid);
             }
         }
+
+        @Override
+    public void draw(float dt) {
+        canvas.clear();
+
+        canvas.begin();
+        float factor = canvas.getWidth() / DEFAULT_HEIGHT;
+        canvas.setCameraPosY(rocket.getY() * 32);
+        System.out.println(rocket.getY());
+        for(Obstacle obj : objects) {
+            obj.draw(canvas);
+        }
+        canvas.end();
+    }
 }

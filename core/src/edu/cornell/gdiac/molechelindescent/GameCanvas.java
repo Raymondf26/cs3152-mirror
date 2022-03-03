@@ -98,6 +98,14 @@ public class GameCanvas {
         vertex = new Vector2();
     }
 
+    public void setCameraPosY(float y) {
+        camera.position.y = y;
+        //camera.translate(0, y - camera.position.y);
+       //System.out.println(camera.position.y);
+        //camera.rotate(1f);
+        camera.update();
+    }
+
     /**
      * Eliminate any resources that should be garbage collected manually.
      */
