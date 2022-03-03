@@ -123,7 +123,7 @@ public class FallingController extends WorldController implements ContactListene
             float dwidth  = goalTile.getRegionWidth()/scale.x;
             float dheight = goalTile.getRegionHeight()/scale.y;
 
-            JsonValue goal = constants.get("goal");
+           /* JsonValue goal = constants.get("goal");
             JsonValue goalpos = goal.get("pos");
             goalDoor = new BoxObstacle(goalpos.getFloat(0),goalpos.getFloat(1),dwidth,dheight);
             goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
@@ -134,13 +134,13 @@ public class FallingController extends WorldController implements ContactListene
             goalDoor.setDrawScale(scale);
             goalDoor.setTexture(goalTile);
             goalDoor.setName("goal");
-            addObject(goalDoor);
+            addObject(goalDoor);*/
 
             // Create ground pieces
             PolygonObstacle obj;
             JsonValue walljv = constants.get("walls");
             JsonValue defaults = constants.get("defaults");
-            obj = new PolygonObstacle(walljv.get(0).asFloatArray(), 0, 0);
+           obj = new PolygonObstacle(walljv.get(0).asFloatArray(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(defaults.getFloat( "density", 0 ));
             obj.setFriction(defaults.getFloat( "friction", 0 ));
@@ -160,7 +160,7 @@ public class FallingController extends WorldController implements ContactListene
             obj.setName("wall2");
             addObject(obj);
 
-            obj = new PolygonObstacle(walljv.get(2).asFloatArray(), 0, 0);
+            /*obj = new PolygonObstacle(walljv.get(2).asFloatArray(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(defaults.getFloat( "density", 0 ));
             obj.setFriction(defaults.getFloat( "friction", 0 ));
@@ -168,10 +168,10 @@ public class FallingController extends WorldController implements ContactListene
             obj.setDrawScale(scale);
             obj.setTexture(earthTile);
             obj.setName("wall3");
-            addObject(obj);
+            addObject(obj);*/
 
             // Create the pile of boxes
-            JsonValue boxjv = constants.get("boxes");
+            /*JsonValue boxjv = constants.get("boxes");
             JsonValue crates = constants.get("crates");
             for (int ii = 0; ii < boxjv.size; ii += 2) {
                 int id = RandomController.rollInt(0,crateTextures.length-1);
@@ -186,7 +186,7 @@ public class FallingController extends WorldController implements ContactListene
                 box.setDrawScale(scale);
                 box.setTexture(texture);
                 addObject(box);
-            }
+            }*/
 
             // Create the rocket avatar
             dwidth  = rocketTexture.getRegionWidth()/scale.x;
@@ -229,7 +229,7 @@ public class FallingController extends WorldController implements ContactListene
 
             InputController input = InputController.getInstance();
             float xforce = rocket.getThrust() * input.getHorizontal();
-            float yforce = rocket.getThrust() * input.getVertical();
+            float yforce = rocket.getThrust() * input.getVertical() * 2.5f;
             rocket.setFX(xforce);
             rocket.setFY(yforce);
             rocket.applyForce();
@@ -253,7 +253,7 @@ public class FallingController extends WorldController implements ContactListene
          * @param  on       Whether to turn the animation on or off
          */
         private void updateBurner(FallingModel.Burner burner, boolean on) {
-            Sound sound = rocket.getBurnerSound(burner);
+          /*  Sound sound = rocket.getBurnerSound(burner);
             long soundId = rocket.getBurnerId(burner);
             if (on) {
                 rocket.animateBurner(burner, true);
@@ -265,7 +265,7 @@ public class FallingController extends WorldController implements ContactListene
                 rocket.animateBurner(burner, false);
                 rocket.setBurnerId( burner, -1 );
                 sound.stop(soundId);
-            }
+            } */
         }
 
         /// CONTACT LISTENER METHODS

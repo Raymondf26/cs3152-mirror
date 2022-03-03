@@ -24,7 +24,7 @@
 		"restitution": 0.1
 	},
 	"rocket" : {
-		"pos": [24, 4],
+		"pos": [16, 14],
 		"density": 1.0,
 		"friction": 0.0,
 		"restitution": 0.4,
