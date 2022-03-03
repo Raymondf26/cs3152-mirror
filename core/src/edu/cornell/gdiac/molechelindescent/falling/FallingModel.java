@@ -204,7 +204,16 @@ public class FallingModel extends BoxObstacle {
         //#region INSERT CODE HERE
         // Apply force to the rocket BODY, not the rocket
 
-        body.applyForce(force.x, force.y, getX(), getY(), true);
+        //body.applyLinearImpulse(force.x / 10, force.y / 100, getX(), getY(), true);
+        if (Math.abs(getVX()) >= 5.0f) {
+            setVX(Math.signum(getVX())*5.0f);
+        } else {
+            body.applyForce(force, getPosition(), true);
+        }
+        if (force.x == 0f) {
+            force.set(-10.0f*getVX(),0);
+            body.applyForce(force, getPosition(), true);
+        }
 
         //#endregion
     }

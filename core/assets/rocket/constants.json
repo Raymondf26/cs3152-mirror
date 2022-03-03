@@ -26,9 +26,9 @@
 	"rocket" : {
 		"pos": [24, 4],
 		"density": 1.0,
-		"friction": 0.1,
+		"friction": 0.0,
 		"restitution": 0.4,
-		"thrust": 30
+		"thrust": 20.0
 	},
 	"walls":	[
 					[ 	 0.0, 18.0, 16.0, 18.0, 16.0, 17.0,
