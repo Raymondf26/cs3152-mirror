@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.molechelindescent.obstacle.*;
 import edu.cornell.gdiac.util.FilmStrip;
@@ -63,6 +64,9 @@ public class FallingModel extends BoxObstacle {
     private final Vector2 leftOrigin = new Vector2();
     /** Cache object for right afterburner origin */
     private final Vector2 rghtOrigin = new Vector2();
+
+    /** Inventory */
+    private Array<String> inventory;
 
     /**
      * Returns the force applied to this rocket.
@@ -159,7 +163,12 @@ public class FallingModel extends BoxObstacle {
         mainId = -1;
         leftId = -1;
         rghtId = -1;
+        inventory = new Array<>();
     }
+
+    /** Getter setter for inventory*/
+    public Array<String> getInventory() {return inventory;}
+    public void setInventory(Array<String> inventory) {this.inventory = inventory;}
 
     /**
      * Creates the physics Body(s) for this object, adding them to the world.

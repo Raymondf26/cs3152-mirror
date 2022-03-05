@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -188,6 +189,16 @@ public class FallingController extends WorldController implements ContactListene
                 addObject(box);
             }*/
 
+            //Add an ingredient
+            MapIngredient ingredient;
+            dwidth  = mainTexture.getRegionWidth()/scale.x;
+            dheight = mainTexture.getRegionHeight()/scale.y;
+            ingredient = new MapIngredient(20, 0, dwidth, goalTile, scale, "testIngredient");
+            Array<String> drops = new Array<String>();
+            drops.add("magical mushroom");
+            ingredient.setDrops(drops);
+            addObject(ingredient);
+
             // Create the rocket avatar
             dwidth  = rocketTexture.getRegionWidth()/scale.x;
             dheight = rocketTexture.getRegionHeight()/scale.y;
@@ -286,6 +297,10 @@ public class FallingController extends WorldController implements ContactListene
                     (body1.getUserData() == goalDoor && body2.getUserData() == rocket)) {
                 setComplete(true);
             }
+           /* if( (body1.getUserData() == rocket   && body2.getUserData().) ||
+                    (body1.getUserData() == goalDoor && body2.getUserData() == rocket)) {
+                //setComplete(true);
+            }*/
         }
 
         /**
