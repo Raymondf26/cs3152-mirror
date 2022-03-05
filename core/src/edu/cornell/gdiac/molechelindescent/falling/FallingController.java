@@ -1,7 +1,6 @@
 package edu.cornell.gdiac.molechelindescent.falling;
 
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.assets.*;
 import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -54,6 +53,8 @@ public class FallingController extends WorldController implements ContactListene
         private BoxObstacle goalDoor;
         /** Reference to the rocket/player avatar */
         private FallingModel rocket;
+        /** Ingredient texture */
+        private TextureRegion ingredientTexture;
 
         /**
          * Creates and initialize a new instance of the rocket lander game
@@ -91,6 +92,7 @@ public class FallingController extends WorldController implements ContactListene
             burnSound  = directory.getEntry( "rocket:mainburn", Sound.class );
             leftSound  = directory.getEntry( "rocket:leftburn", Sound.class );
             rghtSound = directory.getEntry( "rocket:rightburn", Sound.class );
+            ingredientTexture = new TextureRegion (directory.getEntry("ragdoll:head", Texture.class));
             super.gatherAssets(directory);
         }
 
@@ -189,15 +191,23 @@ public class FallingController extends WorldController implements ContactListene
                 addObject(box);
             }*/
 
-            //Add an ingredient
+            //Add ingredients
+            JsonValue ingredientJV = constants.get("ingredients");
             MapIngredient ingredient;
-            dwidth  = mainTexture.getRegionWidth()/scale.x;
-            dheight = mainTexture.getRegionHeight()/scale.y;
-            ingredient = new MapIngredient(20, 0, dwidth, goalTile, scale, "testIngredient");
-            Array<String> drops = new Array<String>();
-            drops.add("magical mushroom");
-            ingredient.setDrops(drops);
-            addObject(ingredient);
+            for (int i = 0; i < ingredientJV.size; i++) {
+                String textureName = ingredientJV.get(i).getString("texture");
+                float x = ingredientJV.get(i).get("pos").getFloat(0);
+                float y = ingredientJV.get(i).get("pos").getFloat(1);
+                Array<String> drops = new Array<>();
+                for (int j = 0; j < ingredientJV.get(i).get("drops").size; j++) {
+                    drops.add(ingredientJV.get(i).get("drops").getString(j));
+                }
+                dwidth  = ingredientTexture.getRegionWidth()/scale.x;
+                dheight = ingredientTexture.getRegionHeight()/scale.y;
+                ingredient = new MapIngredient(x, y, dwidth, ingredientTexture, scale, "testIngredient"+i);
+                ingredient.setDrops(drops);
+                addObject(ingredient);
+            }
 
             // Create the rocket avatar
             dwidth  = rocketTexture.getRegionWidth()/scale.x;
