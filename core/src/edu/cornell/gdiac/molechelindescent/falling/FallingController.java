@@ -15,8 +15,6 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.molechelindescent.*;
 import edu.cornell.gdiac.molechelindescent.obstacle.*;
 
-//testing push
-
 public class FallingController extends WorldController implements ContactListener{
         /** Texture assets for the rocket */
         private TextureRegion rocketTexture;
@@ -299,10 +297,20 @@ public class FallingController extends WorldController implements ContactListene
                     (body1.getUserData() == goalDoor && body2.getUserData() == rocket)) {
                 setComplete(true);
             }
-           /* if( (body1.getUserData() == rocket   && body2.getUserData().) ||
-                    (body1.getUserData() == goalDoor && body2.getUserData() == rocket)) {
-                //setComplete(true);
-            }*/
+
+            // Detect and resolve player-ingredient collision
+            if( (body1.getUserData() == rocket   && body2.getUserData() instanceof MapIngredient) ||
+                    (body1.getUserData() instanceof MapIngredient && body2.getUserData() == rocket)) {
+                Array<String> inventory = rocket.getInventory();
+                MapIngredient ingredient = body1.getUserData() instanceof MapIngredient ?
+                        (MapIngredient)(body1.getUserData()) : (MapIngredient)(body2.getUserData());
+                Array<String> drops = ingredient.getDrops();
+                inventory.addAll(drops);
+                rocket.setInventory(inventory);
+                ingredient.markRemoved(true);
+                System.out.println(rocket.getInventory());
+
+            }
         }
 
         /**
@@ -410,8 +418,8 @@ public class FallingController extends WorldController implements ContactListene
 
         canvas.begin();
         float factor = canvas.getWidth() / DEFAULT_HEIGHT;
-        canvas.setCameraPosY(rocket.getY() * 32);
-        System.out.println(rocket.getY());
+        canvas.setCameraPosY(rocket.getY() * 32); //magic number 32 rn. Should change to soft-code.
+        //System.out.println(rocket.getY());
         for(Obstacle obj : objects) {
             obj.draw(canvas);
         }
