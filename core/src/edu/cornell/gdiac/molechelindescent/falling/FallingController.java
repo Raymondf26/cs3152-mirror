@@ -34,7 +34,7 @@ public class FallingController extends WorldController implements ContactListene
         /** Threshold for generating sound on collision */
         private float bumpThresh;
         /** Snake's y level initialized to height above player **/
-        int snakePos = 30;
+        float snakePos = 30f;
         /** Snake should move every certain number of updates, should be adjusted */
         int nextSwitch;
         /** Current amount to decrease snake height by **/
