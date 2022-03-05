@@ -33,8 +33,17 @@ public class FallingController extends WorldController implements ContactListene
         private float bumpVol;
         /** Threshold for generating sound on collision */
         private float bumpThresh;
+        /** Snake's y level initialized to height above player **/
+        int snakePos = 30;
+        /** Snake should move every certain number of updates, should be adjusted */
+        int nextSwitch;
+        /** Current amount to decrease snake height by **/
+        float decreaseBy = 0.5f;
+        /** How long before snake starts to speed up **/
+        int levelDifficulty = 10000;
+        // could make this change based on level but for now just hard coded to 2000
 
-        /** The sound for the main afterburner */
+    /** The sound for the main afterburner */
         private Sound burnSound;
         /** The sound for the left afterburner */
         private Sound leftSound;
@@ -44,7 +53,7 @@ public class FallingController extends WorldController implements ContactListene
         private float burnVol;
 
         /** Offset for the inventory message on the screen */
-        private static final float INVENTORY_OFFSET   = 5.0f;
+        private static final float DISPLAY_OFFSET   = 25.0f;
 
         /** Texture assets for the crates */
         private TextureRegion[] crateTextures;
@@ -247,6 +256,9 @@ public class FallingController extends WorldController implements ContactListene
          */
         public void update(float dt) {
 
+            if (snakePos < rocket.getY()) {
+                canvas.end();
+            }
             //#region INSERT CODE HERE
             // Read from the input and add the force to the rocket model
             // Then apply the force using the method you modified in RocketObject
@@ -259,6 +271,16 @@ public class FallingController extends WorldController implements ContactListene
             rocket.applyForce();
 
             //#endregion
+            // snake should be decreasing its height by some amount and
+            // then decreasing by more as the level keeps going
+            nextSwitch += 1;
+            if (nextSwitch % 10 == 0) {
+                snakePos -= decreaseBy;
+                nextSwitch = 0;
+            }
+            if (snakePos % levelDifficulty == 0) {
+                decreaseBy = decreaseBy * 1.1f;
+            }
 
             // Animate the three burners
             updateBurner(FallingModel.Burner.MAIN, rocket.getFY() > 1);
@@ -428,14 +450,21 @@ public class FallingController extends WorldController implements ContactListene
         @Override
     public void draw(float dt) {
         canvas.clear();
+        // placeholder so the magic number doesn't need to be replaced
+        float factor = 32;
 
         canvas.begin();
         // Output the player inventory to the screen
         String message = "Current inventory: " + rocket.getInventory().toString();
-        canvas.drawText(message, displayFont, INVENTORY_OFFSET, rocket.getY() * 32 + 150.0f);
+        canvas.drawText(message, displayFont, DISPLAY_OFFSET, rocket.getY() * factor + 150.0f);
 
-         float factor = canvas.getWidth() / DEFAULT_HEIGHT;
-        canvas.setCameraPosY(rocket.getY() * 32); //magic number 32 rn. Should change to soft-code.
+        int rocketYLocation = (int) rocket.getY();
+        int snakeDist = Math.abs((int) snakePos - rocketYLocation); // this is complicated because rocket starts in positive and goes to negative
+
+        canvas.drawText("Snake is " +  snakeDist + " units behind you!", displayFont, DISPLAY_OFFSET, rocket.getY()*factor + 250);
+        canvas.drawText("SNAKE", displayFont, canvas.getWidth()/2, snakePos*factor);
+
+        canvas.setCameraPosY(rocket.getY() * factor); //magic number 32 rn. Should change to soft-code.
         //System.out.println(rocket.getY());
         for(Obstacle obj : objects) {
             obj.draw(canvas);
