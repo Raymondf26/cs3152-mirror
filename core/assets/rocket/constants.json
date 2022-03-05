@@ -49,8 +49,27 @@
 					10.0,  3.00, 13.0,  3.00, 16.0, 3.00, 19.0, 3.0
 				],
 	"ingredients": [{
-		"pos": [20, 0],
+		"pos": [11.426, 2],
 		"texture" : "ragdoll:torso",
-		"drops" : ["magic mushroom"]
-	}]
+		"drops" : ["blue"]
+	},
+		{"pos" : [6.856, -13.0],
+		"texture" : "",
+		"drops" :  ["yellow"]
+		},
+		{"pos" :  [20.566, -13.0],
+		"texture" :  "",
+		"drops" : ["red"]},
+		{"pos" :  [16.0, -31.0],
+		"texture" : "",
+		"drops" : ["yellow"]},
+		{"pos" :  [11.42, -35.5],
+		"texture" :  "",
+		"drops" :  ["blue"]},
+		{"pos" :  [11.42, -40.0],
+		"texture" :  "",
+		"drops" :  ["red"]},
+		{"pos" :  [20.56, -44.5],
+		"texture" :  "",
+		"drops" :  ["purple"]}]
 }

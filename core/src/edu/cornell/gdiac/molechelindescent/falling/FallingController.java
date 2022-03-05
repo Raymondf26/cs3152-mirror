@@ -143,7 +143,7 @@ public class FallingController extends WorldController implements ContactListene
             PolygonObstacle obj;
             JsonValue walljv = constants.get("walls");
             JsonValue defaults = constants.get("defaults");
-           obj = new PolygonObstacle(walljv.get(0).asFloatArray(), 0, 0);
+          /*obj = new PolygonObstacle(walljv.get(0).asFloatArray(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
             obj.setDensity(defaults.getFloat( "density", 0 ));
             obj.setFriction(defaults.getFloat( "friction", 0 ));
@@ -151,7 +151,7 @@ public class FallingController extends WorldController implements ContactListene
             obj.setDrawScale(scale);
             obj.setTexture(earthTile);
             obj.setName("wall1");
-            addObject(obj);
+            addObject(obj);*/
 
             /*obj = new PolygonObstacle(walljv.get(1).asFloatArray(), 0, 0);
             obj.setBodyType(BodyDef.BodyType.StaticBody);
