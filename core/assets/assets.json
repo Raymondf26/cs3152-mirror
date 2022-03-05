@@ -72,7 +72,7 @@
     "fonts": {
         "shared:retro": {
             "file": "shared/RetroGame.ttf",
-            "size": 64
+            "size": 14
         }
     }
 }

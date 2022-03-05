@@ -61,6 +61,8 @@ public abstract class WorldController implements Screen {
     /** The default value of gravity (going down) */
     protected static final float DEFAULT_GRAVITY = -1.5f; //modified for falling to be more floaty
 
+
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
     /** All the objects in the world. */
@@ -438,6 +440,7 @@ public abstract class WorldController implements Screen {
         canvas.clear();
 
         canvas.begin();
+
         for(Obstacle obj : objects) {
             obj.draw(canvas);
         }

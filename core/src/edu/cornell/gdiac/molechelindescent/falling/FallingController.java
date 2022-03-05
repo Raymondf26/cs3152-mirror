@@ -43,6 +43,9 @@ public class FallingController extends WorldController implements ContactListene
         /** Volume for afterburners */
         private float burnVol;
 
+        /** Offset for the inventory message on the screen */
+        private static final float INVENTORY_OFFSET   = 5.0f;
+
         /** Texture assets for the crates */
         private TextureRegion[] crateTextures;
 
@@ -427,7 +430,11 @@ public class FallingController extends WorldController implements ContactListene
         canvas.clear();
 
         canvas.begin();
-        float factor = canvas.getWidth() / DEFAULT_HEIGHT;
+        // Output the player inventory to the screen
+        String message = "Current inventory: " + rocket.getInventory().toString();
+        canvas.drawText(message, displayFont, INVENTORY_OFFSET, rocket.getY() * 32 + 150.0f);
+
+         float factor = canvas.getWidth() / DEFAULT_HEIGHT;
         canvas.setCameraPosY(rocket.getY() * 32); //magic number 32 rn. Should change to soft-code.
         //System.out.println(rocket.getY());
         for(Obstacle obj : objects) {
