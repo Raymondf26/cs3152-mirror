@@ -238,7 +238,7 @@ public class FallingController extends WorldController implements ContactListene
                 float y = obstacleJV.get(i).get("pos").getFloat(1);
                 float[] points = new float[obstacleJV.get(i).get("points").size];
                 for (int j = 0; j < obstacleJV.get(i).get("points").size; j++) {
-                    points[j] = Integer.parseInt(obstacleJV.get(i).get("points").getString(j));
+                    points[j] = Float.parseFloat(obstacleJV.get(i).get("points").getString(j));
                 }
                 obstacle = new MapObstacle(points, x, y, earthTile, scale);
                 addObject(obstacle);
