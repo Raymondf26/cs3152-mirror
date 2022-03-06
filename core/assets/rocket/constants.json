@@ -72,6 +72,12 @@
 		{"pos" :  [20.56, -44.5],
 		"texture" :  "",
 		"drops" :  ["purple"]}],
+	"cooking": [
+		{
+			"pos" : [-10, -15],
+			"texture" : "rocket:crate01"
+		}
+	],
 	"obstacles": [
 		{
 		"pos" : [10.0, -10.0],

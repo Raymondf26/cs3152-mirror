@@ -71,6 +71,8 @@ public class FallingController extends WorldController implements ContactListene
         private TextureRegion ingredientTexture;
         /** Obstacle texture */
         private TextureRegion obstacleTexture;
+        /** Cooking texture */
+        private TextureRegion cookingTexture;
 
     /**
          * Creates and initialize a new instance of the rocket lander game
@@ -110,6 +112,7 @@ public class FallingController extends WorldController implements ContactListene
             rghtSound = directory.getEntry( "rocket:rightburn", Sound.class );
             ingredientTexture = new TextureRegion (directory.getEntry("ragdoll:head", Texture.class));
             obstacleTexture = new TextureRegion(directory.getEntry("rocket:crate01", Texture.class));
+            cookingTexture = new TextureRegion(directory.getEntry("rocket:crate02", Texture.class));
             super.gatherAssets(directory);
         }
 
@@ -240,13 +243,26 @@ public class FallingController extends WorldController implements ContactListene
                 obstacle = new MapObstacle(points, x, y, earthTile, scale);
                 addObject(obstacle);
             }
+            // Add Cooking platform
+            JsonValue cookingJV = constants.get("cooking");
+            CookingPlatform cooking;
+            for (int i = 0; i < cookingJV.size; i++) {
+                String textureName = cookingJV.get(i).getString("texture");
+                float x = cookingJV.get(i).get("pos").getFloat(0);
+                float y = cookingJV.get(i).get("pos").getFloat(1);
+
+                dwidth  = cookingTexture.getRegionWidth()/scale.x;
+                dheight = cookingTexture.getRegionHeight()/scale.y;
+                cooking = new CookingPlatform(x, y, dwidth, cookingTexture, scale, null);
+                addObject(cooking);
+            }
 
             // Create the rocket avatar
             dwidth  = rocketTexture.getRegionWidth()/scale.x;
             dheight = rocketTexture.getRegionHeight()/scale.y;
             JsonValue rockjv = constants.get("rocket");
             rocket = new FallingModel(rockjv, dwidth, dheight);
-            rocket.setVY(-3f);
+            rocket.setVY(-5f);
             rocket.setDrawScale(scale);
             rocket.setTexture(rocketTexture);
             rocket.setBurnerStrip(FallingModel.Burner.MAIN,  mainTexture);
@@ -372,6 +388,14 @@ public class FallingController extends WorldController implements ContactListene
                     (body1.getUserData() instanceof MapObstacle && body2.getUserData() == rocket)) {
                 rocket.updateMultiplier(0.25f);
                 rocket.setVY(-1.5f);
+            }
+            if( (body1.getUserData() == rocket && body2.getUserData() instanceof CookingPlatform) ||
+                    (body1.getUserData() instanceof CookingPlatform && body2.getUserData() == rocket)) {
+                Array<String> inventory = rocket.getInventory();
+                CookingPlatform cooking = body1.getUserData() instanceof CookingPlatform ?
+                        (CookingPlatform)(body1.getUserData()) : (CookingPlatform)(body2.getUserData());
+                cooking.setInventory(inventory);
+                rocket.setInventory(cooking.resolveInventory());
             }
 
         }
