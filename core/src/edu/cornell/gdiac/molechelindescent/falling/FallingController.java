@@ -246,6 +246,7 @@ public class FallingController extends WorldController implements ContactListene
             dheight = rocketTexture.getRegionHeight()/scale.y;
             JsonValue rockjv = constants.get("rocket");
             rocket = new FallingModel(rockjv, dwidth, dheight);
+            rocket.setVY(-3f);
             rocket.setDrawScale(scale);
             rocket.setTexture(rocketTexture);
             rocket.setBurnerStrip(FallingModel.Burner.MAIN,  mainTexture);
@@ -370,6 +371,7 @@ public class FallingController extends WorldController implements ContactListene
             if( (body1.getUserData() == rocket && body2.getUserData() instanceof MapObstacle) ||
                     (body1.getUserData() instanceof MapObstacle && body2.getUserData() == rocket)) {
                 rocket.updateMultiplier(0.25f);
+                rocket.setVY(-1.5f);
             }
 
         }
@@ -380,10 +382,17 @@ public class FallingController extends WorldController implements ContactListene
          * This method is called when two objects cease to touch.  We do not use it.
          */
         public void endContact(Contact contact) {
-            rocket.updateMultiplier(1f);
+            Body body1 = contact.getFixtureA().getBody();
+            Body body2 = contact.getFixtureB().getBody();
+
+            if( (body1.getUserData() == rocket && body2.getUserData() instanceof MapObstacle) ||
+                    (body1.getUserData() instanceof MapObstacle && body2.getUserData() == rocket)) {
+                rocket.updateMultiplier(1f);
+                rocket.setVY(-3f);
+            }
         }
 
-        private final Vector2 cache = new Vector2();
+    private final Vector2 cache = new Vector2();
 
         /** Unused ContactListener method */
         public void postSolve(Contact contact, ContactImpulse impulse) {}
