@@ -64,6 +64,8 @@ public class FallingModel extends BoxObstacle {
     private final Vector2 leftOrigin = new Vector2();
     /** Cache object for right afterburner origin */
     private final Vector2 rghtOrigin = new Vector2();
+    /** Multilpier serves to slow ship down when inside of an obstalce */
+    private float multiplier = 1f;
 
     /** Inventory */
     private Array<String> inventory;
@@ -141,6 +143,11 @@ public class FallingModel extends BoxObstacle {
         return thrust;
     }
 
+    /** Updates the multiplier value */
+    public void updateMultiplier(float value) {
+        this.multiplier = value;
+    }
+
     /**
      * Creates a new rocket with the given physics data.
      *
@@ -208,6 +215,8 @@ public class FallingModel extends BoxObstacle {
 
         // Orient the force with rotation.
         affineCache.setToRotationRad(getAngle());
+        force.x = force.x * multiplier;
+        force.y = force.y * multiplier;
         affineCache.applyTo(force);
 
         //#region INSERT CODE HERE

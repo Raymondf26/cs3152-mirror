@@ -34,7 +34,9 @@ public class FallingController extends WorldController implements ContactListene
         /** Threshold for generating sound on collision */
         private float bumpThresh;
         /** Snake's y level initialized to height above player **/
-        float snakePos = 30f;
+        float beginningSnakePos = 30f;
+        /** Snake's y level initialized to height above player **/
+        float snakePos = beginningSnakePos;
         /** Snake should move every certain number of updates, should be adjusted */
         int nextSwitch;
         /** Current amount to decrease snake height by **/
@@ -67,8 +69,10 @@ public class FallingController extends WorldController implements ContactListene
         private FallingModel rocket;
         /** Ingredient texture */
         private TextureRegion ingredientTexture;
+        /** Obstacle texture */
+        private TextureRegion obstacleTexture;
 
-        /**
+    /**
          * Creates and initialize a new instance of the rocket lander game
          *
          * The game has default gravity and other settings
@@ -105,6 +109,7 @@ public class FallingController extends WorldController implements ContactListene
             leftSound  = directory.getEntry( "rocket:leftburn", Sound.class );
             rghtSound = directory.getEntry( "rocket:rightburn", Sound.class );
             ingredientTexture = new TextureRegion (directory.getEntry("ragdoll:head", Texture.class));
+            obstacleTexture = new TextureRegion(directory.getEntry("rocket:crate01", Texture.class));
             super.gatherAssets(directory);
         }
 
@@ -128,6 +133,7 @@ public class FallingController extends WorldController implements ContactListene
             setComplete(false);
             setFailure(false);
             populateLevel();
+            snakePos = beginningSnakePos;
         }
 
         /**
@@ -219,6 +225,20 @@ public class FallingController extends WorldController implements ContactListene
                 ingredient = new MapIngredient(x, y, dwidth, ingredientTexture, scale, "testIngredient"+i);
                 ingredient.setDrops(drops);
                 addObject(ingredient);
+            }
+
+            // Add obstacles
+            JsonValue obstacleJV = constants.get("obstacles");
+            MapObstacle obstacle;
+            for (int i = 0; i < obstacleJV.size; i++) {
+                float x = obstacleJV.get(i).get("pos").getFloat(0);
+                float y = obstacleJV.get(i).get("pos").getFloat(1);
+                float[] points = new float[obstacleJV.get(i).get("points").size];
+                for (int j = 0; j < obstacleJV.get(i).get("points").size; j++) {
+                    points[j] = Integer.parseInt(obstacleJV.get(i).get("points").getString(j));
+                }
+                obstacle = new MapObstacle(points, x, y, obstacleTexture, scale);
+                addObject(obstacle);
             }
 
             // Create the rocket avatar
@@ -343,9 +363,15 @@ public class FallingController extends WorldController implements ContactListene
                 inventory.addAll(drops);
                 rocket.setInventory(inventory);
                 ingredient.markRemoved(true);
-                System.out.println(rocket.getInventory());
+//                System.out.println(rocket.getInventory());
 
             }
+
+            if( (body1.getUserData() == rocket && body2.getUserData() instanceof MapObstacle) ||
+                    (body1.getUserData() instanceof MapObstacle && body2.getUserData() == rocket)) {
+                rocket.updateMultiplier(0.25f);
+            }
+
         }
 
         /**
@@ -353,7 +379,9 @@ public class FallingController extends WorldController implements ContactListene
          *
          * This method is called when two objects cease to touch.  We do not use it.
          */
-        public void endContact(Contact contact) {}
+        public void endContact(Contact contact) {
+            rocket.updateMultiplier(1f);
+        }
 
         private final Vector2 cache = new Vector2();
 
