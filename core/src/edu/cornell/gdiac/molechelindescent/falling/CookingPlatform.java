@@ -39,8 +39,8 @@ public class CookingPlatform extends BoxObstacle {
 
         boolean cooked = false;
 
-        System.out.println(inventory.contains("yellow", false));
-        System.out.println(inventory.contains("blue", false));
+        //System.out.println(inventory.contains("yellow", false));
+        //System.out.println(inventory.contains("blue", false));
         if (inventory.contains("blue", false) && inventory.contains("yellow", false)){
             //This first if-statement doesn't check for !cooked condition b/c it's the first one, so it will always be false
             inventory.removeValue("blue", false);
