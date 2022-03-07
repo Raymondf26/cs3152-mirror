@@ -233,25 +233,29 @@ public class FallingController extends WorldController implements ContactListene
             // Add obstacles
             JsonValue obstacleJV = constants.get("obstacles");
             MapObstacle obstacle;
-//            for (int i = 0; i < obstacleJV.size; i++) {
-//                float x = obstacleJV.get(i).get("pos").getFloat(0);
-//                float y = obstacleJV.get(i).get("pos").getFloat(1);
-//                float[] points = new float[obstacleJV.get(i).get("points").size];
-//                for (int j = 0; j < obstacleJV.get(i).get("points").size; j++) {
-//                    points[j] = Float.parseFloat(obstacleJV.get(i).get("points").getString(j));
-//                }
-//                obstacle = new MapObstacle(points, x, y, earthTile, scale);
-//                addObject(obstacle);
-//            }
+            for (int i = 0; i < obstacleJV.size; i++) {
+                float x = obstacleJV.get(i).get("pos").getFloat(0);
+                float y = obstacleJV.get(i).get("pos").getFloat(1);
+                float[] points = new float[obstacleJV.get(i).get("points").size];
+                for (int j = 0; j < obstacleJV.get(i).get("points").size; j++) {
+                    points[j] = Float.parseFloat(obstacleJV.get(i).get("points").getString(j));
+                }
+                obstacle = new MapObstacle(points, x, y, earthTile, scale);
+                obstacle.setName("obstacle"+i);
+                addObject(obstacle);
+            }
             // Add Cooking platform
             JsonValue cookingJV = constants.get("cooking");
             CookingPlatform cooking;
             for (int i = 0; i < cookingJV.size; i++) {
                 float x = cookingJV.get(i).get("pos").getFloat(0);
                 float y = cookingJV.get(i).get("pos").getFloat(1);
-                dwidth  = 10;
-                dheight = 5;
+
+                dwidth  = cookingTexture.getRegionWidth()/scale.x;
+                dheight = cookingTexture.getRegionHeight()/scale.y;
+
                 cooking = new CookingPlatform(x, y, dwidth, dheight, cookingTexture, scale, null);
+                cooking.setName("cooking"+i);
                 addObject(cooking);
             }
 
@@ -395,7 +399,7 @@ public class FallingController extends WorldController implements ContactListene
                 cooking.setInventory(inventory);
                 Array<String> up_inventory = cooking.resolveInventory();
                 rocket.setInventory(up_inventory);
-                rocket.setVY(0f);
+                //rocket.setVY(0f);
             }
 
         }
@@ -412,11 +416,11 @@ public class FallingController extends WorldController implements ContactListene
             if( (body1.getUserData() == rocket && body2.getUserData() instanceof MapObstacle) ||
                     (body1.getUserData() instanceof MapObstacle && body2.getUserData() == rocket)) {
                 rocket.updateMultiplier(1f);
-                rocket.setVY(-3f);
+                rocket.setVY(-5f);
             }
             if( (body1.getUserData() == rocket && body2.getUserData() instanceof CookingPlatform) ||
                     (body1.getUserData() instanceof CookingPlatform && body2.getUserData() == rocket)) {
-                rocket.setVY(-3f);
+                //rocket.setVY(-5f);
             }
         }
 

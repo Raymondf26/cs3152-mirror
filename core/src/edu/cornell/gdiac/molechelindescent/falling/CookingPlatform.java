@@ -22,8 +22,8 @@ public class CookingPlatform extends BoxObstacle {
         setBodyType(BodyDef.BodyType.StaticBody);
         setDensity(1f);
         setFriction(0f);
-        setRestitution(0f);
-        setSensor(true);
+        setRestitution(-1000f);
+        setSensor(false);
         setDrawScale(scale);
         setTexture(texture);
         this.texture = texture;
@@ -36,10 +36,9 @@ public class CookingPlatform extends BoxObstacle {
     }
 
     public Array<String> resolveInventory(){
-        System.out.println("resolving inventory");
-        System.out.println(inventory);
+        System.out.println(inventory.contains("yellow", false));
+        System.out.println(inventory.contains("blue", false));
         if (inventory.contains("blue", false) && inventory.contains("yellow", false)){
-            System.out.println("found blue and yellow");
             inventory.removeValue("blue", false);
             inventory.removeValue("yellow", false);
             inventory.add("green");
@@ -52,7 +51,7 @@ public class CookingPlatform extends BoxObstacle {
         if (inventory.contains("purple", false) && inventory.contains("green", false)){
             inventory.removeValue("purple", false);
             inventory.removeValue("green", false);
-            inventory.add("purple");
+            inventory.add("white");
         }
         return inventory;
     }
