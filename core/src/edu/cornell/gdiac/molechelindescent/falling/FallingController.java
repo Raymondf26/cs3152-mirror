@@ -250,8 +250,10 @@ public class FallingController extends WorldController implements ContactListene
             for (int i = 0; i < cookingJV.size; i++) {
                 float x = cookingJV.get(i).get("pos").getFloat(0);
                 float y = cookingJV.get(i).get("pos").getFloat(1);
+
                 dwidth  = cookingTexture.getRegionWidth()/scale.x;
                 dheight = cookingTexture.getRegionHeight()/scale.y;
+
                 cooking = new CookingPlatform(x, y, dwidth, dheight, cookingTexture, scale, null);
                 cooking.setName("cooking"+i);
                 addObject(cooking);
@@ -534,9 +536,6 @@ public class FallingController extends WorldController implements ContactListene
         canvas.setCameraPosY(rocket.getY() * factor); //magic number 32 rn. Should change to soft-code.
         //System.out.println(rocket.getY());
         for(Obstacle obj : objects) {
-            if (obj instanceof CookingPlatform){
-                //System.out.println("drawing cooking platform");
-            }
             obj.draw(canvas);
         }
         canvas.end();

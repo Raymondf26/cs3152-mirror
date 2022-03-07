@@ -48,6 +48,11 @@ public class CookingPlatform extends BoxObstacle {
             inventory.removeValue("red", false);
             inventory.add("purple");
         }
+        if (inventory.contains("purple", false) && inventory.contains("green", false)){
+            inventory.removeValue("purple", false);
+            inventory.removeValue("green", false);
+            inventory.add("white");
+        }
         return inventory;
     }
 }
