@@ -418,7 +418,7 @@ public class FallingController extends WorldController implements ContactListene
             }
             if( (body1.getUserData() == rocket && body2.getUserData() instanceof CookingPlatform) ||
                     (body1.getUserData() instanceof CookingPlatform && body2.getUserData() == rocket)) {
-                //rocket.setVY(-5f);
+                rocket.setVY(-5f);
             }
         }
 

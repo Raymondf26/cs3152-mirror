@@ -27,7 +27,7 @@
 		"pos": [16, 14],
 		"density": 1.0,
 		"friction": 0.0,
-		"restitution": 0.4,
+		"restitution": 0.0,
 		"thrust": 20.0
 	},
 	"walls":	[

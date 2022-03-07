@@ -39,9 +39,7 @@ public class MapObstacle extends PolygonObstacle {
         setBodyType(BodyDef.BodyType.StaticBody);
         setDensity(0.0f);
         setFriction(0.0f);
-        setDensity(0f);
-        setFriction(0.0f);
-        setRestitution(0f);
+        setRestitution(0.0f);
         setSensor(true);
         setDrawScale(scale);
         setTexture(texture);
