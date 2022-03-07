@@ -40,9 +40,9 @@ public class FallingController extends WorldController implements ContactListene
         /** Snake should move every certain number of updates, should be adjusted */
         int nextSwitch;
         /** Current amount to decrease snake height by **/
-        float decreaseBy = 0.48f;
+        float decreaseBy = 0.49f;
         /** How long before snake starts to speed up **/
-        int levelDifficulty = 10000;
+        int levelDifficulty = -25;
         // could make this change based on level but for now just hard coded to 2000
 
     /** The sound for the main afterburner */
@@ -317,8 +317,8 @@ public class FallingController extends WorldController implements ContactListene
                 snakePos -= decreaseBy;
                 nextSwitch = 0;
             }
-            if (snakePos % levelDifficulty == 0) {
-                decreaseBy = decreaseBy * 1.1f;
+            if (snakePos - levelDifficulty < 0 && nextSwitch == 0) {
+                decreaseBy = decreaseBy * 1.01f;
             }
 
             // Animate the three burners
