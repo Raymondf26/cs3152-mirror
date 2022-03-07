@@ -36,14 +36,22 @@ public class CookingPlatform extends BoxObstacle {
     }
 
     public Array<String> resolveInventory(){
-        if (inventory.contains("blue", true) && inventory.contains("yellow", true)){
-            inventory.removeValue("blue", true);
-            inventory.removeValue("yellow", true);
+        System.out.println("resolving inventory");
+        System.out.println(inventory);
+        if (inventory.contains("blue", false) && inventory.contains("yellow", false)){
+            System.out.println("found blue and yellow");
+            inventory.removeValue("blue", false);
+            inventory.removeValue("yellow", false);
             inventory.add("green");
         }
-        if (inventory.contains("blue", true) && inventory.contains("red", true)){
-            inventory.removeValue("blue", true);
-            inventory.removeValue("red", true);
+        if (inventory.contains("blue", false) && inventory.contains("red", false)){
+            inventory.removeValue("blue", false);
+            inventory.removeValue("red", false);
+            inventory.add("purple");
+        }
+        if (inventory.contains("purple", false) && inventory.contains("green", false)){
+            inventory.removeValue("purple", false);
+            inventory.removeValue("green", false);
             inventory.add("purple");
         }
         return inventory;
