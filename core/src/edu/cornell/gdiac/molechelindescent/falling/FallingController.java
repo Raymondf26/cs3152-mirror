@@ -44,6 +44,8 @@ public class FallingController extends WorldController implements ContactListene
         /** How long before snake starts to speed up **/
         int levelDifficulty = -25;
         // could make this change based on level but for now just hard coded to 2000
+        /** If debug mode is true, then the player can control y-axis movement, otherwise cannot. **/
+        boolean debugMode = true;
 
     /** The sound for the main afterburner */
         private Sound burnSound;
@@ -303,10 +305,12 @@ public class FallingController extends WorldController implements ContactListene
             // Then apply the force using the method you modified in RocketObject
 
             InputController input = InputController.getInstance();
+            if (debugMode) {
+                float yforce = rocket.getThrust() * input.getVertical() * 2.5f;
+                rocket.setFY(yforce);
+            }
             float xforce = rocket.getThrust() * input.getHorizontal();
-            float yforce = rocket.getThrust() * input.getVertical() * 2.5f;
             rocket.setFX(xforce);
-            rocket.setFY(yforce);
             rocket.applyForce();
 
             //#endregion
