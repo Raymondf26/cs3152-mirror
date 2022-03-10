@@ -426,7 +426,9 @@ public class FallingController extends WorldController implements ContactListene
                         (CookingPlatform)(body1.getUserData()) : (CookingPlatform)(body2.getUserData());
                 cooking.setInventory(inventory);
                 Array<String> up_inventory = cooking.resolveInventory();
+
                 if(cooking.isWhiteCrafted()) setComplete(true);
+
                 rocket.setInventory(up_inventory);
                 //rocket.setVY(0f);
             }
