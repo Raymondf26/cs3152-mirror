@@ -124,8 +124,27 @@ public class FallingController extends WorldController implements ContactListene
          * Resets the status of the game so that we can play again.
          *
          * This method disposes of the world and creates a new one.
-         * @param win true if the game was won, false otherwise
          */
+        public void reset() {
+            Vector2 gravity = new Vector2(world.getGravity() );
+
+            for(Obstacle obj : objects) {
+                obj.deactivatePhysics(world);
+            }
+            objects.clear();
+            addQueue.clear();
+            world.dispose();
+
+            world = new World(gravity,false);
+            world.setContactListener(this);
+            populateLevel();
+            snakePos = beginningSnakePos;
+            decreaseBy = DECREASE_BY;
+            setComplete(false);
+            setFailure(false);
+
+        }
+
         public void reset(boolean win) {
             Vector2 gravity = new Vector2(world.getGravity() );
 
@@ -138,12 +157,16 @@ public class FallingController extends WorldController implements ContactListene
 
             world = new World(gravity,false);
             world.setContactListener(this);
-            setComplete(true);
-            setFailure(true);
             populateLevel();
             snakePos = beginningSnakePos;
             decreaseBy = DECREASE_BY;
-
+            if (win) {
+                setComplete(true);
+            }
+            else {
+                setComplete(false);
+                setFailure(true);
+            }
         }
 
         /**
