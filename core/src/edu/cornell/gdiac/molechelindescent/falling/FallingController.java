@@ -124,8 +124,9 @@ public class FallingController extends WorldController implements ContactListene
          * Resets the status of the game so that we can play again.
          *
          * This method disposes of the world and creates a new one.
+         * @param win true if the game was won, false otherwise
          */
-        public void reset() {
+        public void reset(boolean win) {
             Vector2 gravity = new Vector2(world.getGravity() );
 
             for(Obstacle obj : objects) {
@@ -137,8 +138,8 @@ public class FallingController extends WorldController implements ContactListene
 
             world = new World(gravity,false);
             world.setContactListener(this);
-            setComplete(false);
-            setFailure(false);
+            setComplete(true);
+            setFailure(true);
             populateLevel();
             snakePos = beginningSnakePos;
             decreaseBy = DECREASE_BY;
@@ -302,7 +303,7 @@ public class FallingController extends WorldController implements ContactListene
         public void update(float dt) {
 
             if (snakePos < rocket.getY()) {
-                canvas.end();
+                reset(false);
             }
             //#region INSERT CODE HERE
             // Read from the input and add the force to the rocket model
@@ -406,6 +407,7 @@ public class FallingController extends WorldController implements ContactListene
                         (CookingPlatform)(body1.getUserData()) : (CookingPlatform)(body2.getUserData());
                 cooking.setInventory(inventory);
                 Array<String> up_inventory = cooking.resolveInventory();
+                if(cooking.isWhiteCrafted()) reset(true);
                 rocket.setInventory(up_inventory);
                 //rocket.setVY(0f);
             }

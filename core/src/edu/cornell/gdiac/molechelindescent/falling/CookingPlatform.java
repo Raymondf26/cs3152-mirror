@@ -17,6 +17,12 @@ public class CookingPlatform extends BoxObstacle {
     /** Array of moley inventory*/
     private Array<String> inventory;
 
+    private boolean whiteCrafted;
+
+    public boolean isWhiteCrafted() {
+        return whiteCrafted;
+    }
+
     public CookingPlatform(float x, float y, float width, float height, TextureRegion texture, Vector2 scale, Array<String> inventory) {
         super(x, y, width, height );
         setBodyType(BodyDef.BodyType.StaticBody);
@@ -38,6 +44,7 @@ public class CookingPlatform extends BoxObstacle {
     public Array<String> resolveInventory(){
 
         boolean cooked = false;
+        whiteCrafted = false;
 
         //System.out.println(inventory.contains("yellow", false));
         //System.out.println(inventory.contains("blue", false));
@@ -58,7 +65,9 @@ public class CookingPlatform extends BoxObstacle {
             inventory.removeValue("purple", false);
             inventory.removeValue("green", false);
             inventory.add("white");
+            whiteCrafted = true;
             cooked = true;
+
         }
         return inventory;
     }
