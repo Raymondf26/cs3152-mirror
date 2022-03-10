@@ -147,6 +147,25 @@ public class FallingController extends WorldController implements ContactListene
         }
 
         /**
+         * This method converts row to height.
+         */
+        private float rth(int row){
+            float height = 0.0F;
+            height = 20 - (row*10);
+            return height;
+        }
+
+        /**
+         * This method converts column to width.
+         */
+        private float ctw(int col){
+            float width = 0.0F;
+            width = (float) (3.806*col);
+            return width;
+        }
+
+
+        /**
          * Lays out the game geography.
          */
         private void populateLevel() {
