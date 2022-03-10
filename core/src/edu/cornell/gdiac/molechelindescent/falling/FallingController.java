@@ -47,7 +47,7 @@ public class FallingController extends WorldController implements ContactListene
         private final int levelDifficulty = -25;
         // could make this change based on level but for now just hard coded to 2000
         /** If debug mode is true, then the player can control y-axis movement, otherwise cannot. **/
-        boolean debugMode = true;
+        boolean debugMode = false;
 
     /** The sound for the main afterburner */
         private Sound burnSound;
