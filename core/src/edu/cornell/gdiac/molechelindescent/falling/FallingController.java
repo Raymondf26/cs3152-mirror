@@ -39,8 +39,10 @@ public class FallingController extends WorldController implements ContactListene
         float snakePos = beginningSnakePos;
         /** Snake should move every certain number of updates, should be adjusted */
         int nextSwitch;
+        /** Beginning amount to decrease snake height by */
+        private final float DECREASE_BY = 0.49f;
         /** Current amount to decrease snake height by **/
-        float decreaseBy = 0.49f;
+        float decreaseBy = DECREASE_BY;
         /** How long before snake starts to speed up **/
         int levelDifficulty = -25;
         // could make this change based on level but for now just hard coded to 2000
@@ -139,6 +141,8 @@ public class FallingController extends WorldController implements ContactListene
             setFailure(false);
             populateLevel();
             snakePos = beginningSnakePos;
+            decreaseBy = DECREASE_BY;
+
         }
 
         /**
