@@ -44,7 +44,7 @@ public class FallingController extends WorldController implements ContactListene
         /** Current amount to decrease snake height by **/
         float decreaseBy = DECREASE_BY;
         /** How long before snake starts to speed up **/
-        int levelDifficulty = -25;
+        private final int levelDifficulty = -25;
         // could make this change based on level but for now just hard coded to 2000
         /** If debug mode is true, then the player can control y-axis movement, otherwise cannot. **/
         boolean debugMode = true;
@@ -143,30 +143,6 @@ public class FallingController extends WorldController implements ContactListene
             setComplete(false);
             setFailure(false);
 
-        }
-
-        public void reset(boolean win) {
-            Vector2 gravity = new Vector2(world.getGravity() );
-
-            for(Obstacle obj : objects) {
-                obj.deactivatePhysics(world);
-            }
-            objects.clear();
-            addQueue.clear();
-            world.dispose();
-
-            world = new World(gravity,false);
-            world.setContactListener(this);
-            populateLevel();
-            snakePos = beginningSnakePos;
-            decreaseBy = DECREASE_BY;
-            if (win) {
-                setComplete(true);
-            }
-            else {
-                setComplete(false);
-                setFailure(true);
-            }
         }
 
         /**
@@ -344,8 +320,9 @@ public class FallingController extends WorldController implements ContactListene
          */
         public void update(float dt) {
 
-            if (snakePos < rocket.getY()) {
-                reset(false);
+            if (snakePos < rocket.getY() && !isFailure()) {
+                setFailure(true);
+                System.out.println("set failure true");
             }
             //#region INSERT CODE HERE
             // Read from the input and add the force to the rocket model
@@ -449,7 +426,7 @@ public class FallingController extends WorldController implements ContactListene
                         (CookingPlatform)(body1.getUserData()) : (CookingPlatform)(body2.getUserData());
                 cooking.setInventory(inventory);
                 Array<String> up_inventory = cooking.resolveInventory();
-                if(cooking.isWhiteCrafted()) reset(true);
+                if(cooking.isWhiteCrafted()) setComplete(true);
                 rocket.setInventory(up_inventory);
                 //rocket.setVY(0f);
             }
@@ -571,6 +548,7 @@ public class FallingController extends WorldController implements ContactListene
         @Override
     public void draw(float dt) {
         canvas.clear();
+        displayFont.setColor(Color.WHITE);
         // placeholder so the magic number doesn't need to be replaced
         float factor = 32;
 
@@ -591,5 +569,23 @@ public class FallingController extends WorldController implements ContactListene
             obj.draw(canvas);
         }
         canvas.end();
+
+        // Final message
+        if (isComplete() && !isFailure()) {
+            displayFont.setColor(Color.YELLOW);
+            canvas.begin(); // DO NOT SCALE
+            canvas.clear();
+            //canvas.drawTextCentered("VICTORY!", displayFont, 0f);
+            canvas.drawText("VICTORY!", displayFont, DISPLAY_OFFSET, rocket.getY()*factor + 250);
+            canvas.end();
+        } else if (isFailure()) {
+            displayFont.setColor(Color.RED);
+            canvas.begin(); // DO NOT SCALE
+            canvas.clear();
+            //canvas.drawTextCentered("FAILURE!", displayFont, 0f);
+            canvas.drawText("FAILURE!", displayFont, DISPLAY_OFFSET, rocket.getY()*factor + 250);
+            canvas.end();
+        }
+
     }
 }

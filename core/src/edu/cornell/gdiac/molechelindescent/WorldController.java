@@ -372,7 +372,8 @@ public abstract class WorldController implements Screen {
                 reset();
             } else if (complete) {
                 pause();
-                listener.exitScreen(this, EXIT_NEXT);
+                //listener.exitScreen(this, EXIT_NEXT);
+                reset();
                 return false;
             }
         }
