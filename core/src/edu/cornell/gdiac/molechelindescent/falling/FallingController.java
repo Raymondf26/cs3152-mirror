@@ -93,7 +93,7 @@ public class FallingController extends WorldController implements ContactListene
 
         /**
          * Gather the assets for this controller.
-         *
+         *f
          * This method extracts the asset variables from the given asset directory. It
          * should only be called after the asset directory is completed.
          *

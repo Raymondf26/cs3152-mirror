@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelindescent.falling.FallingController;
+import edu.cornell.gdiac.molechelindescent.idle.PlatformController;
 import edu.cornell.gdiac.util.ScreenListener;
 
 public class GDXRoot extends Game implements ScreenListener {
@@ -43,7 +44,8 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		// Initialize the three game worlds
 		controllers = new WorldController[1];
-		controllers[0] = new FallingController();
+		//controllers[0] = new FallingController();
+		controllers[0] = new PlatformController();
 		current = 0;
 		loading.setScreenListener(this);
 		setScreen(loading);
