@@ -1,8 +1,14 @@
 package edu.cornell.gdiac.molechelindescent.model;
 
-public class Interactee {
+public interface Interactee {
 
-    /** Whether this element is in the interacted or default state */
-    private boolean interacting;
+    public enum InteracteeType {
+        DOOR,
+        DUMBWAITER
+    }
+
+    public InteracteeType getType();
+
+    public void setType(InteracteeType type);
 
 }

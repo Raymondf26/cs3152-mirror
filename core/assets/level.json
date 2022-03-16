@@ -1,0 +1,60 @@
+{
+  "goal":
+  {
+    "pos": []
+
+  },
+
+  "mole" :
+  [
+    {
+      "pos" : [],
+      "idle behavior" : ["left", 0.5, "right", 0.5]
+    },
+    {
+      "pos" : [],
+      "idle behavior" : [{"right" :  0.5}]
+    }
+  ],
+
+  "interactee" :
+  [
+    {
+      "name" : "door1",
+      "pos" : [],
+      "texture" : "texture name",
+      "type" : "type name (i.e. door)"
+    },
+    {
+      "name" : "dumbwaiter4",
+      "pos1" : [],
+      "pos2" : [],
+      "texture" : "texture name",
+      "type" : "type name (i.e. dumbwaiter)"
+    }
+  ],
+  "interactable" :
+  [
+    {
+      "pos" : [],
+      "texture" : "texture name",
+      "type" : "type name (i.e. button",
+      "link" :
+      [
+        {
+          "name" : "door1",
+          "effect" : 90
+        },
+        {
+          "name" : "dumbwaiter4",
+          "effect" : 1
+        }
+      ]
+    }
+  ],
+  "terrain" :
+  [
+    [0, 0, 0],
+    [1, 1, 1]
+  ]
+}

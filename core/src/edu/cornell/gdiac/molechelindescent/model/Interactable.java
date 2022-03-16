@@ -1,8 +1,14 @@
 package edu.cornell.gdiac.molechelindescent.model;
 
-public class Interactable {
+public interface Interactable {
 
-    /** Whether an agent is actively interacting with this element */
-    private boolean interacting;
+    public enum InteractableType {
+        BUTTON,
+        PRESSURE_PLATE
+    }
+
+    public InteractableType getType();
+
+    public void setType(InteractableType type);
 
 }
