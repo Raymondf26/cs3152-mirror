@@ -25,6 +25,9 @@ public class Mole extends CapsuleObstacle {
     /** The idle behavior of this mole */
     private IdleUnit[] idleBehavior;
 
+    /** Currently being controlled */
+    private boolean controlled;
+
 
     /**
      * Creates a new capsule object.

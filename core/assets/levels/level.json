@@ -1,0 +1,106 @@
+{
+  "goal":
+  {
+    "pos": [],
+    "win condition" :
+    [
+      "tomato",
+      "fried egg",
+      "noodles",
+      "scallion"
+    ],
+    "texture" : "magic"
+  },
+
+  "moles" :
+  {
+    "starting" : 2,
+    "list" :
+    [
+      {
+        "pos" : [],
+        "texture" : "some string",
+        "idle behavior" : ["left", 0.5, "right", 0.5],
+      },
+      {
+        "pos" : [],
+        "idle behavior" : [{"right" :  0.5}]
+      }
+    ]
+  },
+
+  "interactees" :
+  [
+    {
+      "name" : "door1",
+	  "type" : "type name (i.e. door)",
+      "pos" : [],
+	  "orientation" : "",
+      "texture" : "texture name"
+    },
+    {
+      "name" : "dumbwaiter4",
+	  "type" : "type name (i.e. dumbwaiter)",
+      "pos1" : [],
+      "pos2" : [],
+      "texture" : "texture name"
+    }
+  ],
+  "interactors" :
+  [
+    {
+      "pos" : [],
+      "texture" : "texture name",
+      "type" : "type name (i.e. button",
+      "link" :
+      [
+        {
+          "name" : "door1",
+          "effect" : 90
+        },
+        {
+          "name" : "dumbwaiter4",
+          "effect" : 1
+        }
+      ]
+    }
+  ],
+  "terrain" :
+  [
+    {
+      "dirt":
+      [
+        [0, 0, 0],
+        [1, 1, 1]
+      ],
+      "wood" :
+      [
+        [1,1,1]
+      ]
+    }
+  ],
+  "cooking" :
+  [
+    {
+      "type" :  "fryer",
+      "pos" :  [],
+      "size" :  5
+    },
+    {
+      "type" : "ice-cream station",
+      "pos" : [],
+      "size" : 5
+    }
+
+  ],
+  "ingredient" : [
+    {
+      "type" : "tomato",
+      "pos" : []
+    },
+    {
+      "type" : "magic mushroom",
+      "pos" : []
+    }
+  ]
+}
