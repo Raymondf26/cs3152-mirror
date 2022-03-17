@@ -31,6 +31,29 @@ public class Mole extends CapsuleObstacle {
     /** Moles inventory */
     private Ingredient inventory;
 
+    /** Mole can jump status */
+    private boolean jump;
+
+    /**
+     *
+     * Return whether this mole can jump or not.
+     *
+     */
+    public boolean canJump() {
+        return this.jump;
+    }
+
+    /**
+     *
+     * Set the jump status of this mole.
+     *
+     * @param canJump Boolean value of whether or not  mole can jump
+     */
+    public void getInventory(boolean canJump) {
+        this.jump = canJump;
+
+    }
+
     /**
      *
      * Return the inventory of this mole.
