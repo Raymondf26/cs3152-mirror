@@ -7,15 +7,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.model.Level;
 import edu.cornell.gdiac.molechelinmadness.obstacle.Obstacle;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.ScreenListener;
 
 import java.util.Iterator;
 
-public class GameplayController implements Screen, ContactListener {
+public class GameplayController implements Screen {
 
 
     //START: Constants we can extract into data later
@@ -46,36 +48,25 @@ public class GameplayController implements Screen, ContactListener {
     //END
 
 
-    //START: Big picture instance variables
-
     /** Whether or not this is an active controller */
     private boolean active;
     /** Whether we have completed this level */
     private boolean complete;
     /** Whether we have failed at this world (and need a reset) */
     private boolean failed;
-    /** Whether or not debug mode is active */
-    private boolean debug;
     /** Countdown active for winning or losing */
     private int countdown;
 
-    /** All the objects in the world. */
-    protected PooledList<Obstacle> objects  = new PooledList<Obstacle>();
     /** Reference to the game canvas */
     protected GameCanvas canvas;
-    /** Queue for adding objects */
-    protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
     /** Listener that will update the player mode when we are done */
     private ScreenListener listener;
 
-    /** The Box2D world */
-    protected World world;
-    /** The boundary of the world */
-    protected Rectangle bounds;
-    /** The world scale */
-    protected Vector2 scale;
+    /** Reference to the game level */
+    protected Level level;
 
-    //END
+    /** Reference to the Interaction Controller */
+    InteractionController interaction;
 
 
     //START: Game specific instance variables
@@ -83,11 +74,11 @@ public class GameplayController implements Screen, ContactListener {
     protected ObjectSet<Fixture>[] sensorFixturesList; //For now, represented as an array. Can change later.
 
 
-    //Textures:
-    /** The texture for walls and platforms */
-    protected TextureRegion earthTile;
-    /** The texture for the exit condition */
-    protected TextureRegion goalTile;
+    //Assets:
+    /** Need an ongoing reference to the asset directory */
+    protected AssetDirectory directory;
+    /** The JSON defining the level model */
+    private JsonValue  levelFormat;
     /** The font for giving messages to the player */
     protected BitmapFont displayFont;
 
@@ -95,25 +86,22 @@ public class GameplayController implements Screen, ContactListener {
 
     public GameplayController() {
 
-        //Instead of using defaults, read from a config file later
-        world = new World(new Vector2(0, DEFAULT_GRAVITY), false);
-        this.bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        this.scale = new Vector2(1, 1);
+        level = new Level();
         complete = false;
         failed = false;
-        debug = false;
         active = false;
         countdown = -1;
-        world.setContactListener(this);
 
+        setComplete(false);
+        setFailure(false);
     }
 
     public void gatherAssets (AssetDirectory directory) {
+        this.directory = directory;
+        // Access the assets used directly by this controller
 
-    }
-
-    private void populateLevel() {
-
+        // This represents the level but does not BUILD it
+        levelFormat = directory.getEntry( "level", JsonValue.class );
     }
 
     /**
@@ -122,20 +110,15 @@ public class GameplayController implements Screen, ContactListener {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
-        Vector2 gravity = new Vector2(world.getGravity() );
+        level.dispose();
 
-        for(Obstacle obj : objects) {
-            obj.deactivatePhysics(world);
-        }
-        objects.clear();
-        addQueue.clear();
-        world.dispose();
-
-        world = new World(gravity,false);
-        world.setContactListener(this);
         setComplete(false);
         setFailure(false);
-        populateLevel();
+        countdown = -1;
+
+        // Reload the json each time
+        level.populate(directory, levelFormat);
+        level.getWorld().setContactListener(interaction);
     }
 
     /**
@@ -155,14 +138,14 @@ public class GameplayController implements Screen, ContactListener {
         //BEGIN: General preUpdate Checks
 
         InputController input = InputController.getInstance();
-        input.readInput(bounds, scale);
+        input.readInput(level.getBounds(), level.getScale());
         if (listener == null) {
             return true;
         }
 
         // Toggle debug
         if (input.didDebug()) {
-            debug = !debug;
+            level.setDebug(!level.getDebug());
         }
 
         // Handle resets
@@ -208,7 +191,8 @@ public class GameplayController implements Screen, ContactListener {
      * @param dt	Number of seconds since last animation frame
      */
     public void update(float dt) {
-
+        //Process actions in models
+        //Apply forces
     }
 
     /**
@@ -222,14 +206,14 @@ public class GameplayController implements Screen, ContactListener {
      */
     public void postUpdate(float dt) {
         // Add any objects created by actions
-        while (!addQueue.isEmpty()) {
+       /* while (!Level.add.isEmpty()) {
             addObject(addQueue.poll());
-        }
+        } */
 
         // Turn the physics engine crank.
-        world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+        level.getWorld().step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 
-        // Garbage collect the deleted objects.
+     /*   // Garbage collect the deleted objects.
         // Note how we use the linked list nodes to delete O(1) in place.
         // This is O(n) without copying.
         Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
@@ -243,56 +227,18 @@ public class GameplayController implements Screen, ContactListener {
                 // Note that update is called last!
                 obj.update(dt);
             }
-        }
-    }
+        }*/
 
-    /**
-     * Called when two fixtures begin to touch.
-     *
-     * @param contact
-     */
-    public void beginContact(Contact contact) {
-
-    }
-
-    /**
-     * Called when two fixtures cease to touch.
-     *
-     * @param contact
-     */
-    public void endContact(Contact contact) {
-
-    }
-
-    /** Lab 4 did not use this. Idk what it does. */
-    public void preSolve(Contact contact, Manifold oldManifold) {
-
-    }
-
-    /** Lab 4 did not use this. Idk what it does. */
-    public void postSolve(Contact contact, ContactImpulse impulse) {
+        //Grayed out stuff should be reimplemented later. Has to do with adding and removing objects.
 
     }
 
     public void draw(float dt) {
         canvas.clear();
 
-        canvas.begin();
+        level.draw(canvas);
 
-        for(Obstacle obj : objects) {
-            obj.draw(canvas);
-        }
-        canvas.end();
-
-        if (debug) {
-            canvas.beginDebug();
-            for(Obstacle obj : objects) {
-                obj.drawDebug(canvas);
-            }
-            canvas.endDebug();
-        }
-
-        // Final Victory or Defeat Message
+        // Final message
         if (complete && !failed) {
             displayFont.setColor(Color.YELLOW);
             canvas.begin(); // DO NOT SCALE
@@ -307,26 +253,6 @@ public class GameplayController implements Screen, ContactListener {
     }
 
 
-    //BEGIN: Methods useful for debugging
-
-    /**
-     * Returns true if the object is in bounds.
-     *
-     * This assertion is useful for debugging the physics.
-     *
-     * @param obj The object to check.
-     *
-     * @return true if the object is in bounds.
-     */
-    public boolean inBounds(Obstacle obj) {
-        boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x+bounds.width);
-        boolean vert  = (bounds.y <= obj.getY() && obj.getY() <= bounds.y+bounds.height);
-        return horiz && vert;
-    }
-
-    //END
-
-
     //START: Mostly boilerplate methods
 
     /**
@@ -335,9 +261,11 @@ public class GameplayController implements Screen, ContactListener {
      * param obj The object to add
      */
     protected void addObject(Obstacle obj) {
-        assert inBounds(obj) : "Object is not in bounds";
+        /* assert inBounds(obj) : "Object is not in bounds";
         objects.add(obj);
-        obj.activatePhysics(world);
+        obj.activatePhysics(world); */
+
+        //Throw this code in level or something. Rn we don't need it but good to have implemented for future.
     }
 
     /**
@@ -405,40 +333,9 @@ public class GameplayController implements Screen, ContactListener {
      * Called when this screen should release all resources.
      */
     public void dispose() {
-        for(Obstacle obj : objects) {
-            obj.deactivatePhysics(world);
-        }
-        objects.clear();
-        addQueue.clear();
-        world.dispose();
-        objects = null;
-        addQueue = null;
-        bounds = null;
-        scale  = null;
-        world  = null;
-        canvas = null;
-    }
-
-    /**
-     * Returns true if debug mode is active.
-     *
-     * If true, all objects will display their physics bodies.
-     *
-     * @return true if debug mode is active.
-     */
-    public boolean isDebug( ) {
-        return debug;
-    }
-
-    /**
-     * Sets whether debug mode is active.
-     *
-     * If true, all objects will display their physics bodies.
-     *
-     * @param value whether debug mode is active.
-     */
-    public void setDebug(boolean value) {
-        debug = value;
+        level.dispose();
+        level = null;
+        canvas =  null;
     }
 
     /**
@@ -521,8 +418,6 @@ public class GameplayController implements Screen, ContactListener {
      */
     public void setCanvas(GameCanvas canvas) {
         this.canvas = canvas;
-        this.scale.x = canvas.getWidth()/bounds.getWidth();
-        this.scale.y = canvas.getHeight()/bounds.getHeight();
     }
 
     /**

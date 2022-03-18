@@ -1,6 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model.interactor;
 
-import edu.cornell.gdiac.molechelinmadness.model.interactee.Interactee;
+import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 
 public interface Interactor {
 
@@ -9,17 +9,12 @@ public interface Interactor {
         PRESSURE_PLATE
     }
 
-    public class Link {
-        public Interactee interactee;
-        public int effect;
-    }
-
     public InteractableType getType();
 
     public void setType(InteractableType type);
 
-    public Link[] getLinks();
+    public Event[] getLinks();
 
-    public void setLinks(Link[] links);
+    public void setLinks(Event[] links);
 
 }

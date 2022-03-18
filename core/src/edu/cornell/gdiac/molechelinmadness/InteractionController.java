@@ -1,45 +1,45 @@
 package edu.cornell.gdiac.molechelinmadness;
 
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import edu.cornell.gdiac.molechelinmadness.model.Mole;
-import edu.cornell.gdiac.molechelinmadness.model.interactee.Door;
-import edu.cornell.gdiac.molechelinmadness.model.interactee.Interactee;
+import edu.cornell.gdiac.molechelinmadness.model.Door;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
 
-public class InteractionController {
+public class InteractionController implements ContactListener {
 
     public InteractionController() {
 
     }
 
-    public void resolveCollision(Interactor interactor, Mole mole, boolean contact) {
+    /**
+     * Called when two fixtures begin to touch.
+     *
+     * @param contact
+     */
+    public void beginContact(Contact contact) {
 
-        //contact refers to whether we detected "beginContact" or "endContact." true for the former, false for the latter
-
-        switch(interactor.getType()) {
-            case BUTTON:
-                Button button = (Button) interactor;
-                //Check if actually interacting with this object
-                //If so, call:
-                for (int i = 0; i < button.getLinks().length; i++) {
-                    resolveEffect(button.getLinks()[i], mole);
-                }
-
-            default:
-                break;
-        }
     }
 
-    private void resolveEffect(Interactor.Link link,Mole mole) {
-        int effect = link.effect;
-        Interactee interactee = link.interactee;
-        switch(interactee.getType()) {
-            case DOOR:
-                Door door = (Door) interactee;
+    /**
+     * Called when two fixtures cease to touch.
+     *
+     * @param contact
+     */
+    public void endContact(Contact contact) {
 
-            default:
-                break;
-        }
     }
 
+    /** Lab 4 did not use this. Idk what it does. */
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    /** Lab 4 did not use this. Idk what it does. */
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
 }

@@ -2,7 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import edu.cornell.gdiac.molechelinmadness.obstacle.PolygonObstacle;
 
-public class Terrain extends PolygonObstacle {
+public class Wall extends PolygonObstacle {
     /**
      * Creates a (not necessarily convex) polygon at the origin.
      * <p>
@@ -13,7 +13,7 @@ public class Terrain extends PolygonObstacle {
      *
      * @param points The polygon vertices
      */
-    public Terrain(float[] points) {
+    public Wall(float[] points) {
         super(points);
     }
 }

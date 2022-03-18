@@ -1,5 +1,7 @@
 package edu.cornell.gdiac.molechelinmadness.model.interactor;
 
+import edu.cornell.gdiac.molechelinmadness.model.event.Event;
+
 public class Button implements Interactor {
 
 
@@ -11,11 +13,11 @@ public class Button implements Interactor {
 
     }
 
-    public Link[] getLinks() {
-        return new Link[0];
+    public Event[] getLinks() {
+        return new Event[0];
     }
 
-    public void setLinks(Link[] links) {
+    public void setLinks(Event[] links) {
 
     }
 }
