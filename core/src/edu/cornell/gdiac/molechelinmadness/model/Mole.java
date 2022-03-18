@@ -1,6 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
-import edu.cornell.gdiac.molechelinmadness.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
 
 public class Mole extends CapsuleObstacle {
 

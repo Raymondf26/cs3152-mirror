@@ -6,9 +6,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
-import edu.cornell.gdiac.molechelinmadness.obstacle.Obstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.PooledList;
-import edu.cornell.gdiac.util.ScreenListener;
 
 public class Level {
 
@@ -68,6 +67,26 @@ public class Level {
             floor = floor.next();
         }
 
+        //temporary to prevent crash
+        moles = new Mole[0];
+
+        JsonValue interactable = levelFormat.get("interactive elements").child();
+        while (interactable != null) {
+            initialize(directory, interactable);
+            interactable = interactable.next();
+        }
+
+
+    }
+
+    private void initialize(AssetDirectory directory, JsonValue json) {
+        String type = json.getString("type");
+        if (type.equals("dumbwaiter")) {
+            Dumbwaiter dumbwaiter = new Dumbwaiter();
+            dumbwaiter.initialize(directory, json);
+            dumbwaiter.setDrawScale(scale);
+            activate(dumbwaiter);
+        }
     }
 
     public void dispose() {

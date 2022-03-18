@@ -33,7 +33,7 @@
     ]
   },
 
-  "interactees" :
+  "interactive elements" :
   [
     {
       "name" : "door1",
@@ -47,7 +47,14 @@
 	  "type" : "dumbwaiter",
       "pos1" : [17.5, 1],
       "pos2" : [12, 12],
-      "texture" : "interactive:dumbwaiter"
+      "size" : [1.92, 1.92],
+      "bodytype" : "static",
+      "density" : 0.0,
+      "friction" : 0.0,
+      "restitution" : 0.0,
+      "texture" : "interactive:dumbwaiter",
+      "debugcolor" : "yellow",
+      "debugopacity" : 200
     }
   ],
   "interactors" :

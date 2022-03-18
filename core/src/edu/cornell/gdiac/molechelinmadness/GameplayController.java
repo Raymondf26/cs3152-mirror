@@ -3,19 +3,12 @@ package edu.cornell.gdiac.molechelinmadness;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.Level;
-import edu.cornell.gdiac.molechelinmadness.obstacle.Obstacle;
-import edu.cornell.gdiac.util.PooledList;
+import edu.cornell.gdiac.molechelinmadness.model.Mole;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.ScreenListener;
-
-import java.util.Iterator;
 
 public class GameplayController implements Screen {
 
@@ -69,11 +62,6 @@ public class GameplayController implements Screen {
     InteractionController interaction;
 
 
-    //START: Game specific instance variables
-    /** Mark set to handle more sophisticated collision callbacks */
-    protected ObjectSet<Fixture>[] sensorFixturesList; //For now, represented as an array. Can change later.
-
-
     //Assets:
     /** Need an ongoing reference to the asset directory */
     protected AssetDirectory directory;
@@ -99,6 +87,7 @@ public class GameplayController implements Screen {
     public void gatherAssets (AssetDirectory directory) {
         this.directory = directory;
         // Access the assets used directly by this controller
+        displayFont = directory.getEntry("display", BitmapFont.class);
 
         // This represents the level but does not BUILD it
         levelFormat = directory.getEntry( "level", JsonValue.class );
@@ -192,7 +181,23 @@ public class GameplayController implements Screen {
      */
     public void update(float dt) {
         //Process actions in models
-        //Apply forces
+        Mole moles[] = level.getMoles();
+        for (int i = 0; i < moles.length; i++) {
+            /*if (moles[i] is being controlled) {
+                set mole movement, jumping, and interacting based on Input Controller(similar to lab 4 platformer)
+            }
+            else {
+                set mole movement, jumping, and interacting based on AI Controller
+            }
+             */
+
+        }
+
+        //Apply forces and sounds
+        for (int i = 0; i < moles.length; i++) {
+            //apply force for each mole
+            //Play sounds relevant sounds
+        }
     }
 
     /**

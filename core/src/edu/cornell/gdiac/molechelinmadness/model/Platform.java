@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
-import edu.cornell.gdiac.molechelinmadness.obstacle.BoxObstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
 import java.lang.reflect.Field;
 

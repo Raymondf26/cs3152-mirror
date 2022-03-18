@@ -1,6 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
-import edu.cornell.gdiac.molechelinmadness.obstacle.PolygonObstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.PolygonObstacle;
 
 public class Wall extends PolygonObstacle {
     /**
