@@ -1,17 +1,18 @@
 {
 	"textures":
     {
-        "shared:earth" :
+        "earth" :
         {
-            "file":  "shared/earthtile.png",
+            "file":  "textures/earthtile.png",
             "wrapU": "repeated",
             "wrapV": "repeated"
         },
-        "shared:goal":   "shared/goaldoor.png"
+        "shared:goal":   "textures/goaldoor.png",
+        "interactive:dumbwaiter" : "textures/goaldoor.png"
     },
     "jsons"  :
     {
-        "level":  "levels/level.json"
+        "level":  "levels/level1.json"
     },
     "sounds" :
     {
@@ -21,7 +22,7 @@
     {
         "shared:retro":
         {
-            "file": "shared/RetroGame.ttf",
+            "file": "fonts/RetroGame.ttf",
             "size": 14
         }
     }

@@ -1,0 +1,223 @@
+{
+  "physicsSize":    [32.0,18.0],
+  "graphicSize":    [ 1024, 576],
+  "gravity":  	  -14.7,
+  "goal":
+  {
+    "pos": [8.5, 2],
+    "win condition" :
+    [
+      "tomato",
+      "fried egg",
+      "noodles",
+      "scallion"
+    ],
+    "texture" : "goal:pot"
+  },
+
+  "moles" :
+  {
+    "starting" : 1,
+    "list" :
+    [
+      {
+        "pos" : [7.0, 10.5],
+        "texture" : "mole:chef1",
+        "idle behavior" : ["left", 0.5, "right", 0.5]
+      },
+      {
+        "pos" : [16.5, 8.0],
+        "texture" : "mole:chef2",
+        "idle behavior" : ["jump", 1.5]
+      }
+    ]
+  },
+
+  "interactive elements" :
+  [
+    {
+      "name" : "door1",
+	  "type" : "door",
+      "pos" : [7.0, 9.5],
+	  "orientation" : 180,
+      "texture" : "interactive:door"
+    },
+    {
+      "name" : "dumbwaiter4",
+	  "type" : "dumbwaiter",
+      "pos1" : [2.0, 10.5],
+      "pos2" : [2.0, 4.5],
+      "size" : [1.92, 1.92],
+      "bodytype" : "static",
+      "density" : 0.0,
+      "friction" : 0.0,
+      "restitution" : 0.0,
+      "texture" : "interactive:dumbwaiter",
+      "debugcolor" : "yellow",
+      "debugopacity" : 200
+    }
+  ],
+  "interactors" :
+  [
+    {
+      "pos" : [13, 9],
+      "type" : "button",
+      "texture" : "interactive:button",
+      "link" :
+      [
+        {
+          "name" : "door1",
+          "effect" : 90
+        },
+        {
+          "name" : "dumbwaiter4",
+          "effect" : 1
+        }
+      ]
+    }
+  ],
+  "platforms": {
+    "floor1": {
+      "pos":           [ 2.25f, 2.75f],
+      "size":          [  3.5f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor2": {
+      "pos":           [ 5.0f, 3.0f],
+      "size":          [ 2.0f, 1.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor3": {
+      "pos":           [ 11.25f, 2.75],
+      "size":          [  3.5f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor4": {
+      "pos":           [ 14.25f, 3.0f],
+      "size":          [  2.5f,  1.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor5": {
+      "pos":           [ 14.75f, 3.75f],
+      "size":          [  1.5f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor6": {
+      "pos":           [ 11.5f, 4.75f],
+      "size":          [  2.0f, 0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor7": {
+      "pos":           [ 14.75f, 5.75f],
+      "size":          [  1.5f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor8": {
+      "pos":           [ 11.5f,  6.75f],
+      "size":          [  2.0f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor9": {
+      "pos":           [ 7.5f, 7.75f],
+      "size":          [ 2.0f, 0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor10": {
+      "pos":           [ 2.5f,  8.75f],
+      "size":          [ 4.0f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    }
+  },
+  "cooking" :
+  [
+    {
+      "type" :  "fryer",
+      "pos" :  [9.0, 3.8],
+      "size" :  1.0
+    },
+    {
+      "type" : "wok",
+      "pos" : [13.0, 12.5],
+      "size" : 1.0
+    }
+
+  ],
+  "ingredient" : [
+    {
+      "type" : "tomato",
+      "pos" : [5.5, 12]
+    },
+    {
+      "type" : "scallion",
+      "pos" : [12.0, 6.0]
+    },
+    {
+      "type" : "egg",
+      "pos" : [18.0, 18.0]
+    },
+    {
+      "type" : "noodles",
+      "pos" : [0.0, 0.5]
+    }
+  ]
+}

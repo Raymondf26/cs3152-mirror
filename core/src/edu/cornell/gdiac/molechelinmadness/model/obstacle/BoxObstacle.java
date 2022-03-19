@@ -9,7 +9,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
-package edu.cornell.gdiac.molechelinmadness.obstacle;
+package edu.cornell.gdiac.molechelinmadness.model.obstacle;
 
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.graphics.*;
@@ -25,6 +25,8 @@ import edu.cornell.gdiac.molechelinmadness.*;  // For GameCanvas
 public class BoxObstacle extends SimpleObstacle {
 	/** Shape information for this box */
 	protected PolygonShape shape;
+	/** The color to show off the debug shape */
+	private Color debugColor;
 	/** The width and height of the box */
 	private Vector2 dimension;
 	/** A cache value for when the user wants to access the dimensions */
@@ -32,7 +34,7 @@ public class BoxObstacle extends SimpleObstacle {
 	/** A cache value for the fixture (for resizing) */
 	private Fixture geometry;
 	/** Cache of the polygon vertices (for resizing) */
-	private float[] vertices;
+	protected float[] vertices;
 	
 	/** 
 	 * Returns the dimensions of this box
@@ -149,7 +151,7 @@ public class BoxObstacle extends SimpleObstacle {
 	/**
 	 * Reset the polygon vertices in the shape to match the dimension.
 	 */
-	private void resize(float width, float height) {
+	protected void resize(float width, float height) {
 		// Make the box with the center in the center
 		vertices[0] = -width/2.0f;
 		vertices[1] = -height/2.0f;
@@ -190,6 +192,24 @@ public class BoxObstacle extends SimpleObstacle {
 	        body.destroyFixture(geometry);
 	        geometry = null;
 	    }
+	}
+
+	/**
+	 * Returns the color to display the physics outline
+	 *
+	 * @return the color to display the physics outline
+	 */
+	public Color getDebugColor() {
+		return debugColor;
+	}
+
+	/**
+	 * Sets the color to display the physics outline
+	 *
+	 * @param value	the color to display the physics outline
+	 */
+	public void setDebugColor(Color value) {
+		debugColor = value;
 	}
 
 	

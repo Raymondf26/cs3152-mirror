@@ -2,7 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class Ingredient extends BoxObstacle {
+public class FinalStation extends BoxObstacle {
 
 
     /**
@@ -15,7 +15,7 @@ public class Ingredient extends BoxObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public Ingredient(float width, float height) {
+    public FinalStation(float width, float height) {
         super(width, height);
     }
 }

@@ -8,8 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
-import edu.cornell.gdiac.molechelinmadness.obstacle.CapsuleObstacle;
-import edu.cornell.gdiac.molechelinmadness.obstacle.Obstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
 
 public class Mole extends CapsuleObstacle {
 
