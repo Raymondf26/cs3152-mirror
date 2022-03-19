@@ -77,6 +77,13 @@ public class Level {
             floor = floor.next();
         }
 
+        //Add all interactive elements
+        JsonValue interactable = levelFormat.get("interactive elements").child();
+        while (interactable != null) {
+            initializeInteractive(directory, interactable);
+            interactable = interactable.next();
+        }
+
         //Add all moles
         moles = new Array<>();
         JsonValue chefList = levelFormat.get("moles").get("list");
@@ -84,18 +91,12 @@ public class Level {
         for (JsonValue chef : chefList) {
             System.out.println("1");
             Mole mole = new Mole();
-            //mole.initialize(directory, chef);
-           // mole.setDrawScale(scale);
-            //moles.add(mole);
-            //activate(mole);
+            mole.initialize(directory, chef);
+            mole.setDrawScale(scale);
+            moles.add(mole);
+            activate(mole);
         }
-
-        //Add all interactive elements
-        JsonValue interactable = levelFormat.get("interactive elements").child();
-        while (interactable != null) {
-            initializeInteractive(directory, interactable);
-            interactable = interactable.next();
-        }
+        moles.first().setControlled(true);
 
 
     }

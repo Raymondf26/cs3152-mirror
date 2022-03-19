@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
 
 import java.lang.reflect.Field;
@@ -29,12 +30,17 @@ public class Mole extends CapsuleObstacle {
         float time;
     }
 
+
+    /** Cache for internal force calculations */
+    private Vector2 forceCache = new Vector2();
     /** The name of the sensor for detection purposes */
     private String sensorName;
     /** The color to paint the sensor in debug mode */
     private Color sensorColor;
-    /** The sensor shape for the feet and the hands */
-    PolygonShape sensorShape;
+    /** The sensor shape for the feet*/
+    PolygonShape sensorShapeF;
+    /** The sensor shape for the hands*/
+    PolygonShape sensorShapeH;
     /** The amount to slow the character down */
     private float damping;
     /** The maximum character speed */
@@ -178,9 +184,9 @@ public class Mole extends CapsuleObstacle {
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density = 1.0f;
         sensorDef.isSensor = true;
-        sensorShape = new PolygonShape();
-        sensorShape.setAsBox(0.6f*getWidth()*2f, 0.05f, sensorCenter, 0.0f);
-        sensorDef.shape = sensorShape;
+        sensorShapeF = new PolygonShape();
+        sensorShapeF.setAsBox(0.6f*getWidth(), 0.05f, sensorCenter, 0.0f);
+        sensorDef.shape = sensorShapeF;
 
         // Ground sensor to represent our feet
         Fixture sensorFixture = body.createFixture( sensorDef );
@@ -191,9 +197,9 @@ public class Mole extends CapsuleObstacle {
         sensorDef = new FixtureDef();
         sensorDef.density = 1.0f;
         sensorDef.isSensor = true;
-        sensorShape = new PolygonShape();
-        sensorShape.setAsBox(0.05f, 0.6f*getWidth()*2f, sensorCenter, 1.57f); // angle should be 90 degrees
-        sensorDef.shape = sensorShape;
+        sensorShapeH = new PolygonShape();
+        sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter, 0f); // angle should be 90 degrees
+        sensorDef.shape = sensorShapeH;
 
         // Side sensor to represent our front facing hand
         sensorFixture = body.createFixture( sensorDef );
@@ -210,6 +216,15 @@ public class Mole extends CapsuleObstacle {
     public boolean isControlled() {return controlled;}
 
     /**
+     *
+     * Set mole control status
+     *
+     * */
+    public void setControlled(boolean control) {
+        controlled = control;
+    }
+
+    /**
      * Returns how much force to apply to get the dude moving
      *
      * Multiply this by the input to get the movement value.
@@ -218,6 +233,55 @@ public class Mole extends CapsuleObstacle {
      */
     public float getForce() {
         return force;
+    }
+
+    /**
+     * Applies the force to the body of this dude
+     *
+     * This method should be called after the force attribute is set.
+     */
+    public void applyForce() {
+        if (!isActive()) {
+            return;
+        }
+
+        // Don't want to be moving. Damp out player motion
+        if (getMovement() == 0f) {
+            forceCache.set(-getDamping()*getVX(),0);
+            body.applyForce(forceCache,getPosition(),true);
+        }
+
+        // Velocity too high, clamp it
+        if (Math.abs(getVX()) >= getMaxSpeed()) {
+            setVX(Math.signum(getVX())*getMaxSpeed());
+        } else {
+            forceCache.set(getMovement(),0);
+            body.applyForce(forceCache,getPosition(),true);
+        }
+
+        // Jump!
+        if (isJumping()) {
+            forceCache.set(0, getJumpPulse());
+            body.applyLinearImpulse(forceCache,getPosition(),true);
+        }
+    }
+
+    /**
+     * Returns how hard the brakes are applied to get a dude to stop moving
+     *
+     * @return how hard the brakes are applied to get a dude to stop moving
+     */
+    public float getDamping() {
+        return damping;
+    }
+
+    /**
+     * Returns the upward impulse for a jump.
+     *
+     * @return the upward impulse for a jump.
+     */
+    public float getJumpPulse() {
+        return jumppulse;
     }
 
     /**
@@ -281,6 +345,17 @@ public class Mole extends CapsuleObstacle {
         return temp;
     }
 
+    /** */
+    public void updateHand() {
+        Vector2 sensorCenter = new Vector2(getWidth() / 2, 0);
+        if (this.faceRight) {
+            sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter, 0f);
+        }
+        else {
+            sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter.scl(-1), 0f);
+        }
+    }
+
     /**
      * Creates a new capsule object.
      * <p>
@@ -300,6 +375,7 @@ public class Mole extends CapsuleObstacle {
         jumping = false;
         faceRight = true;
         jumpCooldown = 0;
+        sensorFixtures = new ObjectSet<>();
     }
 
     private IdleUnit[] parseIdleBehavior (String[] idle) {
@@ -456,10 +532,10 @@ public class Mole extends CapsuleObstacle {
         setTexture(texture);
 
         // Get the sensor information
-        Vector2 sensorCenter = new Vector2(0, -getHeight()/2);
+        /*Vector2 sensorCenter = new Vector2(0, -getHeight()/2);
         float[] sSize = json.get("sensorsize").asFloatArray();
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(sSize[0], sSize[1], sensorCenter, 0.0f);
+        sensorShape.setAsBox(sSize[0], sSize[1], sensorCenter, 0.0f);*/
 
         // Reflection is best way to convert name to color
         try {
@@ -472,5 +548,30 @@ public class Mole extends CapsuleObstacle {
         opacity = json.get("sensoropacity").asInt();
         sensorColor.mul(opacity/255.0f);
         sensorName = json.get("sensorname").asString();
+    }
+
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
+    public void draw(GameCanvas canvas) {
+        if (texture != null) {
+            float effect = faceRight ? 1.0f : -1.0f;
+            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
+        }
+    }
+
+    /**
+     * Draws the outline of the physics body.
+     *
+     * This method can be helpful for understanding issues with collisions.
+     *
+     * @param canvas Drawing context
+     */
+    public void drawDebug(GameCanvas canvas) {
+        super.drawDebug(canvas);
+        canvas.drawPhysics(sensorShapeF,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+        canvas.drawPhysics(sensorShapeH,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
     }
 }

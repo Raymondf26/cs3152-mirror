@@ -1,7 +1,7 @@
 {
-  "physicsSize":    [32.0,18.0],
-  "graphicSize":    [ 1024, 576],
-  "gravity":  	  -14.7,
+  "physicsSize":    [16.0,12.0],
+  "graphicSize":    [ 800, 600],
+  "gravity":  	  -6.8,
   "goal":
   {
     "pos": [8.5, 2],
@@ -22,7 +22,7 @@
     [
       {
         "idle behavior" : ["left", 0.5, "right", 0.5],
-        "pos":           [ 2.5,  5.0],
+        "pos":           [ 2.25,  8.0],
         "size":          [ 0.45, 0.61],
         "bodytype":      "dynamic",
         "density":        1.0,
@@ -31,7 +31,7 @@
         "force": 		 10.0,
         "damping": 		 10.0,
         "maxspeed": 	  5.0,
-        "jumppulse": 	  1.25,
+        "jumppulse": 	  2.0,
         "jumplimit": 	 30,
         "texture":       "mole:chef1",
         "debugcolor":    "white",
@@ -42,7 +42,7 @@
         "sensoropacity": 192
       },
       {
-        "pos" : [16.5, 8.0],
+        "pos" : [10.5, 8.0],
         "texture" : "mole:chef2",
         "idle behavior" : ["jump", 1.5],
         "size":          [ 0.45, 0.61],
