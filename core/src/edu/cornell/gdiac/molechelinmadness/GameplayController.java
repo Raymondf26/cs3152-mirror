@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.model.Mole;
 import edu.cornell.gdiac.molechelinmadness.obstacle.Obstacle;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.ScreenListener;
@@ -253,6 +254,41 @@ public class GameplayController implements Screen, ContactListener {
      */
     public void beginContact(Contact contact) {
 
+        Fixture fix1 = contact.getFixtureA();
+        Fixture fix2 = contact.getFixtureB();
+
+        Body body1 = fix1.getBody();
+        Body body2 = fix2.getBody();
+
+        Object fd1 = fix1.getUserData();
+        Object fd2 = fix2.getUserData();
+
+        try {
+            Obstacle bd1 = (Obstacle)body1.getUserData();
+            Obstacle bd2 = (Obstacle)body2.getUserData();
+
+            if (fd1.equals("feet")) {
+                Mole currMole = (Mole) bd1;
+                currMole.setJump(true);
+                currMole.addSensorFixtures(fix2); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
+
+            } else if (fd2.equals("feet")){
+                Mole currMole = (Mole) bd2;
+                currMole.setJump(true);
+                currMole.addSensorFixtures(fix1); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
+
+            } else if (fd1.equals("hands")){
+                // what happens with hands?
+
+            } else if (fd2.equals("hands")) {
+                // what happens with hands?
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -262,9 +298,43 @@ public class GameplayController implements Screen, ContactListener {
      */
     public void endContact(Contact contact) {
 
+        Fixture fix1 = contact.getFixtureA();
+        Fixture fix2 = contact.getFixtureB();
+
+        Body body1 = fix1.getBody();
+        Body body2 = fix2.getBody();
+
+        Object fd1 = fix1.getUserData();
+        Object fd2 = fix2.getUserData();
+
+        Object bd1 = body1.getUserData();
+        Object bd2 = body2.getUserData();
+
+        if (fd1.equals("feet")) {
+            Mole currMole = (Mole) bd1;
+            currMole.removeSensorFixtures(fix2);
+            if (currMole.countFixtures() == 0) {
+                currMole.setJump(false);
+            }
+
+        } else if (fd2.equals("feet")) {
+            Mole currMole = (Mole) bd2;
+            currMole.removeSensorFixtures(fix1);
+            if (currMole.countFixtures() == 0) {
+                currMole.setJump(false);
+            }
+
+        } else if (fd1.equals("hands")) {
+            // what happens with hands?
+
+        } else if (fd2.equals("hands")) {
+            // what happens with hands?
+
+
+        }
     }
 
-    /** Lab 4 did not use this. Idk what it does. */
+        /** Lab 4 did not use this. Idk what it does. */
     public void preSolve(Contact contact, Manifold oldManifold) {
 
     }

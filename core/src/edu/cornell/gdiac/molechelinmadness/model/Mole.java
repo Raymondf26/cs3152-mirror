@@ -1,6 +1,15 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.molechelinmadness.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.molechelinmadness.obstacle.Obstacle;
 
 public class Mole extends CapsuleObstacle {
 
@@ -34,6 +43,9 @@ public class Mole extends CapsuleObstacle {
     /** Mole can jump status */
     private boolean jump;
 
+    /** Sensors for this specific mole */
+    private ObjectSet<Fixture> sensorFixtures;
+
     /**
      *
      * Return whether this mole can jump or not.
@@ -49,11 +61,39 @@ public class Mole extends CapsuleObstacle {
      *
      * @param canJump Boolean value of whether or not  mole can jump
      */
-    public void getInventory(boolean canJump) {
+    public void setJump(boolean canJump) {
         this.jump = canJump;
 
     }
 
+    /**
+     *
+     * Add to specific mole's sensor fixture array.
+     * @param toAdd Fixture to be added
+     *
+     */
+    public void addSensorFixtures(Fixture toAdd) {
+        sensorFixtures.add(toAdd);
+    }
+
+    /**
+     *
+     * Remove specific mole's sensor fixture array.
+     * @param toRemove Fixture to be removed
+     *
+     */
+    public void removeSensorFixtures(Fixture toRemove) {
+        sensorFixtures.remove(toRemove);
+    }
+
+    /**
+     *
+     * Return the number of sensor fixtures for this current mole.
+     *
+     */
+    public int countFixtures() {
+        return sensorFixtures.size;
+    }
     /**
      *
      * Return the inventory of this mole.
@@ -61,6 +101,56 @@ public class Mole extends CapsuleObstacle {
      */
     public Ingredient getInventory() {
         return this.inventory;
+    }
+
+    /**
+     * Creates the physics Body(s) for moles, adding them to the world.
+     *
+     * @param world Box2D world to store body
+     *
+     * @return true if object allocation succeeded
+     */
+    public boolean activatePhysics(World world) {
+        // create the box from our superclass
+        if (!super.activatePhysics(world)) {
+            return false;
+        }
+
+        PolygonShape sensorShape;
+
+        // Ground Sensor
+        // -------------
+        // We only allow the Mole to jump when he's on the ground so that double jumping is not allowed.
+        //
+        // To determine whether the Mole is on the ground,
+        // we create a thin sensor under his feet, which reports
+        // collisions with the world but has no collision response.
+        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.density = 1.0f;
+        sensorDef.isSensor = true;
+        sensorShape = new PolygonShape();
+        sensorShape.setAsBox(0.6f*getWidth()*2f, 0.05f, sensorCenter, 0.0f);
+        sensorDef.shape = sensorShape;
+
+        // Ground sensor to represent our feet
+        Fixture sensorFixture = body.createFixture( sensorDef );
+        sensorFixture.setUserData("feet");
+
+        // Sensor for interactions with Interactables
+        sensorCenter = new Vector2(-getWidth() / 2, 0); // change to something to do with height of mole
+        sensorDef = new FixtureDef();
+        sensorDef.density = 1.0f;
+        sensorDef.isSensor = true;
+        sensorShape = new PolygonShape();
+        sensorShape.setAsBox(0.05f, 0.6f*getWidth()*2f, sensorCenter, 1.57f); // angle should be 90 degrees
+        sensorDef.shape = sensorShape;
+
+        // Side sensor to represent our front facing hand
+        sensorFixture = body.createFixture( sensorDef );
+        sensorFixture.setUserData("hands");
+
+        return true;
     }
 
     /**
