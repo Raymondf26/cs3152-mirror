@@ -11,6 +11,14 @@ import edu.cornell.gdiac.util.PooledList;
 
 public class Level {
 
+    //To be made editable in config later
+    /** Width of the game world in Box2d units */
+    protected static final float DEFAULT_WIDTH  = 32.0f;
+    /** Height of the game world in Box2d units */
+    protected static final float DEFAULT_HEIGHT = 18.0f;
+    /** The default value of gravity (going down) */
+    protected static final float DEFAULT_GRAVITY = 0f;
+
     /** All the objects in the world. */
     protected PooledList<Obstacle> objects  = new PooledList<Obstacle>();
     /** Queue for adding objects */
@@ -58,6 +66,7 @@ public class Level {
 
         assert(directory != null);
 
+        //Add all platforms
         JsonValue floor = levelFormat.get("platforms").child();
         while (floor != null) {
             Platform obj = new Platform();
@@ -70,16 +79,19 @@ public class Level {
         //temporary to prevent crash
         moles = new Mole[0];
 
+        //Add all interactive elements
         JsonValue interactable = levelFormat.get("interactive elements").child();
         while (interactable != null) {
-            initialize(directory, interactable);
+            initializeInteractive(directory, interactable);
             interactable = interactable.next();
         }
 
 
     }
 
-    private void initialize(AssetDirectory directory, JsonValue json) {
+
+    /** Initialize all interactive elements like buttons, dumbwaiters, etc. */
+    private void initializeInteractive(AssetDirectory directory, JsonValue json) {
         String type = json.getString("type");
         if (type.equals("dumbwaiter")) {
             Dumbwaiter dumbwaiter = new Dumbwaiter();

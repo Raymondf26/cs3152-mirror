@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
+import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 
 /**
@@ -831,6 +833,7 @@ public abstract class Obstacle {
 	public Body getBody() {
 		return null;
 	}
+
 	
 	/// DRAWING METHODS
 	/**

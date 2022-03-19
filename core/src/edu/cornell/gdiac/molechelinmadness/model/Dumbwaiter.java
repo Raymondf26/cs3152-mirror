@@ -9,11 +9,12 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.ComplexObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
 import java.lang.reflect.Field;
 
-public class Dumbwaiter extends Obstacle{
+public class Dumbwaiter extends ComplexObstacle {
 
     /** References to the head and tail */
     protected BoxObstacle head;
@@ -23,8 +24,9 @@ public class Dumbwaiter extends Obstacle{
      * Create a new Dumbwaiter with degenerate settings
      * */
     public Dumbwaiter() {
-        head = new BoxObstacle(0, 0, 1, 1);
+        head = new BoxObstacle(0, 0, 1f, 1f);
         tail = new BoxObstacle(0, 0, 1, 1);
+        bodies.add(head, tail);
     }
 
     /**
@@ -79,55 +81,18 @@ public class Dumbwaiter extends Obstacle{
         tail.setTexture(texture);
     }
 
-
     /**
-     * Creates the physics Body(s) for this object, adding them to the world.
+     * Creates the joints for this object.
      * <p>
-     * Implementations of this method should NOT retain a reference to World.
-     * That is a tight coupling that we should avoid.
+     * This method is executed as part of activePhysics. This is the primary method to
+     * override for custom physics objects.
      *
-     * @param world Box2D world to store body
+     * @param world Box2D world to store joints
      * @return true if object allocation succeeded
      */
     @Override
-    public boolean activatePhysics(World world) {
-        return head.activatePhysics(world) && tail.activatePhysics(world);
-    }
-
-    /**
-     * Destroys the physics Body(s) of this object if applicable,
-     * removing them from the world.
-     *
-     * @param world Box2D world that stores body
-     */
-    @Override
-    public void deactivatePhysics(World world) {
-        head.deactivatePhysics(world);
-        tail.deactivatePhysics(world);
-    }
-
-    /**
-     * Draws the texture physics object.
-     *
-     * @param canvas Drawing context
-     */
-    @Override
-    public void draw(GameCanvas canvas) {
-        head.draw(canvas);
-        tail.draw(canvas);
-    }
-
-    /**
-     * Draws the outline of the physics body.
-     * <p>
-     * This method can be helpful for understanding issues with collisions.
-     *
-     * @param canvas Drawing context
-     */
-    @Override
-    public void drawDebug(GameCanvas canvas) {
-        head.drawDebug(canvas);
-        tail.drawDebug(canvas);
+    protected boolean createJoints(World world) {
+        return false;
     }
 
 

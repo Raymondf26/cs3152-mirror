@@ -68,6 +68,14 @@ public class InteractionController implements ContactListener {
                 //logic
             }
 
+            //Check for and handle mole-dumbwaiter collision
+            if ((bd1 instanceof Mole && bd2 instanceof Dumbwaiter) || (bd1 instanceof Dumbwaiter && bd2 instanceof  Mole)) {
+                Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
+                Dumbwaiter dumbwaiter = bd1 instanceof Dumbwaiter ? (Dumbwaiter) bd1 : (Dumbwaiter) bd2;
+
+                //logic w/ mole
+            }
+
 
 
 

@@ -1,7 +1,7 @@
 {
-  "physicsSize":    [16.0,12.0],
-  "graphicSize":    [ 800, 600],
-  "gravity":  	  -9.8,
+  "physicsSize":    [32.0,18.0],
+  "graphicSize":    [ 1024, 576],
+  "gravity":  	  -14.7,
   "goal":
   {
     "pos": [8.5, 2],
@@ -45,8 +45,8 @@
     {
       "name" : "dumbwaiter4",
 	  "type" : "dumbwaiter",
-      "pos1" : [17.5, 1],
-      "pos2" : [12, 12],
+      "pos1" : [2.0, 10.5],
+      "pos2" : [2.0, 4.5],
       "size" : [1.92, 1.92],
       "bodytype" : "static",
       "density" : 0.0,
