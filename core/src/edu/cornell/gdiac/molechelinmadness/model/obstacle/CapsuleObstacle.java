@@ -51,6 +51,8 @@ public class CapsuleObstacle extends SimpleObstacle {
     protected CircleShape end2;
     /** Rectangle representation of capsule core for fast computation */
     protected Rectangle center;
+	/**  debug color */
+	private Color debugColor;
 
 	/** The width and height of the box */
 	private Vector2 dimension;
@@ -382,6 +384,15 @@ public class CapsuleObstacle extends SimpleObstacle {
 	            body.resetMassData();
 	        }
 	    }
+	}
+
+	/**
+	 * Sets the color to display the physics outline
+	 *
+	 * @param value	the color to display the physics outline
+	 */
+	public void setDebugColor(Color value) {
+		debugColor = value;
 	}
 
 	/**

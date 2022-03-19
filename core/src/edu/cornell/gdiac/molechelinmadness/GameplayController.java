@@ -3,6 +3,7 @@ package edu.cornell.gdiac.molechelinmadness;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.Level;
@@ -173,20 +174,20 @@ public class GameplayController implements Screen {
      */
     public void update(float dt) {
         //Process actions in models
-        Mole moles[] = level.getMoles();
-        for (int i = 0; i < moles.length; i++) {
-            /*if (moles[i] is being controlled) {
-                set mole movement, jumping, and interacting based on Input Controller(similar to lab 4 platformer)
+        Array<Mole> moles = level.getMoles();
+        for (int i = 0; i < moles.size; i++) {
+            if (moles.get(i).isControlled()) {
+                moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
+                moles.get(i).setJumping(InputController.getInstance().didPrimary());
             }
             else {
-                set mole movement, jumping, and interacting based on AI Controller
+                //set mole movement, jumping, and interacting based on AI Controller
             }
-             */
 
         }
 
         //Apply forces and sounds
-        for (int i = 0; i < moles.length; i++) {
+        for (int i = 0; i < moles.size; i++) {
             //apply force for each mole
             //Play sounds relevant sounds
         }

@@ -43,12 +43,12 @@ public class InteractionController implements ContactListener {
             //Check for and handle ground collision to reset mole jumps
             if (fd1.equals("feet")) {
                 Mole currMole = (Mole) bd1;
-                currMole.setJump(true);
+                currMole.setCanJump(true);
                 currMole.addSensorFixtures(fix2); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
 
             } else if (fd2.equals("feet")){
                 Mole currMole = (Mole) bd2;
-                currMole.setJump(true);
+                currMole.setCanJump(true);
                 currMole.addSensorFixtures(fix1); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
 
             } else if (fd1.equals("hands")){
@@ -122,14 +122,14 @@ public class InteractionController implements ContactListener {
             Mole currMole = (Mole) bd1;
             currMole.removeSensorFixtures(fix2);
             if (currMole.countFixtures() == 0) {
-                currMole.setJump(false);
+                currMole.setCanJump(false);
             }
 
         } else if (fd2.equals("feet")) {
             Mole currMole = (Mole) bd2;
             currMole.removeSensorFixtures(fix1);
             if (currMole.countFixtures() == 0) {
-                currMole.setJump(false);
+                currMole.setCanJump(false);
             }
 
         } else if (fd1.equals("hands")) {

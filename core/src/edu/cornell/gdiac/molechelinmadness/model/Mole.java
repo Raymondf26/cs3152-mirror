@@ -1,14 +1,16 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
+
+import java.lang.reflect.Field;
 
 public class Mole extends CapsuleObstacle {
 
@@ -27,6 +29,35 @@ public class Mole extends CapsuleObstacle {
         float time;
     }
 
+    /** The name of the sensor for detection purposes */
+    private String sensorName;
+    /** The color to paint the sensor in debug mode */
+    private Color sensorColor;
+    /** The sensor shape for the feet and the hands */
+    PolygonShape sensorShape;
+    /** The amount to slow the character down */
+    private float damping;
+    /** The maximum character speed */
+    private float maxspeed;
+
+    /** Cooldown (in animation frames) for jumping */
+    private int jumpLimit;
+
+    /** The impulse for the character jump */
+    private float jumppulse;
+
+    /** How long until we can jump again */
+    private int jumpCooldown;
+
+    /** The factor to multiply by the input */
+    private float force;
+
+    /** float representing left/right movement */
+   private float movement;
+
+   /** which direction the character is facing */
+   private boolean faceRight;
+
     /** Whether it's in the state of interacting or not*/
     private boolean interacting;
 
@@ -40,7 +71,10 @@ public class Mole extends CapsuleObstacle {
     private Ingredient inventory;
 
     /** Mole can jump status */
-    private boolean jump;
+    private boolean canJump;
+
+    /** Mole trying to jump */
+    private boolean jumping;
 
     /** Sensors for this specific mole */
     private ObjectSet<Fixture> sensorFixtures;
@@ -51,7 +85,7 @@ public class Mole extends CapsuleObstacle {
      *
      */
     public boolean canJump() {
-        return this.jump;
+        return this.canJump;
     }
 
     /**
@@ -60,9 +94,27 @@ public class Mole extends CapsuleObstacle {
      *
      * @param canJump Boolean value of whether or not  mole can jump
      */
-    public void setJump(boolean canJump) {
-        this.jump = canJump;
+    public void setCanJump(boolean canJump) {
+        this.canJump = canJump;
 
+    }
+
+    /**
+     * Returns true if the dude is actively jumping.
+     *
+     * @return true if the dude is actively jumping.
+     */
+    public boolean isJumping() {
+        return jumping && jumpCooldown <= 0 && canJump;
+    }
+
+    /**
+     *
+     * Set whether this mole is trying to jump
+     *
+     * */
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
     }
 
     /**
@@ -115,8 +167,6 @@ public class Mole extends CapsuleObstacle {
             return false;
         }
 
-        PolygonShape sensorShape;
-
         // Ground Sensor
         // -------------
         // We only allow the Mole to jump when he's on the ground so that double jumping is not allowed.
@@ -150,6 +200,52 @@ public class Mole extends CapsuleObstacle {
         sensorFixture.setUserData("hands");
 
         return true;
+    }
+
+    /**
+     *
+     * Get if mole is currently being controlled
+     *
+     * */
+    public boolean isControlled() {return controlled;}
+
+    /**
+     * Returns how much force to apply to get the dude moving
+     *
+     * Multiply this by the input to get the movement value.
+     *
+     * @return how much force to apply to get the dude moving
+     */
+    public float getForce() {
+        return force;
+    }
+
+    /**
+     * Returns left/right movement of this character.
+     *
+     * This is the result of input times dude force.
+     *
+     * @return left/right movement of this character.
+     */
+    public float getMovement() {
+        return movement;
+    }
+
+    /**
+     * Sets left/right movement of this character.
+     *
+     * This is the result of input times dude force.
+     *
+     * @param value left/right movement of this character.
+     */
+    public void setMovement(float value) {
+        movement = value;
+        // Change facing if appropriate
+        if (movement < 0) {
+            faceRight = false;
+        } else if (movement > 0) {
+            faceRight = true;
+        }
     }
 
     /**
@@ -195,17 +291,18 @@ public class Mole extends CapsuleObstacle {
      * The size is expressed in physics units NOT pixels.  In order for
      * drawing to work properly, you MUST set the drawScale. The drawScale
      * converts the physics units to pixels.
-     *
-     * @param x       Initial x position of the box center
-     * @param y       Initial y position of the box center
-     * @param control True for mole that player is controlling
-     * @param width   The object width in physics units
-     * @param height  The object width in physics units
-     * @param idle    The idle action list passed from level creation.
      */
-    public Mole(float x, float y, boolean control, float width, float height, String[] idle) {
-        super(x, y, width, height);
+    public Mole() {
+        super(0, 0, 1, 1);
+        setFixedRotation(true);
+        inventory = null;
+        canJump = false;
+        jumping = false;
+        faceRight = true;
+        jumpCooldown = 0;
+    }
 
+    private IdleUnit[] parseIdleBehavior (String[] idle) {
         assert idle.length % 2 == 0;
 
         IdleUnit[] idleActions = new IdleUnit[idle.length/2];
@@ -242,8 +339,138 @@ public class Mole extends CapsuleObstacle {
 
         }
 
-        idleBehavior = idleActions;
-        controlled = control;
-        inventory = null;
+        return idleActions;
+
+    }
+
+    /**
+     * Sets the upward impulse for a jump.
+     *
+     * @param value	the upward impulse for a jump.
+     */
+    public void setJumpPulse(float value) {
+        jumppulse = value;
+    }
+
+    /**
+     * Sets how much force to apply to get the dude moving
+     *
+     * Multiply this by the input to get the movement value.
+     *
+     * @param value	how much force to apply to get the dude moving
+     */
+    public void setForce(float value) {
+        force = value;
+    }
+
+    /**
+     * Sets how hard the brakes are applied to get a dude to stop moving
+     *
+     * @param value	how hard the brakes are applied to get a dude to stop moving
+     */
+    public void setDamping(float value) {
+        damping = value;
+    }
+
+    /**
+     * Returns the upper limit on dude left-right movement.
+     *
+     * This does NOT apply to vertical movement.
+     *
+     * @return the upper limit on dude left-right movement.
+     */
+    public float getMaxSpeed() {
+        return maxspeed;
+    }
+
+    /**
+     * Sets the upper limit on dude left-right movement.
+     *
+     * This does NOT apply to vertical movement.
+     *
+     * @param value	the upper limit on dude left-right movement.
+     */
+    public void setMaxSpeed(float value) {
+        maxspeed = value;
+    }
+
+    /**
+     * Returns the cooldown limit between jumps
+     *
+     * @return the cooldown limit between jumps
+     */
+    public int getJumpLimit() {
+        return jumpLimit;
+    }
+
+    /**
+     * Sets the cooldown limit between jumps
+     *
+     * @param value	the cooldown limit between jumps
+     */
+    public void setJumpLimit(int value) {
+        jumpLimit = value;
+    }
+
+    public void initialize(AssetDirectory directory, JsonValue json) {
+        setName(json.name());
+        float[] pos  = json.get("pos").asFloatArray();
+        float[] size = json.get("size").asFloatArray();
+        setPosition(pos[0],pos[1]);
+        setDimension(size[0],size[1]);
+
+        // Technically, we should do error checking here.
+        // A JSON field might accidentally be missing
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setDensity(json.get("density").asFloat());
+        setFriction(json.get("friction").asFloat());
+        setRestitution(json.get("restitution").asFloat());
+        setForce(json.get("force").asFloat());
+        setDamping(json.get("damping").asFloat());
+        setMaxSpeed(json.get("maxspeed").asFloat());
+        setJumpPulse(json.get("jumppulse").asFloat());
+        setJumpLimit(json.get("jumplimit").asInt());
+
+        //Idle behavior
+        String[] idle = json.get("idle behavior").asStringArray();
+        IdleUnit[] behavior = parseIdleBehavior(idle);
+        idleBehavior = behavior;
+
+
+        // Reflection is best way to convert name to color
+        Color debugColor;
+        try {
+            String cname = json.get("debugcolor").asString().toUpperCase();
+            Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
+            debugColor = new Color((Color)field.get(null));
+        } catch (Exception e) {
+            debugColor = null; // Not defined
+        }
+        int opacity = json.get("debugopacity").asInt();
+        debugColor.mul(opacity/255.0f);
+        setDebugColor(debugColor);
+
+        // Now get the texture from the AssetManager singleton
+        String key = json.get("texture").asString();
+        TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
+        setTexture(texture);
+
+        // Get the sensor information
+        Vector2 sensorCenter = new Vector2(0, -getHeight()/2);
+        float[] sSize = json.get("sensorsize").asFloatArray();
+        sensorShape = new PolygonShape();
+        sensorShape.setAsBox(sSize[0], sSize[1], sensorCenter, 0.0f);
+
+        // Reflection is best way to convert name to color
+        try {
+            String cname = json.get("sensorcolor").asString().toUpperCase();
+            Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
+            sensorColor = new Color((Color)field.get(null));
+        } catch (Exception e) {
+            sensorColor = null; // Not defined
+        }
+        opacity = json.get("sensoropacity").asInt();
+        sensorColor.mul(opacity/255.0f);
+        sensorName = json.get("sensorname").asString();
     }
 }

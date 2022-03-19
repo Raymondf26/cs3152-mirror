@@ -3,6 +3,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
@@ -36,7 +37,7 @@ public class Level {
 
     //Physics objects for the game
     /** Reference to the moles */
-    private Mole[] moles;
+    private Array<Mole> moles;
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
 
@@ -76,8 +77,18 @@ public class Level {
             floor = floor.next();
         }
 
-        //temporary to prevent crash
-        moles = new Mole[0];
+        //Add all moles
+        moles = new Array<>();
+        JsonValue chefList = levelFormat.get("moles").get("list");
+        //JsonValue chef = chefList;
+        for (JsonValue chef : chefList) {
+            System.out.println("1");
+            Mole mole = new Mole();
+            //mole.initialize(directory, chef);
+           // mole.setDrawScale(scale);
+            //moles.add(mole);
+            //activate(mole);
+        }
 
         //Add all interactive elements
         JsonValue interactable = levelFormat.get("interactive elements").child();
@@ -204,7 +215,7 @@ public class Level {
      *
      * @return a reference to the player avatar
      */
-    public Mole[] getMoles() {
+    public Array<Mole> getMoles() {
         return moles;
     }
 
