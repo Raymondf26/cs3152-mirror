@@ -26,8 +26,8 @@ public class Mole extends CapsuleObstacle {
     }
 
     public class IdleUnit {
-        IdleAction idle;
-        float time;
+        public IdleAction idle;
+        public float time;
     }
 
 
