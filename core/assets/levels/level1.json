@@ -34,6 +34,7 @@
         "jumppulse": 	  2.0,
         "jumplimit": 	 30,
         "texture":       "mole:chef1",
+        "control":       "mole:indicator",
         "debugcolor":    "white",
         "debugopacity":  192,
         "sensorsize": 	 [ 0.183, 0.05 ],
@@ -44,6 +45,7 @@
       {
         "pos" : [10.5, 8.0],
         "texture" : "mole:chef2",
+        "control":       "mole:indicator",
         "idle behavior" : ["jump", 1.5],
         "size":          [ 0.45, 0.61],
         "bodytype":      "dynamic",

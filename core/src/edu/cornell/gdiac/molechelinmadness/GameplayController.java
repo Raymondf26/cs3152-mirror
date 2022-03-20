@@ -325,7 +325,6 @@ public class GameplayController implements Screen, ContactListener {
         Array<Mole> moles = level.getMoles();
         for (int i = 0; i < moles.size; i++) {
             if (moles.get(i).isControlled()) {
-                //System.out.println("is controlled");
                 moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
                 moles.get(i).setJumping(InputController.getInstance().didPrimary());
             }
@@ -334,8 +333,6 @@ public class GameplayController implements Screen, ContactListener {
             }
 
         }
-
-        System.out.println(moles.get(0).canJump());
 
         //Apply forces and sounds
         for (int i = 0; i < moles.size; i++) {
