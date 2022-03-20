@@ -86,6 +86,13 @@ public class Level {
             interactable = interactable.next();
         }
 
+        //Add all interactors elements
+        JsonValue interactors = levelFormat.get("interactors").child();
+        while (interactors != null) {
+            initializeInteractors(directory, interactors);
+            interactors = interactors.next();
+        }
+
         //Add all moles
         moles = new Array<>();
         JsonValue chefList = levelFormat.get("moles").get("list");
@@ -125,6 +132,18 @@ public class Level {
             dumbwaiter.initialize(directory, json);
             dumbwaiter.setDrawScale(scale);
             activate(dumbwaiter);
+        }
+    }
+
+    /** Initialize all interactive elements like pressure plates, etc. */
+    private void initializeInteractors(AssetDirectory directory, JsonValue json) {
+        String type = json.getString("type");
+        if (type.equals("pressureplate")) {
+            PressurePlate pressureplate = new PressurePlate();
+            pressureplate.initialize(directory, json);
+            pressureplate.setDrawScale(scale);
+            // MISSING SOMETHING TO LINK EVENTS
+            activate(pressureplate);
         }
     }
 

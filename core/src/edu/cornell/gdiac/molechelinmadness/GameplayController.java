@@ -91,12 +91,12 @@ public class GameplayController implements Screen, ContactListener {
             if ("feet".equals(fd1)) {
                 Mole currMole = (Mole) bd1;
                 currMole.setCanJump(true);
-                currMole.addSensorFixtures(fix2); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
+                currMole.addSensorFixtures(fix2);
 
             } else if ("feet".equals(fd2)){
                 Mole currMole = (Mole) bd2;
                 currMole.setCanJump(true);
-                currMole.addSensorFixtures(fix1); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
+                currMole.addSensorFixtures(fix1);
 
             } else if ("hands".equals(fd1)){
                 // what happens with hands?
@@ -125,6 +125,11 @@ public class GameplayController implements Screen, ContactListener {
             //Check for and handle mole-interactor collision
             if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
                 //logic
+                if (bd1 instanceof PressurePlate){
+                    ((PressurePlate) bd1).activate();
+                } else if (bd2 instanceof PressurePlate){
+                    ((PressurePlate) bd2).activate();
+                }
             }
 
             //Check for and handle mole-dumbwaiter collision
@@ -198,6 +203,11 @@ public class GameplayController implements Screen, ContactListener {
         //Handle interactor collision
         if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
             //logic
+            if (bd2 instanceof PressurePlate){
+                ((PressurePlate) bd2).deactivate();
+            } else if (bd1 instanceof PressurePlate){
+                ((PressurePlate) bd1).deactivate();
+            }
         }
 
 

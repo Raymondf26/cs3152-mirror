@@ -108,6 +108,23 @@
           "effect" : 1
         }
       ]
+    },
+    {
+      "pos" : [10.5, 8],
+      "size" : [1, 0.1],
+      "type" : "pressureplate",
+      "texture" : "interactive:pressureplate",
+      "link" :
+      [
+        {
+          "name" : "door1",
+          "effect" : 90
+        },
+        {
+          "name" : "dumbwaiter4",
+          "effect" : 1
+        }
+      ]
     }
   ],
   "platforms": {

@@ -1,20 +1,44 @@
 package edu.cornell.gdiac.molechelinmadness.model.interactor;
 
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 
 public interface Interactor {
 
-    public enum InteractableType {
+    public enum InteractorType {
         BUTTON,
         PRESSURE_PLATE
     }
 
-    public InteractableType getType();
+    /** Return the type of the interactor object */
+    public InteractorType getType();
 
-    public void setType(InteractableType type);
+    /**
+     *
+     * Give the Array of trigger linked events.
+     *
+     */
+    public Array<Event> getTriggerLinks();
 
-    public Event[] getLinks();
+    /**
+     *
+     * Give the Array of detrigger linked events.
+     *
+     */
+    public Array<Event> getDetriggerLinks();
 
-    public void setLinks(Event[] links);
+    /**
+     * Trigger represents the event that occurs when the interactor starts being interacted with.
+     *
+     * @param toAdd Event to be added to the trigger events.
+     */
+    public void addTriggerEvent(Event toAdd);
+
+    /**
+     * Detrigger represents the event that occurs when the interactor stops being interacted with.
+     *
+     * @param toAdd Event to be added to the detrigger events.
+     */
+    public void addDetriggerEvent(Event toAdd);
 
 }
