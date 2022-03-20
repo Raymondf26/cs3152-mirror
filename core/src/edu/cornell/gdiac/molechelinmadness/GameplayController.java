@@ -43,6 +43,8 @@ public class GameplayController implements Screen, ContactListener {
     private boolean failed;
     /** Countdown active for winning or losing */
     private int countdown;
+    /** Which mole is being controlled */
+    private int controlledMole = 0;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -323,6 +325,12 @@ public class GameplayController implements Screen, ContactListener {
     public void update(float dt) {
         //Process actions in models
         Array<Mole> moles = level.getMoles();
+        if (InputController.getInstance().didSecondary()){
+            moles.get(controlledMole).setControlled(false);
+            controlledMole += 1;
+            controlledMole = controlledMole % moles.size;
+            moles.get(controlledMole).setControlled(true);
+        }
         for (int i = 0; i < moles.size; i++) {
             if (moles.get(i).isControlled()) {
                 moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
