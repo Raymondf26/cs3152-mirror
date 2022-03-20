@@ -239,18 +239,22 @@
   "ingredient" : [
     {
       "type" : "tomato",
+      "texture": "veggies",
       "pos" : [5.5, 12]
     },
     {
       "type" : "scallion",
+      "texture": "veggies",
       "pos" : [12.0, 6.0]
     },
     {
       "type" : "egg",
+      "texture": "veggies",
       "pos" : [18.0, 18.0]
     },
     {
       "type" : "noodles",
+      "texture": "veggies",
       "pos" : [0.0, 0.5]
     }
   ]
