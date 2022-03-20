@@ -1,13 +1,19 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
 public class Ingredient extends BoxObstacle {
+    private static float SIZE = 5.0f;
 
     public enum IngType {
-        CARROT,
-        TURNIP,
-        RADISH
+        TOMATO,
+        SCALLION,
+        EGG,
+        NOODLES
     }
     //Type of ingredient
     public IngType type;
@@ -34,9 +40,33 @@ public class Ingredient extends BoxObstacle {
      * @param width  The object width in physics units
      * @param height The object width in physics units
      */
-    public Ingredient(float x, float y, float width, float height, IngType type) {
-        super(x, y, width, height);
-        this.type = type;
+    public Ingredient() {
+        super(0, 0, 0.45f, 0.65f);
+
+
+    }
+
+    public void initialize(AssetDirectory directory, JsonValue json) {
+        setName(json.name());
+        String type = json.get("type").asString();
+        float[] pos = json.get("pos").asFloatArray();
+        this.setPosition(pos[0],pos[1]);
+
+        if(type == "tomato"){
+            this.type = IngType.TOMATO;
+        }
+        else if(type == "scallion"){
+            this.type = IngType.SCALLION;
+        }
+        else if(type == "egg"){
+            this.type = IngType.EGG;
+        }
+        else{
+            this.type = IngType.NOODLES;
+        }
+        String key = json.get("texture").asString();
+        TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
+        setTexture(texture);
 
     }
 }

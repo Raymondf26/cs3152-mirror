@@ -38,6 +38,8 @@ public class Level {
     //Physics objects for the game
     /** Reference to the moles */
     private Array<Mole> moles;
+    /** Reference to the ingredients */
+    private Array<Ingredient> ingredients;
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
 
@@ -98,6 +100,19 @@ public class Level {
         }
         moles.first().setControlled(true);
 
+        //Add all ingredients
+        ingredients = new Array<>();
+        JsonValue ings = levelFormat.get("ingredient");
+
+        for(JsonValue i : ings){
+            System.out.println(2);
+            Ingredient ingredient = new Ingredient();
+            ingredient.initialize(directory, i);
+            ingredient.setDrawScale(scale);
+            ingredients.add(ingredient);
+            activate(ingredient);
+
+        }
 
     }
 

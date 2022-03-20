@@ -2,7 +2,9 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
@@ -26,8 +28,8 @@ public class Mole extends CapsuleObstacle {
     }
 
     public class IdleUnit {
-        IdleAction idle;
-        float time;
+        public IdleAction idle;
+        public float time;
     }
 
 
@@ -41,6 +43,8 @@ public class Mole extends CapsuleObstacle {
     PolygonShape sensorShapeF;
     /** The sensor shape for the hands*/
     PolygonShape sensorShapeH;
+    /** Texture to indicate which mole is in control */
+    TextureRegion controlTexture;
     /** The amount to slow the character down */
     private float damping;
     /** The maximum character speed */
@@ -530,6 +534,8 @@ public class Mole extends CapsuleObstacle {
         String key = json.get("texture").asString();
         TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
         setTexture(texture);
+        String key2 = json.get("control").asString();
+        controlTexture = new TextureRegion(directory.getEntry(key2, Texture.class));
 
         // Get the sensor information
         /*Vector2 sensorCenter = new Vector2(0, -getHeight()/2);
@@ -559,6 +565,9 @@ public class Mole extends CapsuleObstacle {
         if (texture != null) {
             float effect = faceRight ? 1.0f : -1.0f;
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
+            if (this.controlled) {
+                canvas.draw(controlTexture, Color.WHITE, origin.x, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 0.5f, 0.5f);
+            }
         }
     }
 
