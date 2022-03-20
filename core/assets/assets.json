@@ -10,7 +10,8 @@
         "shared:goal":   "textures/goaldoor.png",
         "interactive:dumbwaiter" : "textures/goaldoor.png",
         "mole:chef1" : "textures/dude.png",
-        "mole:chef2" : "textures/dude.png"
+        "mole:chef2" : "textures/dude.png",
+        "mole:indicator" : "textures/crosshair.png"
     },
     "jsons"  :
     {
