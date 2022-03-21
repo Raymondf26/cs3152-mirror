@@ -2,6 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
@@ -15,8 +16,11 @@ public class CookingStation extends BoxObstacle {
     /** How far along cooking has gone */
     private float progress;
 
+    /** Ingredients currently at the cooking station*/
+    private Array<Ingredient> ingredients;
+
     /**What type of station is this */
-    private enum stationType{
+    public enum stationType{
         CHOPPING,
         COOKING
     }
@@ -30,9 +34,33 @@ public class CookingStation extends BoxObstacle {
      * converts the physics units to pixels.
      *
      */
+
+    /** Get the ingredients in this stations*/
+    public Array<Ingredient> getIngredients(){
+        return this.ingredients;
+    }
+
+    /**Get the station type*/
+    public stationType getType(){
+        return this.type;
+    }
+
+    public void Cook (Mole m){
+        if(this.type == stationType.CHOPPING){
+            m.getInventory().setChopped(true);
+        }
+        if(this.type == stationType.COOKING){
+            if(m.getInventory().getChopped() == true){
+                this.ingredients.add(m.getInventory());
+                m.setInventory(null);
+            }
+        }
+    }
+
     public CookingStation() {
         super(0, 0, 0.45f, 0.65f);
         this.type = null;
+        ingredients = new Array<>();
     }
     public void initialize(AssetDirectory directory, JsonValue json) {
         setName(json.name());
