@@ -122,6 +122,7 @@ public class Level {
             activate(ingredient);
         }
 
+
         stations = new Array<>();
         JsonValue cooking = levelFormat.get("cooking");
         for (JsonValue c : cooking) {
