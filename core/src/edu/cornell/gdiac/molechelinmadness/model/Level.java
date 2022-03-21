@@ -40,6 +40,8 @@ public class Level {
     private Array<Mole> moles;
     /** Reference to the ingredients */
     private Array<Ingredient> ingredients;
+    /** Reference to the cooking stations */
+    private Array<CookingStation> stations;
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
 
@@ -62,18 +64,18 @@ public class Level {
         float[] pSize = levelFormat.get("physicsSize").asFloatArray();
         int[] gSize = levelFormat.get("graphicSize").asIntArray();
 
-        world = new World(new Vector2(0,gravity),false);
-        bounds = new Rectangle(0,0,pSize[0],pSize[1]);
-        scale.x = gSize[0]/pSize[0];
-        scale.y = gSize[1]/pSize[1];
+        world = new World(new Vector2(0, gravity), false);
+        bounds = new Rectangle(0, 0, pSize[0], pSize[1]);
+        scale.x = gSize[0] / pSize[0];
+        scale.y = gSize[1] / pSize[1];
 
-        assert(directory != null);
+        assert (directory != null);
 
         //Add all platforms
         JsonValue floor = levelFormat.get("platforms").child();
         while (floor != null) {
             Platform obj = new Platform();
-            obj.initialize(directory,floor);
+            obj.initialize(directory, floor);
             obj.setDrawScale(scale);
             activate(obj);
             floor = floor.next();
@@ -111,16 +113,26 @@ public class Level {
         ingredients = new Array<>();
         JsonValue ings = levelFormat.get("ingredient");
 
-        for(JsonValue i : ings){
+        for (JsonValue i : ings) {
             System.out.println(2);
             Ingredient ingredient = new Ingredient();
             ingredient.initialize(directory, i);
             ingredient.setDrawScale(scale);
             ingredients.add(ingredient);
             activate(ingredient);
-
         }
 
+
+        stations = new Array<>();
+        JsonValue cooking = levelFormat.get("cooking");
+        for (JsonValue c : cooking) {
+            CookingStation station = new CookingStation();
+            station.initialize(directory, c);
+            station.setDrawScale(scale);
+            stations.add(station);
+            activate(station);
+
+        }
     }
 
     public Array<Ingredient> getIngredients () {return ingredients;}
