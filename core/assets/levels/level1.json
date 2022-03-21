@@ -242,37 +242,33 @@
   "cooking" :
   [
     {
-      "type" :  "fryer",
+      "type" :  "chopping",
       "pos" :  [9.0, 3.8],
-      "size" :  1.0
+      "texture": "veggies"
     },
     {
-      "type" : "wok",
+      "type" : "cooking",
       "pos" : [13.0, 12.5],
-      "size" : 1.0
+      "texture": "veggies"
     }
 
   ],
   "ingredient" : [
     {
       "type" : "tomato",
-      "texture": "veggies",
+      "texture": "tomato",
       "pos" : [5.5, 12]
     },
     {
-      "type" : "scallion",
-      "texture": "veggies",
+      "type" : "onion",
+      "texture": "onion",
       "pos" : [12.0, 6.0]
     },
     {
-      "type" : "egg",
-      "texture": "veggies",
+      "type" : "eggplant",
+      "texture": "eggplant",
       "pos" : [18.0, 18.0]
-    },
-    {
-      "type" : "noodles",
-      "texture": "veggies",
-      "pos" : [0.0, 0.5]
     }
+
   ]
 }

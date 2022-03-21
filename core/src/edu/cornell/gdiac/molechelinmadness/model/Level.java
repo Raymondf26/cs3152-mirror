@@ -123,6 +123,8 @@ public class Level {
 
     }
 
+    public Array<Ingredient> getIngredients () {return ingredients;}
+
 
     /** Initialize all interactive elements like buttons, dumbwaiters, etc. */
     private void initializeInteractive(AssetDirectory directory, JsonValue json) {

@@ -109,6 +109,13 @@ public class GameplayController implements Screen, ContactListener {
             //Check for and handle mole-ingredient collision
             if ((bd1 instanceof Mole && bd2 instanceof Ingredient) || (bd1 instanceof Ingredient && bd2 instanceof  Mole)) {
                 //logic
+                Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
+                Ingredient i = bd2 instanceof Ingredient ? (Ingredient) bd2 : (Ingredient) bd1;
+                if(mole.getInventory() == null){
+                    mole.setInventory(i);
+                    i.holdPos(100, 100);
+                }
+
             }
 
 
@@ -350,6 +357,14 @@ public class GameplayController implements Screen, ContactListener {
                 //set mole movement, jumping, and interacting based on AI Controller
             }
 
+        }
+
+        Array<Ingredient> ingredients = level.getIngredients();
+        for(Ingredient i : ingredients){
+            if(i.moved){
+                i.setX(i.gX());
+                i.setY(i.gY());
+            }
         }
 
         //Apply forces and sounds
