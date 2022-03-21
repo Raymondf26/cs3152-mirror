@@ -15,6 +15,7 @@
         "mole:chef4" : "textures/bluemole.png",
         "mole:chef5" : "textures/redmole.png",
         "mole:indicator" : "textures/crosshair.png",
+        "mole:indicator2" : "textures/molemarker.png",
         "veggies" : "textures/v.png",
         "tomato" : "textures/tomato.png",
         "onion" : "textures/onion.png",
@@ -24,7 +25,11 @@
         "interactive:pressureplate" : "textures/crate01.png",
         "interactive:rotatingplatform" : "textures/crate02.png",
         "interactive:choppingtable" : "textures/choppingtable.png",
-        "interactive:cookingtable" : "textures/cookingtable.png"
+        "interactive:cookingtable" : "textures/cookingtable.png",
+        "interactive:buttonplain" : "textures/buttonplain.png",
+        "interactive:button1" : "textures/button1.png",
+        "interactive:button2" : "textures/button2.png",
+        "interactive:button3" : "textures/button3.png"
     },
     "jsons"  :
     {
