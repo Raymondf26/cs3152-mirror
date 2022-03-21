@@ -17,7 +17,8 @@
         "onion" : "textures/onion.png",
         "eggplant" : "textures/eggplant.png",
         "lemon" : "textures/lemon.png",
-        "interactive:pressureplate" : "textures/crate01.png"
+        "level:top" : "textures/topforlevel.png",
+        "interactive:pressureplate" : "textures/crate01.png",
     },
     "jsons"  :
     {
