@@ -147,8 +147,14 @@ public class GameplayController implements Screen, ContactListener {
                 //logic w/ mole
             }
 
+            // Check for and handle mole-ingredient chute collision
+            if ((bd1 instanceof Mole && bd2 instanceof IngredientChute) || (bd1 instanceof IngredientChute && bd2 instanceof  Mole)) {
+                Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
+                IngredientChute ingredientChute = bd1 instanceof IngredientChute ? (IngredientChute) bd1 : (IngredientChute) bd2;
+                Ingredient ingredient = mole.drop(); // Drop ingredient in inventory so we can send it up
 
 
+            }
 
 
         } catch (Exception e) {
