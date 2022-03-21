@@ -29,6 +29,11 @@ public class IngredientChute extends ComplexObstacle {
         bodies.add(head, tail);
     }
 
+    /** Move an ingredient up the chute */
+    public void useChute(Ingredient ingredient) {
+        ingredient.setPosition(tail.getPosition());
+    }
+
     /**
      * Initializes the ingredient chute via the given JSON value
      *
