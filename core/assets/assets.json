@@ -19,6 +19,8 @@
         "lemon" : "textures/lemon.png",
         "level:top" : "textures/topforlevel.png",
         "interactive:pressureplate" : "textures/crate01.png",
+        "interactive:choppingtable" : "textures/choppingtable.png",
+        "interactive:cookingtable" : "textures/cookingtable.png"
     },
     "jsons"  :
     {
