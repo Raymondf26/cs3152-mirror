@@ -43,6 +43,8 @@ public class GameplayController implements Screen, ContactListener {
     private boolean failed;
     /** Countdown active for winning or losing */
     private int countdown;
+    /** Which mole is being controlled */
+    private int controlledMole = 0;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -89,12 +91,12 @@ public class GameplayController implements Screen, ContactListener {
             if ("feet".equals(fd1)) {
                 Mole currMole = (Mole) bd1;
                 currMole.setCanJump(true);
-                currMole.addSensorFixtures(fix2); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
+                currMole.addSensorFixtures(fix2);
 
             } else if ("feet".equals(fd2)){
                 Mole currMole = (Mole) bd2;
                 currMole.setCanJump(true);
-                currMole.addSensorFixtures(fix1); // Could have more than one ground ## IDK WHY THIS IS IN OG CODE
+                currMole.addSensorFixtures(fix1);
 
             } else if ("hands".equals(fd1)){
                 // what happens with hands?
@@ -107,6 +109,13 @@ public class GameplayController implements Screen, ContactListener {
             //Check for and handle mole-ingredient collision
             if ((bd1 instanceof Mole && bd2 instanceof Ingredient) || (bd1 instanceof Ingredient && bd2 instanceof  Mole)) {
                 //logic
+                Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
+                Ingredient i = bd2 instanceof Ingredient ? (Ingredient) bd2 : (Ingredient) bd1;
+                if(mole.getInventory() == null){
+                    mole.setInventory(i);
+                    i.holdPos(100, 100);
+                }
+
             }
 
 
@@ -123,6 +132,11 @@ public class GameplayController implements Screen, ContactListener {
             //Check for and handle mole-interactor collision
             if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
                 //logic
+                if (bd1 instanceof PressurePlate){
+                    ((PressurePlate) bd1).activate();
+                } else if (bd2 instanceof PressurePlate){
+                    ((PressurePlate) bd2).activate();
+                }
             }
 
             //Check for and handle mole-dumbwaiter collision
@@ -202,6 +216,11 @@ public class GameplayController implements Screen, ContactListener {
         //Handle interactor collision
         if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
             //logic
+            if (bd2 instanceof PressurePlate){
+                ((PressurePlate) bd2).deactivate();
+            } else if (bd1 instanceof PressurePlate){
+                ((PressurePlate) bd1).deactivate();
+            }
         }
 
 
@@ -329,6 +348,12 @@ public class GameplayController implements Screen, ContactListener {
     public void update(float dt) {
         //Process actions in models
         Array<Mole> moles = level.getMoles();
+        if (InputController.getInstance().didSecondary()){
+            moles.get(controlledMole).setControlled(false);
+            controlledMole += 1;
+            controlledMole = controlledMole % moles.size;
+            moles.get(controlledMole).setControlled(true);
+        }
         for (int i = 0; i < moles.size; i++) {
             if (moles.get(i).isControlled()) {
                 moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
@@ -338,6 +363,14 @@ public class GameplayController implements Screen, ContactListener {
                 //set mole movement, jumping, and interacting based on AI Controller
             }
 
+        }
+
+        Array<Ingredient> ingredients = level.getIngredients();
+        for(Ingredient i : ingredients){
+            if(i.moved){
+                i.setX(i.gX());
+                i.setY(i.gY());
+            }
         }
 
         //Apply forces and sounds

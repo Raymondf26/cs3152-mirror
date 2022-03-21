@@ -38,6 +38,8 @@ public class Level {
     //Physics objects for the game
     /** Reference to the moles */
     private Array<Mole> moles;
+    /** Reference to the ingredients */
+    private Array<Ingredient> ingredients;
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
 
@@ -84,6 +86,13 @@ public class Level {
             interactable = interactable.next();
         }
 
+        //Add all interactors elements
+        JsonValue interactors = levelFormat.get("interactors").child();
+        while (interactors != null) {
+            initializeInteractors(directory, interactors);
+            interactors = interactors.next();
+        }
+
         //Add all moles
         moles = new Array<>();
         JsonValue chefList = levelFormat.get("moles").get("list");
@@ -98,8 +107,23 @@ public class Level {
         }
         moles.first().setControlled(true);
 
+        //Add all ingredients
+        ingredients = new Array<>();
+        JsonValue ings = levelFormat.get("ingredient");
+
+        for(JsonValue i : ings){
+            System.out.println(2);
+            Ingredient ingredient = new Ingredient();
+            ingredient.initialize(directory, i);
+            ingredient.setDrawScale(scale);
+            ingredients.add(ingredient);
+            activate(ingredient);
+
+        }
 
     }
+
+    public Array<Ingredient> getIngredients () {return ingredients;}
 
 
     /** Initialize all interactive elements like buttons, dumbwaiters, etc. */
@@ -110,6 +134,18 @@ public class Level {
             dumbwaiter.initialize(directory, json);
             dumbwaiter.setDrawScale(scale);
             activate(dumbwaiter);
+        }
+    }
+
+    /** Initialize all interactive elements like pressure plates, etc. */
+    private void initializeInteractors(AssetDirectory directory, JsonValue json) {
+        String type = json.getString("type");
+        if (type.equals("pressureplate")) {
+            PressurePlate pressureplate = new PressurePlate();
+            pressureplate.initialize(directory, json);
+            pressureplate.setDrawScale(scale);
+            // MISSING SOMETHING TO LINK EVENTS
+            activate(pressureplate);
         }
     }
 

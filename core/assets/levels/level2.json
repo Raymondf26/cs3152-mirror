@@ -1,6 +1,6 @@
 {
-  "physicsSize":    [25.6,14.4],
-  "graphicSize":    [ 1280, 720],
+  "physicsSize":    [16.0,12.0],
+  "graphicSize":    [ 800, 600],
   "gravity":  	  -6.8,
   "goal":
   {
@@ -34,7 +34,6 @@
         "jumppulse": 	  2.0,
         "jumplimit": 	 30,
         "texture":       "mole:chef1",
-        "control":       "mole:indicator",
         "debugcolor":    "white",
         "debugopacity":  192,
         "sensorsize": 	 [ 0.183, 0.05 ],
@@ -45,7 +44,6 @@
       {
         "pos" : [10.5, 8.0],
         "texture" : "mole:chef2",
-        "control":       "mole:indicator",
         "idle behavior" : ["jump", 1.5],
         "size":          [ 0.45, 0.61],
         "bodytype":      "dynamic",
@@ -97,23 +95,6 @@
       "pos" : [13, 9],
       "type" : "button",
       "texture" : "interactive:button",
-      "link" :
-      [
-        {
-          "name" : "door1",
-          "effect" : 90
-        },
-        {
-          "name" : "dumbwaiter4",
-          "effect" : 1
-        }
-      ]
-    },
-    {
-      "pos" : [10.5, 8],
-      "size" : [1, 0.1],
-      "type" : "pressureplate",
-      "texture" : "interactive:pressureplate",
       "link" :
       [
         {
@@ -242,33 +223,33 @@
   "cooking" :
   [
     {
-      "type" :  "chopping",
+      "type" :  "fryer",
       "pos" :  [9.0, 3.8],
-      "texture": "veggies"
+      "size" :  1.0
     },
     {
-      "type" : "cooking",
+      "type" : "wok",
       "pos" : [13.0, 12.5],
-      "texture": "veggies"
+      "size" : 1.0
     }
 
   ],
   "ingredient" : [
     {
       "type" : "tomato",
-      "texture": "tomato",
       "pos" : [5.5, 12]
     },
     {
-      "type" : "onion",
-      "texture": "onion",
+      "type" : "scallion",
       "pos" : [12.0, 6.0]
     },
     {
-      "type" : "eggplant",
-      "texture": "eggplant",
+      "type" : "egg",
       "pos" : [18.0, 18.0]
+    },
+    {
+      "type" : "noodles",
+      "pos" : [0.0, 0.5]
     }
-
   ]
 }

@@ -11,7 +11,13 @@
         "interactive:dumbwaiter" : "textures/goaldoor.png",
         "mole:chef1" : "textures/dude.png",
         "mole:chef2" : "textures/dude.png",
-        "mole:indicator" : "textures/crosshair.png"
+        "mole:indicator" : "textures/crosshair.png",
+        "veggies" : "textures/v.png",
+        "tomato" : "textures/tomato.png",
+        "onion" : "textures/onion.png",
+        "eggplant" : "textures/eggplant.png",
+        "lemon" : "textures/lemon.png",
+        "interactive:pressureplate" : "textures/crate01.png"
     },
     "jsons"  :
     {

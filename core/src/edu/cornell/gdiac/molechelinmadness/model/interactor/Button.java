@@ -1,23 +1,33 @@
 package edu.cornell.gdiac.molechelinmadness.model.interactor;
 
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 
 public class Button implements Interactor {
 
 
-    public InteractableType getType() {
+    @Override
+    public InteractorType getType() {
         return null;
     }
 
-    public void setType(InteractableType type) {
+    @Override
+    public Array<Event> getTriggerLinks() {
+        return null;
+    }
+
+    @Override
+    public Array<Event> getDetriggerLinks() {
+        return null;
+    }
+
+    @Override
+    public void addTriggerEvent(Event toAdd) {
 
     }
 
-    public Event[] getLinks() {
-        return new Event[0];
-    }
-
-    public void setLinks(Event[] links) {
+    @Override
+    public void addDetriggerEvent(Event toAdd) {
 
     }
 }
