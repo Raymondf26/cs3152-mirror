@@ -1,5 +1,5 @@
 {
-  "physicsSize":    [25.6,14.4],
+  "physicsSize":    [32,18],
   "graphicSize":    [ 1280, 720],
   "gravity":  	  -6.8,
   "goal":
@@ -70,11 +70,14 @@
   "interactive elements" :
   [
     {
-      "name" : "door1",
-	  "type" : "door",
+      "name" : "rotating_platform1",
+	  "type" : "rotating_platform",
       "pos" : [7.0, 9.5],
+      "size" : [1, 0.2],
+      "pin_pos" : [7.5, 9.5],
+      "pin_radius" : 0.1,
 	  "orientation" : 180,
-      "texture" : "interactive:door"
+      "texture" : "interactive:rotatingplatform"
     },
     {
       "name" : "dumbwaiter4",
@@ -130,8 +133,8 @@
   ],
   "platforms": {
     "floor1": {
-      "pos":           [ 2.25f, 2.75f],
-      "size":          [  3.5f,  0.5f],
+      "pos":           [ 16f, 0f],
+      "size":          [  31f,  1f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -141,8 +144,8 @@
       "debugopacity":  200
     },
     "floor2": {
-      "pos":           [ 5.0f, 3.0f],
-      "size":          [ 2.0f, 1.0f],
+      "pos":           [ 26f, 4f],
+      "size":          [ 12f, 0.5f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -152,8 +155,8 @@
       "debugopacity":  200
     },
     "floor3": {
-      "pos":           [ 11.25f, 2.75],
-      "size":          [  3.5f,  0.5f],
+      "pos":           [ 18f, 8f],
+      "size":          [  16f,  0.5f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -163,8 +166,8 @@
       "debugopacity":  200
     },
     "floor4": {
-      "pos":           [ 14.25f, 3.0f],
-      "size":          [  2.5f,  1.0f],
+      "pos":           [ 10f, 9.5f],
+      "size":          [  0.5f,  3.0f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -174,8 +177,8 @@
       "debugopacity":  200
     },
     "floor5": {
-      "pos":           [ 14.75f, 3.75f],
-      "size":          [  1.5f,  0.5f],
+      "pos":           [ 14f, 11f],
+      "size":          [  8.5f,  0.5f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -185,52 +188,8 @@
       "debugopacity":  200
     },
     "floor6": {
-      "pos":           [ 11.5f, 4.75f],
-      "size":          [  2.0f, 0.5f],
-      "bodytype":      "static",
-      "density":        0.0,
-      "friction":       0.4,
-      "restitution":    0.1,
-      "texture":       "earth",
-      "debugcolor":    "yellow",
-      "debugopacity":  200
-    },
-    "floor7": {
-      "pos":           [ 14.75f, 5.75f],
-      "size":          [  1.5f,  0.5f],
-      "bodytype":      "static",
-      "density":        0.0,
-      "friction":       0.4,
-      "restitution":    0.1,
-      "texture":       "earth",
-      "debugcolor":    "yellow",
-      "debugopacity":  200
-    },
-    "floor8": {
-      "pos":           [ 11.5f,  6.75f],
-      "size":          [  2.0f,  0.5f],
-      "bodytype":      "static",
-      "density":        0.0,
-      "friction":       0.4,
-      "restitution":    0.1,
-      "texture":       "earth",
-      "debugcolor":    "yellow",
-      "debugopacity":  200
-    },
-    "floor9": {
-      "pos":           [ 7.5f, 7.75f],
-      "size":          [ 2.0f, 0.5f],
-      "bodytype":      "static",
-      "density":        0.0,
-      "friction":       0.4,
-      "restitution":    0.1,
-      "texture":       "earth",
-      "debugcolor":    "yellow",
-      "debugopacity":  200
-    },
-    "floor10": {
-      "pos":           [ 2.5f,  8.75f],
-      "size":          [ 4.0f,  0.5f],
+      "pos":           [ 26f, 15f],
+      "size":          [  0.5f, 14.5f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -239,6 +198,32 @@
       "debugcolor":    "yellow",
       "debugopacity":  200
     }
+  },
+  "walls": {
+    "wall1": {
+      "vertices": 12,
+      "boundary": [ 8.0f, 18.0f,  8.0f, 17.5f,  0.5f, 17.5f,
+        0.5f,  0.0f,  0.0f,  0.0f,  0.0f, 18.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.2,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "wall2": {
+      "vertices": 12,
+      "boundary": [32.0f, 18.0f, 32.0f,  0.0f, 31.5f,  0.0f,
+        31.5f, 17.5f,  8f, 17.5f,  8f, 18.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
   },
   "cooking" :
   [

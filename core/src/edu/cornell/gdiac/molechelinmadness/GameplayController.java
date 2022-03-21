@@ -259,7 +259,7 @@ public class GameplayController implements Screen, ContactListener {
         displayFont = directory.getEntry("display", BitmapFont.class);
 
         // This represents the level but does not BUILD it
-        levelFormat = directory.getEntry( "level", JsonValue.class );
+        levelFormat = directory.getEntry( "level_tutorial", JsonValue.class );
     }
 
     /**
@@ -364,7 +364,10 @@ public class GameplayController implements Screen, ContactListener {
                 moles.get(i).setJumping(InputController.getInstance().didPrimary());
             }
             else {
-                //set mole movement, jumping, and interacting based on AI Controller
+                AIController ai = moles.get(i).getAIController();
+                moles.get(i).setMovement(ai.getHorizontal() * moles.get(i).getForce());
+                moles.get(i).setJumping(ai.getJump());
+                ai.update(dt);
             }
 
         }

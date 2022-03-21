@@ -17,7 +17,7 @@ public class AIController {
     /** Time since we last changed the state */
     private float elapsedTime;
 
-    AIController(Mole.IdleUnit[] idleUnits) {
+    public AIController(Mole.IdleUnit[] idleUnits) {
         this.idleUnits = idleUnits;
         index = 0;
         elapsedTime = 0.0f;

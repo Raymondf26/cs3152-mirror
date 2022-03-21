@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.AIController;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
 
@@ -33,6 +34,8 @@ public class Mole extends CapsuleObstacle {
     }
 
 
+    /** Possibly temporary storage for ai controller*/
+    AIController ai;
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
     /** The name of the sensor for detection purposes */
@@ -237,6 +240,16 @@ public class Mole extends CapsuleObstacle {
      */
     public float getForce() {
         return force;
+    }
+
+    /** Possibly temporary method getting AI Controller from mole */
+    public AIController getAIController() {
+        return ai;
+    }
+
+    /** Possibly temporary method attaching AI Controller to mole */
+    public void setAIController(AIController ai) {
+        this.ai = ai;
     }
 
     /**
@@ -554,6 +567,40 @@ public class Mole extends CapsuleObstacle {
         opacity = json.get("sensoropacity").asInt();
         sensorColor.mul(opacity/255.0f);
         sensorName = json.get("sensorname").asString();
+
+        AIController ai = new AIController(idleBehavior);
+        this.ai = ai;
+
+        /*String[] idle = json.get("idle behavior").asStringArray();
+        int length = idle.length / 2;
+        Mole.IdleUnit[] idleUnit = new Mole.IdleUnit[length];
+        for (int i = 0; i < idle.length; i++) {
+            Mole.IdleAction action = Mole.IdleAction.IDLE;
+            Float time;
+            if (i % 2 == 0) {
+                if (idle[i].equals("left")) {
+                    action = Mole.IdleAction.LEFT;
+                }
+                else if (idle[i].equals("right")) {
+                    action = Mole.IdleAction.RIGHT;
+                }
+                else if (idle[i].equals("jump")) {
+                    action = Mole.IdleAction.JUMP;
+                }
+                else if (idle[i].equals("interact")) {
+                    action = Mole.IdleAction.INTERACT;
+                }
+                else {
+                    action = Mole.IdleAction.IDLE;
+                }
+            }
+            else {
+                time = Float.valueOf(idle[i]);
+                idleUnit[i-1] = new Mole.IdleUnit(action, time);
+            }
+        }
+        AIController ai = new AIController();*/
+
     }
 
     /**

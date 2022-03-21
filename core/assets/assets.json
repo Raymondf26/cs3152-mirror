@@ -22,12 +22,14 @@
         "lemon" : "textures/lemon.png",
         "level:top" : "textures/topforlevel.png",
         "interactive:pressureplate" : "textures/crate01.png",
+        "interactive:rotatingplatform" : "textures/crate02.png",
         "interactive:choppingtable" : "textures/choppingtable.png",
         "interactive:cookingtable" : "textures/cookingtable.png"
     },
     "jsons"  :
     {
-        "level":  "levels/level1.json"
+        "level":  "levels/level1.json",
+        "level_tutorial" : "levels/levelTutorial.json"
     },
     "sounds" :
     {
