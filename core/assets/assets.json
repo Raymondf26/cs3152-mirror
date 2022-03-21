@@ -23,7 +23,11 @@
         "level:top" : "textures/topforlevel.png",
         "interactive:pressureplate" : "textures/crate01.png",
         "interactive:choppingtable" : "textures/choppingtable.png",
-        "interactive:cookingtable" : "textures/cookingtable.png"
+        "interactive:cookingtable" : "textures/cookingtable.png",
+        "interactive:buttonplain" : "textures/buttonplain.png",
+        "interactive:button1" : "textures/button1.png",
+        "interactive:button2" : "textures/button2.png",
+        "interactive:button3" : "textures/button3.png"
     },
     "jsons"  :
     {
