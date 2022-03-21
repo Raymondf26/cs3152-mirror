@@ -244,12 +244,12 @@
     {
       "type" :  "chopping",
       "pos" :  [9.0, 3.8],
-      "texture": "veggies"
+      "texture": "interactive:choppingtable"
     },
     {
       "type" : "cooking",
       "pos" : [13.0, 12.5],
-      "texture": "veggies"
+      "texture": "interactive:cookingtable"
     }
 
   ],

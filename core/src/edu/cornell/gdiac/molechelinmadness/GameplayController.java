@@ -122,6 +122,9 @@ public class GameplayController implements Screen, ContactListener {
             //Check for and handle mole-cooking-station collision
             if ((bd1 instanceof Mole && bd2 instanceof CookingStation) || (bd1 instanceof CookingStation && bd2 instanceof  Mole)) {
                 //logic
+                Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
+                CookingStation c = bd2 instanceof CookingStation ? (CookingStation) bd2 : (CookingStation) bd1;
+                c.Cook(mole);
             }
 
             //Check for and handle mole-final-cooking-station collision
@@ -152,7 +155,7 @@ public class GameplayController implements Screen, ContactListener {
                 Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
                 IngredientChute ingredientChute = bd1 instanceof IngredientChute ? (IngredientChute) bd1 : (IngredientChute) bd2;
                 Ingredient ingredient = mole.drop(); // Drop ingredient in inventory so we can send it up
-                ingredientChute.useChute(ingredient);
+
 
             }
 
@@ -348,6 +351,7 @@ public class GameplayController implements Screen, ContactListener {
     public void update(float dt) {
         //Process actions in models
         Array<Mole> moles = level.getMoles();
+        Array<CookingStation> stations = level.getStations();
         if (InputController.getInstance().didSecondary()){
             moles.get(controlledMole).setControlled(false);
             controlledMole += 1;
@@ -379,6 +383,16 @@ public class GameplayController implements Screen, ContactListener {
             moles.get(i).updateHand();
             //Play sounds relevant sounds
         }
+
+        //check win
+        for(CookingStation c : stations){
+            if(c.getType() == CookingStation.stationType.COOKING){
+                if(c.getIngredients().size == 3){
+                    complete = true;
+                }
+            }
+        }
+
     }
 
     /**

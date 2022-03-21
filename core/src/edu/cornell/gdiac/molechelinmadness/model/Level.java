@@ -268,6 +268,11 @@ public class Level {
         return moles;
     }
 
+    /** Return cooking stations*/
+    public Array<CookingStation> getStations(){
+        return stations;
+    }
+
     /**
      * Returns a reference to the exit door
      *
