@@ -28,7 +28,8 @@
         "interactive:buttonplain" : "textures/buttonplain.png",
         "interactive:button1" : "textures/button1.png",
         "interactive:button2" : "textures/button2.png",
-        "interactive:button3" : "textures/button3.png"
+        "interactive:button3" : "textures/button3.png",
+        "background" : "textures/environment_background_2.png"
     },
     "jsons"  :
     {

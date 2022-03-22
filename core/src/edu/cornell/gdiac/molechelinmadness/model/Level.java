@@ -1,5 +1,8 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -19,6 +22,9 @@ public class Level {
     protected static final float DEFAULT_HEIGHT = 18.0f;
     /** The default value of gravity (going down) */
     protected static final float DEFAULT_GRAVITY = 0f;
+
+    /** Texture asset for background image */
+    private TextureRegion backgroundTexture;
 
     /** All the objects in the world. */
     protected PooledList<Obstacle> objects  = new PooledList<Obstacle>();
@@ -59,6 +65,7 @@ public class Level {
      * @param levelFormat	the JSON file defining the level
      */
     public void populate(AssetDirectory directory, JsonValue levelFormat) {
+        backgroundTexture = new TextureRegion(directory.getEntry( "background", Texture.class ));
 
         float gravity = levelFormat.getFloat("gravity");
         float[] pSize = levelFormat.get("physicsSize").asFloatArray();
@@ -211,6 +218,10 @@ public class Level {
      */
     public void draw(GameCanvas canvas) {
         canvas.clear();
+
+        canvas.begin();
+        canvas.draw(backgroundTexture, Color.WHITE, 0, 0,canvas.getWidth(),canvas.getHeight());
+        canvas.end();
 
         canvas.begin();
         for(Obstacle obj : objects) {

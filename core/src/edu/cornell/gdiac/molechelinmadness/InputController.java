@@ -230,6 +230,7 @@ public class InputController {
         nextPrevious = nextPressed;
         prevPrevious = prevPressed;
 
+
         // Check to see if a GamePad is connected
         if (xbox != null && xbox.isConnected()) {
             readGamepad(bounds, scale);
@@ -295,6 +296,8 @@ public class InputController {
         prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
         nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
         exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+        prevPressed = Gdx.input.isKeyPressed(Input.Keys.P);
+        nextPressed = Gdx.input.isKeyPressed(Input.Keys.N);
 
         // Directional controls
         horizontal = (secondary ? horizontal : 0.0f);

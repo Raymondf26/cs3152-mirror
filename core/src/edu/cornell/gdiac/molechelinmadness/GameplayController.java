@@ -2,7 +2,9 @@ package edu.cornell.gdiac.molechelinmadness;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
@@ -16,6 +18,9 @@ public class GameplayController implements Screen, ContactListener {
 
 
     //START: Constants we can extract into data later
+
+    /** Array of level names to be extracted */
+    // public static final String[];
 
     /** Exit code for quitting the game */
     public static final int EXIT_QUIT = 0;
@@ -34,6 +39,8 @@ public class GameplayController implements Screen, ContactListener {
     public static final int WORLD_POSIT = 2;
 
     //END
+
+
 
     /** Whether or not this is an active controller */
     private boolean active;
@@ -258,6 +265,7 @@ public class GameplayController implements Screen, ContactListener {
         // Access the assets used directly by this controller
         displayFont = directory.getEntry("display", BitmapFont.class);
 
+
         // This represents the level but does not BUILD it
         levelFormat = directory.getEntry( "level", JsonValue.class );
     }
@@ -315,6 +323,14 @@ public class GameplayController implements Screen, ContactListener {
         if (input.didExit()) {
             pause();
             listener.exitScreen(this, EXIT_QUIT);
+            return false;
+        } else if (input.didAdvance()) {
+            pause();
+            listener.exitScreen(this, EXIT_NEXT);
+            return false;
+        } else  if (input.didRetreat()) {
+            pause();
+            listener.exitScreen(this, EXIT_PREV);
             return false;
         } else if (countdown > 0) {
             countdown--;
