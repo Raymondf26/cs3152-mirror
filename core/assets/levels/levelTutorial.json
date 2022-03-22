@@ -232,7 +232,7 @@
   [
     {
       "type" :  "chopping",
-      "pos" :  [16.0, 1.0],
+      "pos" :  [8.0, 1.0],
       "size" : [1.5, 1.25],
       "texture": "interactive:choppingtable"
     },
