@@ -288,7 +288,6 @@ public class GameplayController implements Screen, ContactListener {
         this.directory = directory;
         // Access the assets used directly by this controller
         displayFont = directory.getEntry("shared:retro", BitmapFont.class);
-        System.out.println(displayFont);
 
 
         // This represents the level but does not BUILD it
