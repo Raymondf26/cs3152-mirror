@@ -46,6 +46,10 @@ public class Mole extends CapsuleObstacle {
     PolygonShape sensorShapeF;
     /** The sensor shape for the hands*/
     PolygonShape sensorShapeH;
+    /** Sensor fixure Left */
+    Fixture left;
+    Fixture right;
+    FixtureDef sensorDefHand;
     /** Texture to indicate which mole is in control */
     TextureRegion controlTexture;
     /** The amount to slow the character down */
@@ -91,6 +95,12 @@ public class Mole extends CapsuleObstacle {
 
     /** Sensors for this specific mole */
     private ObjectSet<Fixture> sensorFixtures;
+
+    /** Get interacting */
+    public boolean isInteracting() {return interacting;}
+
+    /** Set interacting */
+    public void setInteracting(boolean bool) {interacting = bool;}
 
     /**
      *
@@ -201,16 +211,22 @@ public class Mole extends CapsuleObstacle {
 
         // Sensor for interactions with Interactables
         sensorCenter = new Vector2(-getWidth() / 2, 0); // change to something to do with height of mole
-        sensorDef = new FixtureDef();
-        sensorDef.density = 1.0f;
-        sensorDef.isSensor = true;
+        sensorDefHand = new FixtureDef();
+        sensorDefHand.density = 1.0f;
+        sensorDefHand.isSensor = true;
         sensorShapeH = new PolygonShape();
         sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter, 0f); // angle should be 90 degrees
-        sensorDef.shape = sensorShapeH;
+        sensorDefHand.shape = sensorShapeH;
 
         // Side sensor to represent our front facing hand
-        sensorFixture = body.createFixture( sensorDef );
-        sensorFixture.setUserData("hands");
+        left = body.createFixture( sensorDefHand );
+
+        sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter.scl(-1), 0f); // angle should be 90 degrees
+        sensorDefHand.shape = sensorShapeH;
+        right = body.createFixture(sensorDefHand);
+
+        left.setUserData("hands");
+        right.setUserData("hands");
 
         return true;
     }

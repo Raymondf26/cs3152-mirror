@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.*;
+import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.ScreenListener;
@@ -98,11 +99,24 @@ public class GameplayController implements Screen, ContactListener {
                 currMole.setCanJump(true);
                 currMole.addSensorFixtures(fix1);
 
-            } else if ("hands".equals(fd1)){
-                // what happens with hands?
+            }  if ("hands".equals(fd1)){
+                System.out.println("hands collied");
+                if (bd2 instanceof Button) {
+                    Button button = (Button) bd2;
+                    Mole currMole = (Mole)(bd1);
+                    button.setContact(true);
+                    button.setContactMole(currMole);
+                }
 
             } else if ("hands".equals(fd2)) {
-                // what happens with hands?
+
+                System.out.println("hands collied");
+                if (bd1 instanceof Button) {
+                    Button button = (Button) bd1;
+                    Mole currMole = (Mole)(bd2);
+                    button.setContact(true);
+                    button.setContactMole(currMole);
+                }
 
             }
 
@@ -134,12 +148,13 @@ public class GameplayController implements Screen, ContactListener {
 
             //Check for and handle mole-interactor collision
             if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
-                //logic
+                //pressure plate
                 if (bd1 instanceof PressurePlate){
                     ((PressurePlate) bd1).activate();
                 } else if (bd2 instanceof PressurePlate){
                     ((PressurePlate) bd2).activate();
                 }
+
             }
 
             //Check for and handle mole-dumbwaiter collision
@@ -201,12 +216,16 @@ public class GameplayController implements Screen, ContactListener {
             }
 
         } else if ("hands".equals(fd1)) {
-            // what happens with hands?
+            if (bd2 instanceof Button) {
+                ((Button) bd2).setContact(false);
+                ((Button) bd2).setContactMole(null);
+            }
 
-        } else if ("hands".equals(fd1)) {
-            // what happens with hands?
-
-
+        } else if ("hands".equals(fd2)) {
+            if (bd1 instanceof Button) {
+                ((Button) bd1).setContact(false);
+                ((Button) bd1).setContactMole(null);
+            }
         }
 
 
@@ -218,7 +237,8 @@ public class GameplayController implements Screen, ContactListener {
 
         //Handle interactor collision
         if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
-            //logic
+
+            //pressure plate
             if (bd2 instanceof PressurePlate){
                 ((PressurePlate) bd2).deactivate();
             } else if (bd1 instanceof PressurePlate){
@@ -362,6 +382,7 @@ public class GameplayController implements Screen, ContactListener {
             if (moles.get(i).isControlled()) {
                 moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
                 moles.get(i).setJumping(InputController.getInstance().didPrimary());
+                moles.get(i).setInteracting(InputController.getInstance().didTertiary());
             }
             else {
                 AIController ai = moles.get(i).getAIController();
@@ -378,6 +399,16 @@ public class GameplayController implements Screen, ContactListener {
                 i.setX(i.gX());
                 i.setY(i.gY());
             }
+        }
+
+
+        for (Button button : level.getButtons()) {
+            button.update();
+        }
+
+        //Updating rotation for platform
+        for (RotatingPlatform platform : level.getRotatingPlatform()) {
+            platform.update();
         }
 
         //Apply forces and sounds

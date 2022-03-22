@@ -67,6 +67,8 @@ public class CookingStation extends BoxObstacle {
         String type = json.get("type").asString();
         float[] pos = json.get("pos").asFloatArray();
         this.setPosition(pos[0],pos[1]);
+        float[] size = json.get("size").asFloatArray();
+        this.setDimension(size[0], size[1]);
 
         if(type == "chopping"){
             this.type = CookingStation.stationType.CHOPPING;
