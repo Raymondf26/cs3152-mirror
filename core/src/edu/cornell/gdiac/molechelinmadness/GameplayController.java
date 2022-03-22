@@ -20,7 +20,11 @@ public class GameplayController implements Screen, ContactListener {
     //START: Constants we can extract into data later
 
     /** Array of level names to be extracted */
-    // public static final String[];
+    public static String[] levels = {"level1", "level2"};
+
+    /** Current index in level array */
+    private int levelIndex;
+
 
     /** Exit code for quitting the game */
     public static final int EXIT_QUIT = 0;
@@ -249,7 +253,7 @@ public class GameplayController implements Screen, ContactListener {
 
 
     public GameplayController() {
-
+        levelIndex = 0;
         level = new Level();
         complete = false;
         failed = false;
@@ -267,7 +271,7 @@ public class GameplayController implements Screen, ContactListener {
 
 
         // This represents the level but does not BUILD it
-        levelFormat = directory.getEntry( "level", JsonValue.class );
+        levelFormat = directory.getEntry( levels[levelIndex], JsonValue.class );
     }
 
     /**
@@ -326,11 +330,13 @@ public class GameplayController implements Screen, ContactListener {
             return false;
         } else if (input.didAdvance()) {
             pause();
-            listener.exitScreen(this, EXIT_NEXT);
+            // listener.exitScreen(this, EXIT_NEXT);
+            changeLevel(1);
             return false;
         } else  if (input.didRetreat()) {
             pause();
-            listener.exitScreen(this, EXIT_PREV);
+           // listener.exitScreen(this, EXIT_PREV);
+            changeLevel(-1);
             return false;
         } else if (countdown > 0) {
             countdown--;
@@ -354,6 +360,24 @@ public class GameplayController implements Screen, ContactListener {
 
     }
 
+
+    /**
+     * Change the level by dumping the current level and changing our index into the levels array
+     * and repopulating. Workaround solution currently.
+     *
+     * @param next      1 if next level, 0 if previous level
+     */
+    public void changeLevel(int next) {
+        if (levelIndex == -1) {
+            if (levelIndex > 0) levelIndex --;
+            else { levelIndex = levels.length-1; }
+        } else {
+            if (levelIndex < levels.length - 1) levelIndex ++;
+            else {levelIndex = 0; }
+        }
+       levelFormat = directory.getEntry( levels[levelIndex], JsonValue.class );
+       reset();
+    }
 
     /**
      * The core gameplay loop of this world.

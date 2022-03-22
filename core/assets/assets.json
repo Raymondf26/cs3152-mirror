@@ -33,7 +33,8 @@
     },
     "jsons"  :
     {
-        "level":  "levels/level1.json"
+        "level1":  "levels/level1.json",
+        "level2": "levels/level2.json",
     },
     "sounds" :
     {
