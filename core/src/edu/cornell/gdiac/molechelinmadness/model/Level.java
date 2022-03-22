@@ -133,7 +133,8 @@ public class Level {
             moles.add(mole);
             activate(mole);
         }
-        moles.first().setControlled(true);
+        int startingIndex = levelFormat.get("moles").getInt("starting");
+        moles.get(startingIndex).setControlled(true);
 
         //Add all ingredients
         ingredients = new Array<>();
