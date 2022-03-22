@@ -66,7 +66,7 @@ public class RotatingPlatform extends BoxObstacle {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),getDimension().x,getDimension().y);
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y,getX()*drawScale.x,getY()*drawScale.y, getAngle(),getWidth() * 0.65f ,getHeight());
         }
     }
 }

@@ -626,10 +626,10 @@ public class Mole extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            float effect = faceRight ? 1.0f : -1.0f;
+            float effect = faceRight ? -1.0f : 1.0f;
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
             if (this.controlled) {
-                canvas.draw(controlTexture, Color.WHITE, origin.x, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 0.5f, 0.5f);
+                canvas.draw(controlTexture, Color.WHITE, origin.x / 2, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
             }
         }
     }

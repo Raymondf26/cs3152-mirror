@@ -14,7 +14,7 @@
         "mole:chef3" : "textures/purplemole.png",
         "mole:chef4" : "textures/bluemole.png",
         "mole:chef5" : "textures/redmole.png",
-        "mole:indicator" : "textures/crosshair.png",
+        "mole:indicator" : "textures/molemarker.png",
         "mole:indicator2" : "textures/molemarker.png",
         "veggies" : "textures/v.png",
         "tomato" : "textures/tomato.png",

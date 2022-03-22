@@ -283,7 +283,8 @@ public class GameplayController implements Screen, ContactListener {
     public void gatherAssets (AssetDirectory directory) {
         this.directory = directory;
         // Access the assets used directly by this controller
-        displayFont = directory.getEntry("display", BitmapFont.class);
+        displayFont = directory.getEntry("shared:retro", BitmapFont.class);
+        System.out.println(displayFont);
 
 
         // This represents the level but does not BUILD it
@@ -408,6 +409,9 @@ public class GameplayController implements Screen, ContactListener {
             }
 
         }
+
+        //System.out.println(moles.get(0).getInventory());
+        //System.out.println(moles.get(1).getInventory());
 
         Array<Ingredient> ingredients = level.getIngredients();
         for(Ingredient i : ingredients){

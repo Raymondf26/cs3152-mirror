@@ -59,7 +59,12 @@ public class AIController {
         elapsedTime += dt;
         if (elapsedTime >= idleUnits[index].time) {
             elapsedTime = 0.0f;
-            index = (index == idleUnits.length - 1) ? 0 : index ++;
+            if (index == (idleUnits.length - 1)) {
+                index = 0;
+            }
+            else {
+                index++;
+            }
         }
     }
 }

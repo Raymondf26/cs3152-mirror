@@ -2,6 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -47,12 +48,17 @@ public class CookingStation extends BoxObstacle {
 
     public void Cook (Mole m){
         if(this.type == stationType.CHOPPING){
-            m.getInventory().setChopped(true);
+            if (m.getInventory() != null) {
+                m.getInventory().setChopped(true);
+                System.out.println("chopped veggie");
+            }
         }
         if(this.type == stationType.COOKING){
-            if(m.getInventory().getChopped() == true){
-                this.ingredients.add(m.getInventory());
-                m.setInventory(null);
+            if (m.getInventory() != null) {
+                if(m.getInventory().getChopped()){
+                    this.ingredients.add(m.getInventory());
+                    m.drop();
+                }
             }
         }
     }
@@ -70,7 +76,10 @@ public class CookingStation extends BoxObstacle {
         float[] size = json.get("size").asFloatArray();
         this.setDimension(size[0], size[1]);
 
-        if(type == "chopping"){
+        setBodyType(BodyDef.BodyType.StaticBody);
+        setSensor(true);
+
+        if(type.equals("chopping")){
             this.type = CookingStation.stationType.CHOPPING;
         }
         else{
