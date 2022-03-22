@@ -56,7 +56,7 @@ public class GameplayController implements Screen, ContactListener {
     /** Countdown active for winning or losing */
     private int countdown;
     /** Which mole is being controlled */
-    private int controlledMole = 0;
+    private int controlledMole;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -308,6 +308,7 @@ public class GameplayController implements Screen, ContactListener {
 
         // Reload the json each time
         level.populate(directory, levelFormat);
+        controlledMole = level.controlMole;
         level.getWorld().setContactListener(this);
     }
 

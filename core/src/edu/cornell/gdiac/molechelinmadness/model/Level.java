@@ -40,6 +40,8 @@ public class Level {
     protected Rectangle bounds;
     /** The world scale */
     protected Vector2 scale;
+    /** Temporary control mole */
+    public int controlMole;
 
     /** Whether or not debug mode is active */
     private boolean debug;
@@ -133,8 +135,8 @@ public class Level {
             moles.add(mole);
             activate(mole);
         }
-        int startingIndex = levelFormat.get("moles").getInt("starting");
-        moles.get(startingIndex).setControlled(true);
+        controlMole = levelFormat.get("moles").getInt("starting");
+        moles.get(controlMole).setControlled(true);
 
         //Add all ingredients
         ingredients = new Array<>();
