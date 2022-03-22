@@ -405,6 +405,7 @@ public class GameplayController implements Screen, ContactListener {
                 AIController ai = moles.get(i).getAIController();
                 moles.get(i).setMovement(ai.getHorizontal() * moles.get(i).getForce());
                 moles.get(i).setJumping(ai.getJump());
+                moles.get(i).setInteracting(ai.getInteract());
                 ai.update(dt);
             }
 

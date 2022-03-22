@@ -11,9 +11,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
-import edu.cornell.gdiac.molechelinmadness.model.event.DoorClose;
-import edu.cornell.gdiac.molechelinmadness.model.event.DoorOpen;
-import edu.cornell.gdiac.molechelinmadness.model.event.Event;
+import edu.cornell.gdiac.molechelinmadness.model.event.*;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.PooledList;
@@ -240,6 +238,12 @@ public class Level {
         }
         if (string.equals("door:close")) {
             return new DoorClose();
+        }
+        if (string.equals("door:close_middle")) {
+            return new DoorCloseMiddle();
+        }
+        if (string.equals("door:open_middle")) {
+            return new DoorOpenMiddle();
         }
         return null;
     }

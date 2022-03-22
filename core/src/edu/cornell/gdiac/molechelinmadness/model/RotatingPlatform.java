@@ -57,6 +57,7 @@ public class RotatingPlatform extends BoxObstacle {
     public void update() {
         setAngle(newAngle);
         setPosition(getPosition().add(newVector));
+        translate(newVector.scl(0));
     }
 
     /**

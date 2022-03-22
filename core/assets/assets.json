@@ -25,7 +25,7 @@
         "interactive:pressureplate" : "textures/crate01.png",
         "interactive:rotatingplatform" : "textures/crate02.png",
         "interactive:choppingtable" : "textures/choppingtable.png",
-        "interactive:cookingtable" : "textures/cookingtable.png",
+        "interactive:cookingtable" : "textures/cookingpot.png",
         "interactive:buttonplain" : "textures/buttonplain.png",
         "interactive:button1" : "textures/button1.png",
         "interactive:button2" : "textures/button2.png",
@@ -35,7 +35,8 @@
     "jsons"  :
     {
         "level":  "levels/level1.json",
-        "level_tutorial" : "levels/levelTutorial.json"
+        "level_tutorial" : "levels/levelTutorial.json",
+        "level_medium" : "levels/levelMedium.json"
     },
     "sounds" :
     {
