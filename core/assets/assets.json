@@ -14,7 +14,7 @@
         "mole:chef3" : "textures/purplemole.png",
         "mole:chef4" : "textures/bluemole.png",
         "mole:chef5" : "textures/redmole.png",
-        "mole:indicator" : "textures/crosshair.png",
+        "mole:indicator" : "textures/molemarker.png",
         "mole:indicator2" : "textures/molemarker.png",
         "veggies" : "textures/v.png",
         "tomato" : "textures/tomato.png",
@@ -23,8 +23,9 @@
         "lemon" : "textures/lemon.png",
         "level:top" : "textures/topforlevel.png",
         "interactive:pressureplate" : "textures/crate01.png",
+        "interactive:rotatingplatform" : "textures/crate02.png",
         "interactive:choppingtable" : "textures/choppingtable.png",
-        "interactive:cookingtable" : "textures/cookingtable.png",
+        "interactive:cookingtable" : "textures/cookingpot.png",
         "interactive:buttonplain" : "textures/buttonplain.png",
         "interactive:button1" : "textures/button1.png",
         "interactive:button2" : "textures/button2.png",
@@ -33,8 +34,9 @@
     },
     "jsons"  :
     {
-        "level1":  "levels/level1.json",
-        "level2": "levels/level2.json",
+        "level":  "levels/level1.json",
+        "level_tutorial" : "levels/levelTutorial.json",
+        "level_medium" : "levels/levelMedium.json"
     },
     "sounds" :
     {

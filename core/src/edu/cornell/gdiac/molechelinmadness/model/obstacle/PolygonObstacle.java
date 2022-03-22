@@ -53,6 +53,8 @@ public class PolygonObstacle extends SimpleObstacle {
 	private Vector2 sizeCache;
 	/** Cache of the polygon vertices (for resizing) */
 	private float[] vertices;
+	/** The color to show off the debug shape */
+	private Color debugColor;
 	
 	/** 
 	 * Returns the dimensions of this box
@@ -126,6 +128,15 @@ public class PolygonObstacle extends SimpleObstacle {
 		sizeCache.set(dimension.x,value);
 		setDimension(sizeCache);
 	}
+
+	/**
+	 * Sets the color to display the physics outline
+	 *
+	 * @param value	the color to display the physics outline
+	 */
+	public void setDebugColor(Color value) {
+		debugColor = value;
+	}
 	
 	/**
 	 * Creates a (not necessarily convex) polygon at the origin.
@@ -196,7 +207,7 @@ public class PolygonObstacle extends SimpleObstacle {
 	 *
 	 * @param points   The polygon vertices
 	 */
-	private void initShapes(float[] points) {
+	protected void initShapes(float[] points) {
 		// Triangulate
 		ShortArray array = TRIANGULATOR.computeTriangles(points);
 		trimColinear(points,array);

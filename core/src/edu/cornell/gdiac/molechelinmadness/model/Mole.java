@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.AIController;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
 
@@ -33,6 +34,8 @@ public class Mole extends CapsuleObstacle {
     }
 
 
+    /** Possibly temporary storage for ai controller*/
+    AIController ai;
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
     /** The name of the sensor for detection purposes */
@@ -43,6 +46,10 @@ public class Mole extends CapsuleObstacle {
     PolygonShape sensorShapeF;
     /** The sensor shape for the hands*/
     PolygonShape sensorShapeH;
+    /** Sensor fixure Left */
+    Fixture left;
+    Fixture right;
+    FixtureDef sensorDefHand;
     /** Texture to indicate which mole is in control */
     TextureRegion controlTexture;
     /** The amount to slow the character down */
@@ -88,6 +95,12 @@ public class Mole extends CapsuleObstacle {
 
     /** Sensors for this specific mole */
     private ObjectSet<Fixture> sensorFixtures;
+
+    /** Get interacting */
+    public boolean isInteracting() {return interacting;}
+
+    /** Set interacting */
+    public void setInteracting(boolean bool) {interacting = bool;}
 
     /**
      *
@@ -198,16 +211,22 @@ public class Mole extends CapsuleObstacle {
 
         // Sensor for interactions with Interactables
         sensorCenter = new Vector2(-getWidth() / 2, 0); // change to something to do with height of mole
-        sensorDef = new FixtureDef();
-        sensorDef.density = 1.0f;
-        sensorDef.isSensor = true;
+        sensorDefHand = new FixtureDef();
+        sensorDefHand.density = 1.0f;
+        sensorDefHand.isSensor = true;
         sensorShapeH = new PolygonShape();
         sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter, 0f); // angle should be 90 degrees
-        sensorDef.shape = sensorShapeH;
+        sensorDefHand.shape = sensorShapeH;
 
         // Side sensor to represent our front facing hand
-        sensorFixture = body.createFixture( sensorDef );
-        sensorFixture.setUserData("hands");
+        left = body.createFixture( sensorDefHand );
+
+        sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter.scl(-1), 0f); // angle should be 90 degrees
+        sensorDefHand.shape = sensorShapeH;
+        right = body.createFixture(sensorDefHand);
+
+        left.setUserData("hands");
+        right.setUserData("hands");
 
         return true;
     }
@@ -237,6 +256,16 @@ public class Mole extends CapsuleObstacle {
      */
     public float getForce() {
         return force;
+    }
+
+    /** Possibly temporary method getting AI Controller from mole */
+    public AIController getAIController() {
+        return ai;
+    }
+
+    /** Possibly temporary method attaching AI Controller to mole */
+    public void setAIController(AIController ai) {
+        this.ai = ai;
     }
 
     /**
@@ -554,6 +583,40 @@ public class Mole extends CapsuleObstacle {
         opacity = json.get("sensoropacity").asInt();
         sensorColor.mul(opacity/255.0f);
         sensorName = json.get("sensorname").asString();
+
+        AIController ai = new AIController(idleBehavior);
+        this.ai = ai;
+
+        /*String[] idle = json.get("idle behavior").asStringArray();
+        int length = idle.length / 2;
+        Mole.IdleUnit[] idleUnit = new Mole.IdleUnit[length];
+        for (int i = 0; i < idle.length; i++) {
+            Mole.IdleAction action = Mole.IdleAction.IDLE;
+            Float time;
+            if (i % 2 == 0) {
+                if (idle[i].equals("left")) {
+                    action = Mole.IdleAction.LEFT;
+                }
+                else if (idle[i].equals("right")) {
+                    action = Mole.IdleAction.RIGHT;
+                }
+                else if (idle[i].equals("jump")) {
+                    action = Mole.IdleAction.JUMP;
+                }
+                else if (idle[i].equals("interact")) {
+                    action = Mole.IdleAction.INTERACT;
+                }
+                else {
+                    action = Mole.IdleAction.IDLE;
+                }
+            }
+            else {
+                time = Float.valueOf(idle[i]);
+                idleUnit[i-1] = new Mole.IdleUnit(action, time);
+            }
+        }
+        AIController ai = new AIController();*/
+
     }
 
     /**
@@ -563,10 +626,10 @@ public class Mole extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            float effect = faceRight ? 1.0f : -1.0f;
+            float effect = faceRight ? -1.0f : 1.0f;
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
             if (this.controlled) {
-                canvas.draw(controlTexture, Color.WHITE, origin.x, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 0.5f, 0.5f);
+                canvas.draw(controlTexture, Color.WHITE, origin.x / 2, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
             }
         }
     }
