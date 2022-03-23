@@ -14,11 +14,15 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
 import java.lang.reflect.Field;
 
-public class Dumbwaiter extends ComplexObstacle {
+public class Dumbwaiter extends ComplexObstacle implements Interactive{
 
     /** References to the head and tail */
     protected BoxObstacle head;
     protected BoxObstacle tail;
+
+    /** Reference to ingredients in the chute */
+    Ingredient top;
+    Ingredient bot;
 
     /**
      * Create a new Dumbwaiter with degenerate settings
@@ -27,6 +31,31 @@ public class Dumbwaiter extends ComplexObstacle {
         head = new BoxObstacle(0, 0, 1f, 1f);
         tail = new BoxObstacle(0, 0, 1, 1);
         bodies.add(head, tail);
+    }
+
+    /**
+     * 0 refers to hands, 1 refers to feet
+     */
+    @Override
+    public int getType() {
+        return 0;
+    }
+
+    @Override
+    public void resolveBegin(Mole mole) {
+
+        System.out.println("collided with dumbwaiter");
+
+        if (mole.isInteracting()) {
+            if (!mole.isEmpty()) {
+
+            }
+        }
+    }
+
+    @Override
+    public void resolveEnd(Mole mole) {
+
     }
 
     /**
@@ -94,7 +123,4 @@ public class Dumbwaiter extends ComplexObstacle {
     protected boolean createJoints(World world) {
         return false;
     }
-
-
-
 }

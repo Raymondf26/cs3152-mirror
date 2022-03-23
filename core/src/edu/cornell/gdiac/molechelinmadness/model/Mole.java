@@ -2,9 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
@@ -355,7 +353,7 @@ public class Mole extends CapsuleObstacle {
      * @param toAdd       Ingredient to be added to mole inventory.
      *
      */
-    public boolean setInventory(Ingredient toAdd) {
+    public boolean addToInventory(Ingredient toAdd) {
 
         if (this.inventory == null) {
             this.inventory = toAdd;
@@ -376,6 +374,11 @@ public class Mole extends CapsuleObstacle {
         Ingredient temp = this.inventory;
         this.inventory = null;
         return temp;
+    }
+
+    /** Return whether inventory is empty or not */
+    public boolean isEmpty() {
+        return (inventory == null);
     }
 
     /** */

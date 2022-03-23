@@ -2,9 +2,7 @@ package edu.cornell.gdiac.molechelinmadness;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
@@ -98,31 +96,50 @@ public class GameplayController implements Screen, ContactListener {
             //Check for and handle ground collision to reset mole jumps
             if ("feet".equals(fd1)) {
                 Mole currMole = (Mole) bd1;
+
+                //Handle jump resets
                 currMole.setCanJump(true);
                 currMole.addSensorFixtures(fix2);
 
+
+
             } else if ("feet".equals(fd2)){
                 Mole currMole = (Mole) bd2;
+
+                //Handle jump resets
                 currMole.setCanJump(true);
                 currMole.addSensorFixtures(fix1);
 
             }  if ("hands".equals(fd1)){
-                System.out.println("hands collied");
+                Mole currMole = (Mole)(bd1);
+
+                //Handle button (temp)
                 if (bd2 instanceof Button) {
                     Button button = (Button) bd2;
-                    Mole currMole = (Mole)(bd1);
                     button.setContact(true);
                     button.setContactMole(currMole);
                 }
 
-            } else if ("hands".equals(fd2)) {
+                //Handle interactives (including dumbwaiter, buttons, etc.)
+                if (bd2 instanceof Interactive) {
+                    Interactive interactive = (Interactive) bd2;
+                    interactive.resolveBegin(currMole);
+                }
 
-                System.out.println("hands collied");
+            } else if ("hands".equals(fd2)) {
+                Mole currMole = (Mole)(bd2);
+
+                //Handle button (temp)
                 if (bd1 instanceof Button) {
                     Button button = (Button) bd1;
-                    Mole currMole = (Mole)(bd2);
                     button.setContact(true);
                     button.setContactMole(currMole);
+                }
+
+                //Handle interactives (including dumbwaiter, buttons, etc.)
+                if (bd2 instanceof Interactive) {
+                    Interactive interactive = (Interactive) bd2;
+                    interactive.resolveBegin(currMole);
                 }
 
             }
@@ -133,7 +150,7 @@ public class GameplayController implements Screen, ContactListener {
                 Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
                 Ingredient i = bd2 instanceof Ingredient ? (Ingredient) bd2 : (Ingredient) bd1;
                 if(mole.getInventory() == null){
-                    mole.setInventory(i);
+                    mole.addToInventory(i);
                     i.holdPos(100, 100);
                 }
 
@@ -210,17 +227,25 @@ public class GameplayController implements Screen, ContactListener {
         //Handle ground collision
         if ("feet".equals(fd1)) {
             Mole currMole = (Mole) bd1;
+
+            //Handle jump resets
             currMole.removeSensorFixtures(fix2);
             if (currMole.countFixtures() == 0) {
                 currMole.setCanJump(false);
             }
 
+
+
         } else if ("feet".equals(fd2)) {
             Mole currMole = (Mole) bd2;
+
+            //Handle jump resets
             currMole.removeSensorFixtures(fix1);
             if (currMole.countFixtures() == 0) {
                 currMole.setCanJump(false);
             }
+
+
 
         } else if ("hands".equals(fd1)) {
             if (bd2 instanceof Button) {
