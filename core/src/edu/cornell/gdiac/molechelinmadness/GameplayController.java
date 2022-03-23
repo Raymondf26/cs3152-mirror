@@ -19,7 +19,11 @@ public class GameplayController implements Screen, ContactListener {
     //START: Constants we can extract into data later
 
     /** Array of level names to be extracted */
-    // public static final String[];
+    public static String[] levels = {"level1", "level2"};
+
+    /** Current index in level array */
+    private int levelIndex;
+
 
     /** Exit code for quitting the game */
     public static final int EXIT_QUIT = 0;
@@ -50,7 +54,7 @@ public class GameplayController implements Screen, ContactListener {
     /** Countdown active for winning or losing */
     private int countdown;
     /** Which mole is being controlled */
-    private int controlledMole = 0;
+    private int controlledMole;
 
     /** Reference to the game canvas */
     protected GameCanvas canvas;
@@ -294,7 +298,7 @@ public class GameplayController implements Screen, ContactListener {
 
 
     public GameplayController() {
-
+        levelIndex = 0;
         level = new Level();
         complete = false;
         failed = false;
@@ -309,11 +313,10 @@ public class GameplayController implements Screen, ContactListener {
         this.directory = directory;
         // Access the assets used directly by this controller
         displayFont = directory.getEntry("shared:retro", BitmapFont.class);
-        System.out.println(displayFont);
 
 
         // This represents the level but does not BUILD it
-        levelFormat = directory.getEntry( "level_tutorial", JsonValue.class );
+        levelFormat = directory.getEntry( levels[levelIndex], JsonValue.class );
     }
 
     /**
@@ -330,6 +333,7 @@ public class GameplayController implements Screen, ContactListener {
 
         // Reload the json each time
         level.populate(directory, levelFormat);
+        controlledMole = level.controlMole;
         level.getWorld().setContactListener(this);
     }
 
@@ -372,11 +376,13 @@ public class GameplayController implements Screen, ContactListener {
             return false;
         } else if (input.didAdvance()) {
             pause();
-            listener.exitScreen(this, EXIT_NEXT);
+            // listener.exitScreen(this, EXIT_NEXT);
+            changeLevel(1);
             return false;
         } else  if (input.didRetreat()) {
             pause();
-            listener.exitScreen(this, EXIT_PREV);
+           // listener.exitScreen(this, EXIT_PREV);
+            changeLevel(-1);
             return false;
         } else if (countdown > 0) {
             countdown--;
@@ -400,6 +406,24 @@ public class GameplayController implements Screen, ContactListener {
 
     }
 
+
+    /**
+     * Change the level by dumping the current level and changing our index into the levels array
+     * and repopulating. Workaround solution currently.
+     *
+     * @param next      1 if next level, 0 if previous level
+     */
+    public void changeLevel(int next) {
+        if (levelIndex == -1) {
+            if (levelIndex > 0) levelIndex --;
+            else { levelIndex = levels.length-1; }
+        } else {
+            if (levelIndex < levels.length - 1) levelIndex ++;
+            else {levelIndex = 0; }
+        }
+       levelFormat = directory.getEntry( levels[levelIndex], JsonValue.class );
+       reset();
+    }
 
     /**
      * The core gameplay loop of this world.
