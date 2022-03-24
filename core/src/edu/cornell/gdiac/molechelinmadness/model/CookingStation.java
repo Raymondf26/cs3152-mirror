@@ -146,7 +146,7 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
         super.draw(canvas);
         if (interacting) {
             displayFont.setColor(Color.YELLOW);
-            canvas.drawText(String.valueOf(timeReq - progress), displayFont, getX()*drawScale.x, (getY() + getHeight()) *drawScale.y);
+            canvas.drawText(String.valueOf((int)((timeReq - progress) * 100)), displayFont, getX()*drawScale.x, (getY() + getHeight()) *drawScale.y);
         }
     }
 }

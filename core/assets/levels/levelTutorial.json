@@ -235,7 +235,7 @@
     {
       "name" : "cooking1",
       "type" : "cooking",
-      "pos" : [5.0, 1.0],
+      "pos" : [13.5, 1.0],
       "size" : [1.5, 1.25],
       "cooking_time" : 0.5,
       "texture": "interactive:cookingtable"
