@@ -26,6 +26,8 @@ public class WheelObstacle extends SimpleObstacle {
 	protected CircleShape shape;
 	/** A cache value for the fixture (for resizing) */
 	private Fixture geometry;
+
+	private Color debugColor;
 	
 	/**
 	 * Returns the radius of this circle
@@ -117,4 +119,21 @@ public class WheelObstacle extends SimpleObstacle {
 		canvas.drawPhysics(shape,Color.YELLOW,getX(),getY(),drawScale.x,drawScale.y);
 	}
 
+	/**
+	 * Returns the color to display the physics outline
+	 *
+	 * @return the color to display the physics outline
+	 */
+	public Color getDebugColor() {
+		return debugColor;
+	}
+
+	/**
+	 * Sets the color to display the physics outline
+	 *
+	 * @param value	the color to display the physics outline
+	 */
+	public void setDebugColor(Color value) {
+		debugColor = value;
+	}
 }

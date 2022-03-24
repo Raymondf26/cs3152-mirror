@@ -6,12 +6,13 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.model.GameObject;
 import edu.cornell.gdiac.molechelinmadness.model.Interactive;
 import edu.cornell.gdiac.molechelinmadness.model.Mole;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class Button extends BoxObstacle implements Interactor, Interactive {
+public class Button extends BoxObstacle implements Interactor, Interactive, GameObject {
 
 
     Array<Event> triggers;
@@ -84,7 +85,7 @@ public class Button extends BoxObstacle implements Interactor, Interactive {
         setTexture(texture);
     }
 
-    public void update(){
+    public void refresh(float dt){
         if (contact) {
             if (mole != null) {
                 if (mole.isInteracting()) {

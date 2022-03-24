@@ -12,10 +12,12 @@ import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class PressurePlate extends BoxObstacle implements Interactor {
+public class PressurePlate extends BoxObstacle implements Interactor, Interactive, GameObject {
 
     Array<Event> TriggerEventList;
     Array<Event> DetriggerEventList;
+
+    boolean contact;
 
     public PressurePlate(){
         super(0,0,1,1);
@@ -28,6 +30,16 @@ public class PressurePlate extends BoxObstacle implements Interactor {
         setFriction(1.0f);
         setRestitution(0.0f);
 
+    }
+
+    @Override
+    public void refresh(float dt) {
+        if (contact) {
+            activate();
+        }
+        else {
+            deactivate();
+        }
     }
 
     /**
@@ -70,13 +82,16 @@ public class PressurePlate extends BoxObstacle implements Interactor {
         DetriggerEventList.add(toAdd);
     }
 
-    /**
-     *
-     * Return the type of the interactable object.
-     *
-     */
-    public InteractorType getType() {
-        return InteractorType.PRESSURE_PLATE;
+    public int getType() {return 1;}
+
+    @Override
+    public void resolveBegin(Mole mole) {
+        contact = true;
+    }
+
+    @Override
+    public void resolveEnd(Mole mole) {
+        contact = false;
     }
 
     /**

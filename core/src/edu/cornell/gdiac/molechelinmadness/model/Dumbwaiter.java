@@ -1,6 +1,5 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,16 +10,15 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.ComplexObstacle;
-import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
 import java.lang.reflect.Field;
 
 public class Dumbwaiter extends ComplexObstacle implements GameObject{
 
     @Override
-    public void update(float dt) {
-        head.update(dt);
-        tail.update(dt);
+    public void refresh(float dt) {
+        head.refresh(dt);
+        tail.refresh(dt);
     }
 
     private class DumbHead extends BoxObstacle implements Interactive, GameObject {
@@ -56,7 +54,7 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
         }
 
         @Override
-        public void update(float dt) {
+        public void refresh(float dt) {
             if (timeLeft < 0) {
                 if (contact) {
                     if (contactMole.isInteracting()) {

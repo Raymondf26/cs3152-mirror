@@ -93,6 +93,7 @@
   "interactors" :
   [
     {
+      "name" : "button2",
       "pos" : [11.5, 9],
       "type" : "button",
       "size" : [0.75, 0.75],
@@ -113,6 +114,7 @@
       ]
     },
     {
+      "name" : "button1",
       "pos" : [28, 1],
       "type" : "button",
       "size" : [0.75, 0.75],
@@ -231,15 +233,11 @@
   "cooking" :
   [
     {
-      "type" :  "chopping",
-      "pos" :  [8.0, 1.0],
-      "size" : [1.5, 1.25],
-      "texture": "interactive:choppingtable"
-    },
-    {
+      "name" : "cooking1",
       "type" : "cooking",
-      "pos" : [2.0, 1.0],
+      "pos" : [5.0, 1.0],
       "size" : [1.5, 1.25],
+      "cooking_time" : 0.5,
       "texture": "interactive:cookingtable"
     }
 
@@ -248,17 +246,20 @@
     {
       "type" : "tomato",
       "texture": "tomato",
-      "pos" : [12.5, 14]
+      "pos" : [12.5, 14],
+      "chopped" : true
     },
     {
       "type" : "onion",
       "texture": "onion",
-      "pos" : [26.0, 2.0]
+      "pos" : [26.0, 2.0],
+      "chopped" : true
     },
     {
       "type" : "eggplant",
       "texture": "eggplant",
-      "pos" : [18.0, 15.0]
+      "pos" : [18.0, 15.0],
+      "chopped" : true
     }
   ]
 }

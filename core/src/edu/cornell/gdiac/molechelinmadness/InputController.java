@@ -59,6 +59,8 @@ public class InputController {
     private boolean exitPressed;
     private boolean exitPrevious;
 
+    private boolean didDrop;
+
     /** How much did we move horizontally? */
     private float horizontal;
     /** How much did we move vertically? */
@@ -318,11 +320,17 @@ public class InputController {
 
         tertiaryPressed = Gdx.input.isKeyPressed(Input.Keys.F);
 
+        didDrop = Gdx.input.isKeyPressed(Input.Keys.G);
+
         // Mouse results
         crosshair.set(Gdx.input.getX(), Gdx.input.getY());
         crosshair.scl(1/scale.x,-1/scale.y);
         crosshair.y += bounds.height;
         clampPosition(bounds);
+    }
+
+    public boolean didDrop() {
+        return didDrop;
     }
 
     /**

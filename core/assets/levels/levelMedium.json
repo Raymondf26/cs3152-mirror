@@ -21,8 +21,8 @@
     "list" :
     [
       {
-        "idle behavior" : ["left", 0.5, "idle", 0.25, "right", 0.5, "idle", 0.25],
-        "pos":           [ 28,  5.0],
+        "idle behavior" : ["left", 1.0, "idle", 0.25, "right", 1.0, "idle", 0.25],
+        "pos":           [ 24,  2.0],
         "size":          [ 1.1, 1.5],
         "bodytype":      "dynamic",
         "density":        0.333,
@@ -43,7 +43,7 @@
         "sensoropacity": 192
       },
       {
-        "pos" : [14.5, 8.0],
+        "pos" : [13.5, 11.0],
         "texture" : "mole:chef2",
         "control":       "mole:indicator",
         "idle behavior" : ["idle", 1.5, "jump", 0.01],
@@ -55,7 +55,7 @@
         "force": 		 10.0,
         "damping": 		 10.0,
         "maxspeed": 	  5.0,
-        "jumppulse": 	  6.0,
+        "jumppulse": 	  8.0,
         "jumplimit": 	 30,
         "debugcolor":    "white",
         "debugopacity":  192,
@@ -93,30 +93,46 @@
   [
     {
       "name" : "rotating_platform2",
-      "type" : "rotating_platform",
-      "pos" : [23, 6],
-      "size" : [3.5, 0.2],
-      "pin_pos" : [7.5, 9.5],
+      "type" : "rotating_platform_v2",
+      "pos" : [17.5, 12.5],
+      "size" : [0.2, 1.0],
+      "pin_offset" : [0, -1.0],
       "pin_radius" : 0.1,
       "orientation" : 180,
+      "debugcolor" : "yellow",
+      "debugopacity" : 200,
       "texture" : "interactive:rotatingplatform"
     },
     {
       "name" : "rotating_platform1",
-      "type" : "rotating_platform",
-      "pos" : [21, 6],
+      "type" : "rotating_platform_v2",
+      "pos" : [18.25, 9.75],
       "size" : [0.2, 1.5],
-      "pin_pos" : [7.5, 9.5],
+      "pin_offset" : [0, -1],
       "pin_radius" : 0.1,
       "orientation" : 180,
+      "debugcolor" : "yellow",
+      "debugopacity" : 200,
+      "texture" : "interactive:rotatingplatform"
+    },
+    {
+      "name" : "rotating_platform3",
+      "type" : "rotating_platform_v2",
+      "pos" : [28.85, 2.25],
+      "size" : [1, 0.2],
+      "pin_offset" : [-0.6, 0],
+      "pin_radius" : 0.1,
+      "orientation" : 180,
+      "debugcolor" : "yellow",
+      "debugopacity" : 200,
       "texture" : "interactive:rotatingplatform"
     },
     {
       "name" : "dumbwaiter1",
       "type" : "dumbwaiter",
-      "pos1" : [2, 7.5],
-      "pos2" : [2, 2.5],
-      "size" : [1.92, 1.92],
+      "pos1" : [5, 10.5],
+      "pos2" : [1, 3],
+      "size" : [1.25, 1.25],
       "cooldown" : 0.25,
       "bodytype" : "static",
       "density" : 0.0,
@@ -130,30 +146,11 @@
   "interactors" :
   [
     {
-      "pos" : [11.5, 7],
+      "name" : "button1",
+      "pos" : [22.5, 13.5],
       "type" : "button",
       "size" : [0.75, 0.75],
       "texture" : "interactive:button1",
-      "link" :
-      [
-        {
-          "name" : "rotating_platform1",
-          "event" : "door:open_middle"
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform1",
-          "event" : "door:close_middle"
-        }
-      ]
-    },
-    {
-      "pos" : [13.0, 2],
-      "type" : "button",
-      "size" : [0.75, 0.75],
-      "texture" : "interactive:button2",
       "link" :
       [
         {
@@ -162,8 +159,101 @@
         }
       ],
       "linkEnd" : []
+    },
+    {
+      "name" : "button2",
+      "pos" : [0.75, 1.5],
+      "type" : "button",
+      "size" : [0.75, 0.75],
+      "texture" : "interactive:button2",
+      "link" :
+      [
+        {
+          "name" : "rotating_platform3",
+          "event" : "doorv2:open",
+          "effect" : 1.57
+        },
+        {
+          "name" : "rotating_platform2",
+          "event" : "doorv2:open",
+          "effect" : -1.57
+        }
+      ],
+      "linkEnd" :
+      [
+        {
+          "name" : "rotating_platform3",
+          "event" : "doorv2:close"
+        },
+        {
+          "name" : "rotating_platform2",
+          "event" : "doorv2:close"
+        }
+      ]
+    },
+    {
+      "name" : "pressureplate1",
+      "pos" : [30, 0.4],
+      "size" : [1, 0.1],
+      "type" : "pressureplate",
+      "texture" : "interactive:pressureplate",
+      "link" :
+      [
+        {
+          "name" : "rotating_platform1",
+          "event" : "doorv2:open",
+          "effect" : -1.57
+        }
+      ],
+      "linkEnd" :
+      [
+        {
+          "name" : "rotating_platform1",
+          "event" : "doorv2:close"
+        }
+      ]
     }
 
+  ],
+  "cooking" :
+  [
+    {
+      "name" : "chopping1",
+      "type" :  "chopping",
+      "pos" :  [19.25, 10.0],
+      "size" : [1.5, 1.25],
+      "cooking_time" : 1,
+      "texture": "interactive:choppingtable"
+    },
+    {
+      "name" : "cooking1",
+      "type" : "cooking",
+      "pos" : [5.0, 1.0],
+      "size" : [1.5, 1.25],
+      "cooking_time" : 1,
+      "texture": "interactive:cookingtable"
+    }
+
+  ],
+  "ingredient" : [
+    {
+      "type" : "tomato",
+      "texture": "tomato",
+      "pos" : [13.5, 8],
+      "chopped" : true
+    },
+    {
+      "type" : "onion",
+      "texture": "onion",
+      "pos" : [28.75, 4.0],
+      "chopped" : false
+    },
+    {
+      "type" : "eggplant",
+      "texture": "eggplant",
+      "pos" : [19.0, 15.0],
+      "chopped" : true
+    }
   ],
   "platforms": {
     "floor1": {
@@ -189,8 +279,8 @@
       "debugopacity":  200
     },
     "floor3": {
-      "pos":           [ 9f, 9f],
-      "size":          [  8f,  0.5f],
+      "pos":           [ 10f, 9.25f],
+      "size":          [  12f,  1f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -222,8 +312,19 @@
       "debugopacity":  200
     },
     "floor4": {
-      "pos":           [ 19.5f, 11.25f],
-      "size":          [  6f,  0.5f],
+      "pos":           [ 20f, 12.25f],
+      "size":          [  5f,  1.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor5": {
+      "pos":           [ 28.75f, 4f],
+      "size":          [  1f,  0.25f],
       "bodytype":      "static",
       "density":        0.0,
       "friction":       0.4,
@@ -259,38 +360,6 @@
       "debugcolor":    "yellow",
       "debugopacity":  200
     }
-  },
-  "cooking" :
-  [
-    {
-      "type" :  "chopping",
-      "pos" :  [19, 10.0],
-      "size" : [1.5, 1.25],
-      "texture": "interactive:choppingtable"
-    },
-    {
-      "type" : "cooking",
-      "pos" : [5.0, 1.0],
-      "size" : [1.5, 1.25],
-      "texture": "interactive:cookingtable"
-    }
+  }
 
-  ],
-  "ingredient" : [
-    {
-      "type" : "tomato",
-      "texture": "tomato",
-      "pos" : [13.5, 14]
-    },
-    {
-      "type" : "onion",
-      "texture": "onion",
-      "pos" : [26.0, 2.0]
-    },
-    {
-      "type" : "eggplant",
-      "texture": "eggplant",
-      "pos" : [18.0, 15.0]
-    }
-  ]
 }

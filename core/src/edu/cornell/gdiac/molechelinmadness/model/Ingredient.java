@@ -6,10 +6,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class Ingredient extends BoxObstacle {
+public class Ingredient extends BoxObstacle implements GameObject{
     private static float SIZE = 5.0f;
-    private float x;
-    private float y;
+    private float holdX;
+    private float holdY;
     public Boolean moved = false;
 
     //True if this ingredient chopped
@@ -44,20 +44,17 @@ public class Ingredient extends BoxObstacle {
     }
 
     public void holdPos(float x, float y){
-        this.x = x;
-        this.y = y;
+        this.holdX = x;
+        this.holdY = y;
         this.moved = true;
     }
 
-    public void update() {
-        setPosition(x, y);
-    }
-
-    public float gX(){
-        return this.x;
-    }
-    public float gY(){
-        return this.y;
+    @Override
+    public void refresh(float dt) {
+        if (moved) {
+            setPosition(holdX, holdY);
+            this.moved = false;
+        }
     }
 
     /**
@@ -71,8 +68,8 @@ public class Ingredient extends BoxObstacle {
      */
     public Ingredient() {
         super(0, 0, 0.45f, 0.65f);
-        this.x = 0;
-        this.y = 0;
+        this.holdX = 0;
+        this.holdY = 0;
         chopped = false;
 
     }
@@ -82,11 +79,13 @@ public class Ingredient extends BoxObstacle {
         String type = json.get("type").asString();
         float[] pos = json.get("pos").asFloatArray();
         this.setPosition(pos[0],pos[1]);
+        boolean isChopped = json.get("chopped").asBoolean();
+        this.chopped = isChopped;
 
-        if(type == "tomato"){
+        if(type.equals("tomato")){
             this.type = IngType.TOMATO;
         }
-        else if(type == "onion"){
+        else if(type.equals("onion")){
             this.type = IngType.ONION;
         }
 
@@ -96,6 +95,5 @@ public class Ingredient extends BoxObstacle {
         String key = json.get("texture").asString();
         TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
         setTexture(texture);
-
     }
 }

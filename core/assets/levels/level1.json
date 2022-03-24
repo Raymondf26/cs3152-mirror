@@ -245,11 +245,13 @@
     {
       "type" :  "chopping",
       "pos" :  [9.0, 3.8],
+      "cooking_time" : 0.5,
       "texture": "interactive:choppingtable"
     },
     {
       "type" : "cooking",
       "pos" : [13.0, 12.5],
+      "cooking_time" : 0.5,
       "texture": "interactive:cookingtable"
     }
 

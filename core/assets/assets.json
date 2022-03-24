@@ -8,7 +8,7 @@
             "wrapV": "repeated"
         },
         "shared:goal":   "textures/goaldoor.png",
-        "interactive:dumbwaiter" : "textures/goaldoor.png",
+        "interactive:dumbwaiter" : "textures/dumbwaiter.png",
         "mole:chef1" : "textures/whitemole.png",
         "mole:chef2" : "textures/pinkmole.png",
         "mole:chef3" : "textures/purplemole.png",

@@ -376,6 +376,16 @@ public class Mole extends CapsuleObstacle {
         return temp;
     }
 
+    public void dropToWorld(boolean bool) {
+        if (bool) {
+            Ingredient ingr = drop();
+            float offset = faceRight ? 1.25f : -1.25f;
+            if (ingr != null) {
+                ingr.holdPos(getX() + offset, getY());
+            }
+        }
+    }
+
     /** Return whether inventory is empty or not */
     public boolean isEmpty() {
         return (inventory == null);

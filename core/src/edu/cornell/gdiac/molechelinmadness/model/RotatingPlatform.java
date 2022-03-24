@@ -56,7 +56,7 @@ public class RotatingPlatform extends BoxObstacle implements GameObject {
     }
 
     @Override
-    public void update(float dt) {
+    public void refresh(float dt) {
         setAngle(newAngle);
         setPosition(getPosition().add(newVector));
         translate(newVector.scl(0));

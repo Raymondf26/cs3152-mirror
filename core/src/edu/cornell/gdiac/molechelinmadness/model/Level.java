@@ -139,11 +139,11 @@ public class Level {
         JsonValue ings = levelFormat.get("ingredient");
 
         for (JsonValue i : ings) {
-            //System.out.println(2);
             Ingredient ingredient = new Ingredient();
             ingredient.initialize(directory, i);
             ingredient.setDrawScale(scale);
             ingredients.add(ingredient);
+            gameObjects.put(i.getString("type"), ingredient);
             activate(ingredient);
         }
 
@@ -155,6 +155,7 @@ public class Level {
             station.initialize(directory, c);
             station.setDrawScale(scale);
             stations.add(station);
+            gameObjects.put(c.getString("name"), station);
             activate(station);
 
         }
@@ -174,8 +175,15 @@ public class Level {
             gameObjects.put(json.getString("name"), dumbwaiter);
             activate(dumbwaiter);
         }
-        if (type.equals("rotating_platform")) {
+        else if (type.equals("rotating_platform")) {
             RotatingPlatform rotatingPlatform = new RotatingPlatform();
+            rotatingPlatform.initialize(directory, json);
+            rotatingPlatform.setDrawScale(scale);
+            gameObjects.put(json.getString("name"), rotatingPlatform);
+            activate(rotatingPlatform);
+        }
+        else if (type.equals("rotating_platform_v2")) {
+            RotatingPlatformV2 rotatingPlatform = new RotatingPlatformV2();
             rotatingPlatform.initialize(directory, json);
             rotatingPlatform.setDrawScale(scale);
             gameObjects.put(json.getString("name"), rotatingPlatform);
@@ -188,16 +196,40 @@ public class Level {
 
     public Array<Button> getButtons() {return buttons;}
 
-    /** Initialize all interactive elements like pressure plates, etc. */
+    /** Initialize all interactor elements like pressure plates, etc. */
     private void initializeInteractors(AssetDirectory directory, JsonValue json) {
         String type = json.getString("type");
         if (type.equals("pressureplate")) {
             PressurePlate pressureplate = new PressurePlate();
             pressureplate.initialize(directory, json);
             pressureplate.setDrawScale(scale);
-            // MISSING SOMETHING TO LINK EVENTS
+            JsonValue link = json.get("link").child();
+            while (link != null) {
+                String name = link.getString("name");
+                System.out.println(name);
+                GameObject obs = gameObjects.get(name);
+                Event event = parseEvent(link.getString("event"), link);
+                assert (event != null);
+                event.linkObject(obs);
+                pressureplate.addTriggerEvent(event);
+                pressureplate.addTriggerEvent(event);
+                link = link.next();
+            }
+            JsonValue endLink = json.get("linkEnd").child();
+            while (endLink != null) {
+                String name = endLink.getString("name");
+                System.out.println(name);
+                GameObject obs = gameObjects.get(name);
+                Event event = parseEvent(endLink.getString("event"), link);
+                assert (event != null);
+                event.linkObject(obs);
+                pressureplate.addDetriggerEvent(event);
+                endLink = endLink.next();
+            }
+            gameObjects.put(json.getString("name"), pressureplate);
             activate(pressureplate);
         }
+
         if (type.equals("button")) {
             Button button = new Button();
             button.initialize(directory, json);
@@ -207,7 +239,7 @@ public class Level {
                 String name = link.getString("name");
                 System.out.println(name);
                 GameObject obs = gameObjects.get(name);
-                Event event = parseEvent(link.getString("event"));
+                Event event = parseEvent(link.getString("event"), link);
                 assert (event != null);
                 event.linkObject(obs);
                 button.addTriggerEvent(event);
@@ -219,18 +251,19 @@ public class Level {
                 String name = endLink.getString("name");
                 System.out.println(name);
                 GameObject obs = gameObjects.get(name);
-                Event event = parseEvent(endLink.getString("event"));
+                Event event = parseEvent(endLink.getString("event"), link);
                 assert (event != null);
                 event.linkObject(obs);
                 button.addDetriggerEvent(event);
                 endLink = endLink.next();
             }
             buttons.add(button);
+            gameObjects.put(json.getString("name"), button);
             activate(button);
         }
     }
 
-    private Event parseEvent(String string) {
+    private Event parseEvent(String string, JsonValue link) {
         if (string.equals("door:open")) {
             return new DoorOpen();
         }
@@ -245,6 +278,15 @@ public class Level {
         }
         else if (string.equals("dumbwaiter:up")) {
             return new DumbwaiterUp();
+        }
+        else if (string.equals("doorv2:open")) {
+            float angle = link.getFloat("effect");
+            DoorV2Open event = new DoorV2Open();
+            event.setAngle(angle);
+            return event;
+        }
+        else if (string.equals("doorv2:close")) {
+            return new DoorV2Close();
         }
         else return null;
     }

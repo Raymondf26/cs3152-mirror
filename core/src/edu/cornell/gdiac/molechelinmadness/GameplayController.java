@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.*;
-import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
-import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.ScreenListener;
 
@@ -106,6 +104,13 @@ public class GameplayController implements Screen, ContactListener {
                 currMole.addSensorFixtures(fix2);
 
 
+                //Handle interactives (including dumbwaiter, buttons, etc.)
+                if (bd2 instanceof Interactive) {
+                    Interactive interactive = (Interactive) bd2;
+                    if (interactive.getType() == 1) {
+                        interactive.resolveBegin(currMole);
+                    }
+                }
 
             } else if ("feet".equals(fd2)){
                 Mole currMole = (Mole) bd2;
@@ -114,13 +119,24 @@ public class GameplayController implements Screen, ContactListener {
                 currMole.setCanJump(true);
                 currMole.addSensorFixtures(fix1);
 
+
+                //Handle interactives (including dumbwaiter, buttons, etc.)
+                if (bd1 instanceof Interactive) {
+                    Interactive interactive = (Interactive) bd1;
+                    if (interactive.getType() == 1) {
+                        interactive.resolveBegin(currMole);
+                    }
+                }
+
             }  if ("hands".equals(fd1)){
                 Mole currMole = (Mole)(bd1);
 
                 //Handle interactives (including dumbwaiter, buttons, etc.)
                 if (bd2 instanceof Interactive) {
                     Interactive interactive = (Interactive) bd2;
-                    interactive.resolveBegin(currMole);
+                    if (interactive.getType() == 0) {
+                        interactive.resolveBegin(currMole);
+                    }
                 }
 
             } else if ("hands".equals(fd2)) {
@@ -129,7 +145,9 @@ public class GameplayController implements Screen, ContactListener {
                 //Handle interactives (including dumbwaiter, buttons, etc.)
                 if (bd1 instanceof Interactive) {
                     Interactive interactive = (Interactive) bd1;
-                    interactive.resolveBegin(currMole);
+                    if (interactive.getType() == 0) {
+                        interactive.resolveBegin(currMole);
+                    }
                 }
 
             }
@@ -148,35 +166,16 @@ public class GameplayController implements Screen, ContactListener {
 
 
             //Check for and handle mole-cooking-station collision
-            if ((bd1 instanceof Mole && bd2 instanceof CookingStation) || (bd1 instanceof CookingStation && bd2 instanceof  Mole)) {
+           /* if ((bd1 instanceof Mole && bd2 instanceof CookingStation) || (bd1 instanceof CookingStation && bd2 instanceof  Mole)) {
                 //logic
                 Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
                 CookingStation c = bd2 instanceof CookingStation ? (CookingStation) bd2 : (CookingStation) bd1;
                 c.Cook(mole);
-            }
+            }*/
 
             //Check for and handle mole-final-cooking-station collision
             if ((bd1 instanceof Mole && bd2 instanceof FinalStation) || (bd1 instanceof FinalStation && bd2 instanceof  Mole)) {
                 //logic
-            }
-
-            //Check for and handle mole-interactor collision
-            if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
-                //pressure plate
-                if (bd1 instanceof PressurePlate){
-                    ((PressurePlate) bd1).activate();
-                } else if (bd2 instanceof PressurePlate){
-                    ((PressurePlate) bd2).activate();
-                }
-
-            }
-
-            //Check for and handle mole-dumbwaiter collision
-            if ((bd1 instanceof Mole && bd2 instanceof Dumbwaiter) || (bd1 instanceof Dumbwaiter && bd2 instanceof  Mole)) {
-                Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
-                Dumbwaiter dumbwaiter = bd1 instanceof Dumbwaiter ? (Dumbwaiter) bd1 : (Dumbwaiter) bd2;
-
-                //logic w/ mole
             }
 
             // Check for and handle mole-ingredient chute collision
@@ -184,8 +183,6 @@ public class GameplayController implements Screen, ContactListener {
                 Mole mole = bd1 instanceof Mole ? (Mole) bd1 : (Mole) bd2;
                 IngredientChute ingredientChute = bd1 instanceof IngredientChute ? (IngredientChute) bd1 : (IngredientChute) bd2;
                 Ingredient ingredient = mole.drop(); // Drop ingredient in inventory so we can send it up
-
-
             }
 
 
@@ -224,6 +221,14 @@ public class GameplayController implements Screen, ContactListener {
                 currMole.setCanJump(false);
             }
 
+            //Handle interactives (including dumbwaiter, buttons, etc.)
+            if (bd2 instanceof Interactive) {
+                Interactive interactive = (Interactive) bd2;
+                if (interactive.getType() == 1) {
+                    interactive.resolveEnd(currMole);
+                }
+            }
+
 
 
         } else if ("feet".equals(fd2)) {
@@ -235,6 +240,13 @@ public class GameplayController implements Screen, ContactListener {
                 currMole.setCanJump(false);
             }
 
+            if (bd1 instanceof Interactive) {
+                Interactive interactive = (Interactive) bd1;
+                if (interactive.getType() == 1) {
+                    interactive.resolveEnd(currMole);
+                }
+            }
+
 
 
         } else if ("hands".equals(fd1)) {
@@ -243,7 +255,9 @@ public class GameplayController implements Screen, ContactListener {
             //Handle interactives (including dumbwaiter, buttons, etc.)
             if (bd2 instanceof Interactive) {
                 Interactive interactive = (Interactive) bd2;
-                interactive.resolveEnd(currMole);
+                if (interactive.getType() == 0) {
+                    interactive.resolveEnd(currMole);
+                }
             }
 
         } else if ("hands".equals(fd2)) {
@@ -251,28 +265,11 @@ public class GameplayController implements Screen, ContactListener {
 
             if (bd1 instanceof Interactive) {
                 Interactive interactive = (Interactive) bd1;
-                interactive.resolveEnd(currMole);
+                if (interactive.getType() == 0) {
+                    interactive.resolveEnd(currMole);
+                }
             }
         }
-
-
-        //Handle cooking station collision
-        if ((bd1 instanceof Mole && bd2 instanceof CookingStation) || (bd1 instanceof CookingStation && bd2 instanceof  Mole)) {
-            //logic
-        }
-
-
-        //Handle interactor collision
-        if ((bd1 instanceof Mole && bd2 instanceof Interactor) || (bd1 instanceof Interactor && bd2 instanceof  Mole)) {
-
-            //pressure plate
-            if (bd2 instanceof PressurePlate){
-                ((PressurePlate) bd2).deactivate();
-            } else if (bd1 instanceof PressurePlate){
-                ((PressurePlate) bd1).deactivate();
-            }
-        }
-
 
     }
 
@@ -440,6 +437,7 @@ public class GameplayController implements Screen, ContactListener {
                 moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
                 moles.get(i).setJumping(InputController.getInstance().didPrimary());
                 moles.get(i).setInteracting(InputController.getInstance().didTertiary());
+                moles.get(i).dropToWorld(InputController.getInstance().didDrop());
             }
             else {
                 AIController ai = moles.get(i).getAIController();
@@ -451,25 +449,9 @@ public class GameplayController implements Screen, ContactListener {
 
         }
 
-        //System.out.println(moles.get(0).getInventory());
-        //System.out.println(moles.get(1).getInventory());
-
-        Array<Ingredient> ingredients = level.getIngredients();
-        for(Ingredient i : ingredients){
-            if(i.moved){
-                i.setX(i.gX());
-                i.setY(i.gY());
-            }
-        }
-
-
-        for (Button button : level.getButtons()) {
-            button.update();
-        }
-
         //Updating all game objects
         for (GameObject obj : level.getGameObjects()) {
-            obj.update(dt);
+            obj.refresh(dt);
         }
 
         //Apply forces and sounds
@@ -481,7 +463,7 @@ public class GameplayController implements Screen, ContactListener {
 
         //check win
         for(CookingStation c : stations){
-            if(c.getType() == CookingStation.stationType.COOKING){
+            if(c.getStationType() == CookingStation.stationType.COOKING){
                 if(c.getIngredients().size == 3){
                     complete = true;
                 }
