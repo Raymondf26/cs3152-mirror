@@ -99,16 +99,16 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
     }
 
     /** Send ingredient from tail to head event */
-    private void sendUp() {
-        if (head.ingr != null) {
+    public void sendUp() {
+        if (tail.ingr != null) {
             head.ingr = tail.ingr;
             tail.ingr = null;
         }
     }
 
     /** Send ingredient from tail to head event */
-    private void sendDown() {
-        if (tail.ingr != null) {
+    public void sendDown() {
+        if (head.ingr != null) {
             tail.ingr = head.ingr;
             head.ingr = null;
         }

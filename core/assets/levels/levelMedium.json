@@ -148,6 +148,20 @@
           "event" : "door:close_middle"
         }
       ]
+    },
+    {
+      "pos" : [13.0, 2],
+      "type" : "button",
+      "size" : [0.75, 0.75],
+      "texture" : "interactive:button2",
+      "link" :
+      [
+        {
+          "name" : "dumbwaiter1",
+          "event" : "dumbwaiter:up"
+        }
+      ],
+      "linkEnd" : []
     }
 
   ],

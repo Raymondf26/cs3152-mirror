@@ -208,8 +208,8 @@ public class Level {
                 System.out.println(name);
                 GameObject obs = gameObjects.get(name);
                 Event event = parseEvent(link.getString("event"));
-                event.linkObject(obs);
                 assert (event != null);
+                event.linkObject(obs);
                 button.addTriggerEvent(event);
                 button.addTriggerEvent(event);
                 link = link.next();
@@ -220,8 +220,8 @@ public class Level {
                 System.out.println(name);
                 GameObject obs = gameObjects.get(name);
                 Event event = parseEvent(endLink.getString("event"));
-                event.linkObject(obs);
                 assert (event != null);
+                event.linkObject(obs);
                 button.addDetriggerEvent(event);
                 endLink = endLink.next();
             }
@@ -234,16 +234,19 @@ public class Level {
         if (string.equals("door:open")) {
             return new DoorOpen();
         }
-        if (string.equals("door:close")) {
+        else if (string.equals("door:close")) {
             return new DoorClose();
         }
-        if (string.equals("door:close_middle")) {
+        else if (string.equals("door:close_middle")) {
             return new DoorCloseMiddle();
         }
-        if (string.equals("door:open_middle")) {
+        else if (string.equals("door:open_middle")) {
             return new DoorOpenMiddle();
         }
-        return null;
+        else if (string.equals("dumbwaiter:up")) {
+            return new DumbwaiterUp();
+        }
+        else return null;
     }
 
     public void dispose() {
