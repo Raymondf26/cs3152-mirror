@@ -56,16 +56,14 @@ public class Level {
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
     /** Reference to interactive objects as a map*/
-    private ObjectMap<String, Obstacle> interactiveElements;
-    /** temp reference to rotating platform */
-    private Array<RotatingPlatform> rp;
+    private ObjectMap<String, GameObject> gameObjects;
 
     public Level() {
         world  = null;
         bounds = new Rectangle(0,0,1,1);
         scale = new Vector2(1,1);
         debug  = false;
-        interactiveElements = new ObjectMap<>();
+        gameObjects = new ObjectMap<>();
     }
 
     /**
@@ -97,8 +95,6 @@ public class Level {
             activate(obj);
             floor = floor.next();
         }
-
-        rp = new Array<>();
 
         //Add all walls
         JsonValue wall = levelFormat.get("walls").child();
@@ -165,7 +161,7 @@ public class Level {
     }
 
     public Array<Ingredient> getIngredients () {return ingredients;}
-    public Array<RotatingPlatform> getRotatingPlatform() {return rp;}
+    public ObjectMap.Values<GameObject> getGameObjects() {return gameObjects.values();}
 
 
     /** Initialize all interactive elements like rotating platforms, dumbwaiters, etc. */
@@ -175,15 +171,14 @@ public class Level {
             Dumbwaiter dumbwaiter = new Dumbwaiter();
             dumbwaiter.initialize(directory, json);
             dumbwaiter.setDrawScale(scale);
-            interactiveElements.put(json.getString("name"), dumbwaiter);
+            gameObjects.put(json.getString("name"), dumbwaiter);
             activate(dumbwaiter);
         }
         if (type.equals("rotating_platform")) {
             RotatingPlatform rotatingPlatform = new RotatingPlatform();
             rotatingPlatform.initialize(directory, json);
             rotatingPlatform.setDrawScale(scale);
-            interactiveElements.put(json.getString("name"), rotatingPlatform);
-            rp.add(rotatingPlatform);
+            gameObjects.put(json.getString("name"), rotatingPlatform);
             activate(rotatingPlatform);
         }
     }
@@ -211,7 +206,7 @@ public class Level {
             while (link != null) {
                 String name = link.getString("name");
                 System.out.println(name);
-                Obstacle obs = interactiveElements.get(name);
+                GameObject obs = gameObjects.get(name);
                 Event event = parseEvent(link.getString("event"));
                 event.linkObject(obs);
                 assert (event != null);
@@ -223,7 +218,7 @@ public class Level {
             while (endLink != null) {
                 String name = endLink.getString("name");
                 System.out.println(name);
-                Obstacle obs = interactiveElements.get(name);
+                GameObject obs = gameObjects.get(name);
                 Event event = parseEvent(endLink.getString("event"));
                 event.linkObject(obs);
                 assert (event != null);

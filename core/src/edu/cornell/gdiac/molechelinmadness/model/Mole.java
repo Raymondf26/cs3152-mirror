@@ -634,6 +634,10 @@ public class Mole extends CapsuleObstacle {
             if (this.controlled) {
                 canvas.draw(controlTexture, Color.WHITE, origin.x / 2, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
             }
+            if (inventory != null) {
+                TextureRegion texture = inventory.getTexture();
+                canvas.draw(texture, Color.WHITE, origin.x /2, origin.y, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
+            }
         }
     }
 

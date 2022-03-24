@@ -1,6 +1,7 @@
 package edu.cornell.gdiac.molechelinmadness.model.event;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.gdiac.molechelinmadness.model.GameObject;
 import edu.cornell.gdiac.molechelinmadness.model.RotatingPlatform;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
@@ -15,7 +16,7 @@ public class DoorCloseMiddle implements Event{
     }
 
     @Override
-    public void linkObject(Obstacle obs) {
+    public void linkObject(GameObject obs) {
         door = (RotatingPlatform) obs;
     }
 

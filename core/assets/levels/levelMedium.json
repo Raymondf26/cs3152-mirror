@@ -110,6 +110,21 @@
       "pin_radius" : 0.1,
       "orientation" : 180,
       "texture" : "interactive:rotatingplatform"
+    },
+    {
+      "name" : "dumbwaiter1",
+      "type" : "dumbwaiter",
+      "pos1" : [2, 7.5],
+      "pos2" : [2, 2.5],
+      "size" : [1.92, 1.92],
+      "cooldown" : 0.25,
+      "bodytype" : "static",
+      "density" : 0.0,
+      "friction" : 0.0,
+      "restitution" : 0.0,
+      "texture" : "interactive:dumbwaiter",
+      "debugcolor" : "yellow",
+      "debugopacity" : 200
     }
   ],
   "interactors" :
@@ -131,26 +146,6 @@
         {
           "name" : "rotating_platform1",
           "event" : "door:close_middle"
-        }
-      ]
-    },
-    {
-      "pos" : [28, 1],
-      "type" : "button",
-      "size" : [0.75, 0.75],
-      "texture" : "interactive:button2",
-      "link" :
-      [
-        {
-          "name" : "rotating_platform2",
-          "event" : "door:open"
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform2",
-          "event" : "door:close"
         }
       ]
     }
@@ -271,7 +266,7 @@
     {
       "type" : "tomato",
       "texture": "tomato",
-      "pos" : [12.5, 14]
+      "pos" : [13.5, 14]
     },
     {
       "type" : "onion",

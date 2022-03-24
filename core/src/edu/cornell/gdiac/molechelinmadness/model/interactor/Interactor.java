@@ -10,9 +10,6 @@ public interface Interactor {
         PRESSURE_PLATE
     }
 
-    /** Return the type of the interactor object */
-    public InteractorType getType();
-
     /**
      *
      * Give the Array of trigger linked events.

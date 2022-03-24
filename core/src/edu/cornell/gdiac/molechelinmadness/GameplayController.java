@@ -117,13 +117,6 @@ public class GameplayController implements Screen, ContactListener {
             }  if ("hands".equals(fd1)){
                 Mole currMole = (Mole)(bd1);
 
-                //Handle button (temp)
-                if (bd2 instanceof Button) {
-                    Button button = (Button) bd2;
-                    button.setContact(true);
-                    button.setContactMole(currMole);
-                }
-
                 //Handle interactives (including dumbwaiter, buttons, etc.)
                 if (bd2 instanceof Interactive) {
                     Interactive interactive = (Interactive) bd2;
@@ -133,16 +126,9 @@ public class GameplayController implements Screen, ContactListener {
             } else if ("hands".equals(fd2)) {
                 Mole currMole = (Mole)(bd2);
 
-                //Handle button (temp)
-                if (bd1 instanceof Button) {
-                    Button button = (Button) bd1;
-                    button.setContact(true);
-                    button.setContactMole(currMole);
-                }
-
                 //Handle interactives (including dumbwaiter, buttons, etc.)
-                if (bd2 instanceof Interactive) {
-                    Interactive interactive = (Interactive) bd2;
+                if (bd1 instanceof Interactive) {
+                    Interactive interactive = (Interactive) bd1;
                     interactive.resolveBegin(currMole);
                 }
 
@@ -252,15 +238,20 @@ public class GameplayController implements Screen, ContactListener {
 
 
         } else if ("hands".equals(fd1)) {
-            if (bd2 instanceof Button) {
-                ((Button) bd2).setContact(false);
-                ((Button) bd2).setContactMole(null);
+            Mole currMole = (Mole) bd1;
+
+            //Handle interactives (including dumbwaiter, buttons, etc.)
+            if (bd2 instanceof Interactive) {
+                Interactive interactive = (Interactive) bd2;
+                interactive.resolveEnd(currMole);
             }
 
         } else if ("hands".equals(fd2)) {
-            if (bd1 instanceof Button) {
-                ((Button) bd1).setContact(false);
-                ((Button) bd1).setContactMole(null);
+            Mole currMole = (Mole) bd2;
+
+            if (bd1 instanceof Interactive) {
+                Interactive interactive = (Interactive) bd1;
+                interactive.resolveEnd(currMole);
             }
         }
 
@@ -476,9 +467,9 @@ public class GameplayController implements Screen, ContactListener {
             button.update();
         }
 
-        //Updating rotation for platform
-        for (RotatingPlatform platform : level.getRotatingPlatform()) {
-            platform.update();
+        //Updating all game objects
+        for (GameObject obj : level.getGameObjects()) {
+            obj.update(dt);
         }
 
         //Apply forces and sounds

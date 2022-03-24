@@ -49,6 +49,10 @@ public class Ingredient extends BoxObstacle {
         this.moved = true;
     }
 
+    public void update() {
+        setPosition(x, y);
+    }
+
     public float gX(){
         return this.x;
     }

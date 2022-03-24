@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,7 +16,7 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.ComplexObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.WheelObstacle;
 
-public class RotatingPlatform extends BoxObstacle {
+public class RotatingPlatform extends BoxObstacle implements GameObject {
 
     float newAngle = 0;
     Vector2 newVector = new Vector2(0, 0);
@@ -54,7 +55,8 @@ public class RotatingPlatform extends BoxObstacle {
         newAngle = 0;
     }
 
-    public void update() {
+    @Override
+    public void update(float dt) {
         setAngle(newAngle);
         setPosition(getPosition().add(newVector));
         translate(newVector.scl(0));

@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -14,48 +15,119 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
 import java.lang.reflect.Field;
 
-public class Dumbwaiter extends ComplexObstacle implements Interactive{
+public class Dumbwaiter extends ComplexObstacle implements GameObject{
+
+    @Override
+    public void update(float dt) {
+        head.update(dt);
+        tail.update(dt);
+    }
+
+    private class DumbHead extends BoxObstacle implements Interactive, GameObject {
+
+        Ingredient ingr;
+        Boolean contact;
+        Mole contactMole;
+        float timeLeft;
+        float cooldown;
+
+        public DumbHead() {
+            super(0,0,1,1);
+            contact = false;
+            contactMole = null;
+            cooldown = 0f;
+            timeLeft = 0f;
+        }
+
+        /**
+         * 0 refers to hands, 1 refers to feet
+         */
+        @Override
+        public int getType() {
+            return 0;
+        }
+
+        @Override
+        public void resolveBegin(Mole mole) {
+
+            contact = true;
+            contactMole = mole;
+
+        }
+
+        @Override
+        public void update(float dt) {
+            if (timeLeft < 0) {
+                if (contact) {
+                    if (contactMole.isInteracting()) {
+                        if (!contactMole.isEmpty()) {
+                            if (ingr == null) {
+                                ingr = contactMole.drop();
+                                timeLeft = cooldown;
+                            }
+                        }
+                        else {
+                            if (ingr != null) {
+                                contactMole.addToInventory(ingr);
+                                ingr = null;
+                                timeLeft = cooldown;
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                timeLeft -= dt;
+            }
+        }
+
+        @Override
+        public void resolveEnd(Mole mole) {
+            contact = false;
+            contactMole = null;
+        }
+
+        @Override
+        public void draw(GameCanvas canvas) {
+            super.draw(canvas);
+            if (ingr != null) {
+                TextureRegion texture = ingr.getTexture();
+                canvas.draw(texture, Color.WHITE, origin.x / 2, origin.y /2, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
+            }
+        }
+
+    }
+
+    /** Send ingredient from tail to head event */
+    private void sendUp() {
+        if (head.ingr != null) {
+            head.ingr = tail.ingr;
+            tail.ingr = null;
+        }
+    }
+
+    /** Send ingredient from tail to head event */
+    private void sendDown() {
+        if (tail.ingr != null) {
+            tail.ingr = head.ingr;
+            head.ingr = null;
+        }
+    }
 
     /** References to the head and tail */
-    protected BoxObstacle head;
-    protected BoxObstacle tail;
-
-    /** Reference to ingredients in the chute */
-    Ingredient top;
-    Ingredient bot;
+    protected DumbHead head;
+    protected DumbHead tail;
 
     /**
      * Create a new Dumbwaiter with degenerate settings
      * */
     public Dumbwaiter() {
-        head = new BoxObstacle(0, 0, 1f, 1f);
-        tail = new BoxObstacle(0, 0, 1, 1);
-        bodies.add(head, tail);
-    }
-
-    /**
-     * 0 refers to hands, 1 refers to feet
-     */
-    @Override
-    public int getType() {
-        return 0;
-    }
-
-    @Override
-    public void resolveBegin(Mole mole) {
-
-        System.out.println("collided with dumbwaiter");
-
-        if (mole.isInteracting()) {
-            if (!mole.isEmpty()) {
-
-            }
-        }
-    }
-
-    @Override
-    public void resolveEnd(Mole mole) {
-
+        head = new DumbHead();
+        tail = new DumbHead();
+        bodies.add(head);
+        bodies.add(tail);
+        head.setSensor(true);
+        tail.setSensor(true);
     }
 
     /**
@@ -76,6 +148,9 @@ public class Dumbwaiter extends ComplexObstacle implements Interactive{
         tail.setPosition(pos2[0], pos2[1]);
         head.setDimension(size[0], size[1]);
         tail.setDimension(size[0], size[1]);
+
+        head.cooldown = json.get("cooldown").asFloat();
+        tail.cooldown = json.get("cooldown").asFloat();
 
         // Technically, we should do error checking here.
         // A JSON field might accidentally be missing
@@ -121,6 +196,6 @@ public class Dumbwaiter extends ComplexObstacle implements Interactive{
      */
     @Override
     protected boolean createJoints(World world) {
-        return false;
+        return true;
     }
 }

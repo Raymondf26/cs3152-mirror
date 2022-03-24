@@ -6,17 +6,19 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.model.Interactive;
 import edu.cornell.gdiac.molechelinmadness.model.Mole;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class Button extends BoxObstacle implements Interactor {
+public class Button extends BoxObstacle implements Interactor, Interactive {
 
 
     Array<Event> triggers;
     Array<Event> detriggers;
     Boolean contact;
     Boolean triggered;
+    Mole mole;
 
     /**
      * Degenerate button
@@ -30,8 +32,20 @@ public class Button extends BoxObstacle implements Interactor {
     }
 
     @Override
-    public InteractorType getType() {
-        return InteractorType.BUTTON;
+    public int getType() {
+        return 0;
+    }
+
+    @Override
+    public void resolveBegin(Mole mole) {
+        contact = true;
+        this.mole = mole;
+    }
+
+    @Override
+    public void resolveEnd(Mole mole) {
+        contact = false;
+        this.mole = null;
     }
 
     @Override
@@ -70,21 +84,8 @@ public class Button extends BoxObstacle implements Interactor {
         setTexture(texture);
     }
 
-    public void setContact(boolean bool) {
-        contact = bool;
-    }
-
-    public boolean getContact (){return contact;}
-
-    Mole mole;
-
-    public void setContactMole(Mole mole) {this.mole = mole;}
-
-    public Mole getContactMole() {return mole;}
-
     public void update(){
         if (contact) {
-            //System.out.println("contacted");
             if (mole != null) {
                 if (mole.isInteracting()) {
                     triggerOn();
