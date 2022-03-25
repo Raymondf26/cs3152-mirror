@@ -10,7 +10,7 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.PolygonObstacle;
 
 import java.lang.reflect.Field;
 
-public class Wall extends PolygonObstacle {
+public class Wall extends PolygonObstacle{
     /**
      * Creates a (not necessarily convex) polygon at the origin.
      * <p>
