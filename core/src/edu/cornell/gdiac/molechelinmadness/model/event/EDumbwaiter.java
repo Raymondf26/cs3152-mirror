@@ -3,11 +3,11 @@ package edu.cornell.gdiac.molechelinmadness.model.event;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 
-public class Dumbwaiter implements Event{
+public class EDumbwaiter implements Event{
 
     boolean up;
 
-    public Dumbwaiter () {
+    public EDumbwaiter() {
         up = true;
     }
 

@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.ObjectMap;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.event.*;
+import edu.cornell.gdiac.molechelinmadness.model.event.Door;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
+import edu.cornell.gdiac.molechelinmadness.model.interactor.PressurePlate;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.PooledList;
 
@@ -264,31 +266,16 @@ public class Level {
     }
 
     private Event parseEvent(String string, JsonValue link) {
-        if (string.equals("door:open")) {
-            return new DoorOpen();
+        if (string.equals("door")) {
+            return new Door();
         }
-        else if (string.equals("door:close")) {
-            return new DoorClose();
+        else if (string.equals("dumbwaiter")) {
+            return new EDumbwaiter();
         }
-        else if (string.equals("door:close_middle")) {
-            return new DoorCloseMiddle();
+        else {
+            System.err.println("no event of that name");
+            return null;
         }
-        else if (string.equals("door:open_middle")) {
-            return new DoorOpenMiddle();
-        }
-        else if (string.equals("dumbwaiter:up")) {
-            return new DumbwaiterUp();
-        }
-        else if (string.equals("doorv2:open")) {
-            float angle = link.getFloat("effect");
-            DoorV2Open event = new DoorV2Open();
-            event.setAngle(angle);
-            return event;
-        }
-        else if (string.equals("doorv2:close")) {
-            return new DoorV2Close();
-        }
-        else return null;
     }
 
     public void dispose() {

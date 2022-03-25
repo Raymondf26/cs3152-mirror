@@ -1,4 +1,4 @@
-package edu.cornell.gdiac.molechelinmadness.model;
+package edu.cornell.gdiac.molechelinmadness.model.interactor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,6 +8,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
+import edu.cornell.gdiac.molechelinmadness.model.GameObject;
+import edu.cornell.gdiac.molechelinmadness.model.Interactive;
+import edu.cornell.gdiac.molechelinmadness.model.Mole;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;

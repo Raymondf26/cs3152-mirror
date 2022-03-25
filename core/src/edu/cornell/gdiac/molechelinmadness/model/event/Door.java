@@ -1,28 +1,22 @@
 package edu.cornell.gdiac.molechelinmadness.model.event;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
+import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.GameObject;
 import edu.cornell.gdiac.molechelinmadness.model.RotatingPlatform;
-import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
-public class DoorOpen implements Event{
+public class Door implements Event{
 
-    RotatingPlatform door;
-    Vector2 translation = new Vector2();
+    float degree;
 
-    @Override
-    public void activate() {
-        door.rotate();
-        door.translate(translation);
+    public Door() {
+        degree = 0f;
     }
 
-    public void setTranslation(Vector2 vector) {
-        translation = vector;
-    }
 
     @Override
-    public void linkObject(GameObject obs) {
-        door = (RotatingPlatform) obs;
+    public void initialize(AssetDirectory directory, JsonValue json) {
+        degree = json.get("angle").asFloat();
     }
 }

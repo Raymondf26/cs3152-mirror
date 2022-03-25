@@ -12,7 +12,7 @@ import edu.cornell.gdiac.molechelinmadness.model.Mole;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class Button extends BoxObstacle implements Interactor, Interactive, GameObject {
+public class Button extends BoxObstacle {
 
 
     Array<Event> triggers;
@@ -30,43 +30,6 @@ public class Button extends BoxObstacle implements Interactor, Interactive, Game
         detriggers = new Array<>();
         contact = false;
         triggered = false;
-    }
-
-    @Override
-    public int getType() {
-        return 0;
-    }
-
-    @Override
-    public void resolveBegin(Mole mole) {
-        contact = true;
-        this.mole = mole;
-    }
-
-    @Override
-    public void resolveEnd(Mole mole) {
-        contact = false;
-        this.mole = null;
-    }
-
-    @Override
-    public Array<Event> getTriggerLinks() {
-        return triggers;
-    }
-
-    @Override
-    public Array<Event> getDetriggerLinks() {
-        return detriggers;
-    }
-
-    @Override
-    public void addTriggerEvent(Event toAdd) {
-        triggers.add(toAdd);
-    }
-
-    @Override
-    public void addDetriggerEvent(Event toAdd) {
-        detriggers.add(toAdd);
     }
 
     public void initialize(AssetDirectory directory, JsonValue json) {

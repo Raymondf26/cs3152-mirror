@@ -1002,4 +1002,8 @@ public abstract class Obstacle {
 	 */
 	public abstract void drawDebug(GameCanvas canvas);
 
+
+	//OUR OBSTACLE METHODS
+
+
 }
