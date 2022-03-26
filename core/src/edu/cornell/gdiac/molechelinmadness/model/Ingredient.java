@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
@@ -8,12 +9,21 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
 public class Ingredient extends BoxObstacle implements GameObject{
     private static float SIZE = 5.0f;
-    private float holdX;
-    private float holdY;
-    public Boolean moved = false;
 
     //True if this ingredient chopped
     public Boolean chopped;
+
+    /**
+     * Handles the telegram just received.
+     *
+     * @param msg The telegram
+     * @return {@code true} if the telegram has been successfully handled; {@code false} otherwise.
+     */
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        System.err.println("There should be no events affecting Ingredient");
+        return false;
+    }
 
     public enum IngType {
         TOMATO,
@@ -29,7 +39,6 @@ public class Ingredient extends BoxObstacle implements GameObject{
         return this.type;
     }
 
-
     //Sets the ingredients type
     public void setIngType(IngType ing){
         this.type = ing;
@@ -43,17 +52,13 @@ public class Ingredient extends BoxObstacle implements GameObject{
         chopped = c;
     }
 
-    public void holdPos(float x, float y){
-        this.holdX = x;
-        this.holdY = y;
-        this.moved = true;
-    }
-
     @Override
     public void refresh(float dt) {
-        if (moved) {
-            setPosition(holdX, holdY);
-            this.moved = false;
+        if (isContacting()) {
+            if (getContactMole().isEmpty()) {
+                getContactMole().addToInventory(this);
+                setActive(false);
+            }
         }
     }
 
@@ -68,10 +73,7 @@ public class Ingredient extends BoxObstacle implements GameObject{
      */
     public Ingredient() {
         super(0, 0, 0.45f, 0.65f);
-        this.holdX = 0;
-        this.holdY = 0;
         chopped = false;
-
     }
 
     public void initialize(AssetDirectory directory, JsonValue json) {
@@ -82,16 +84,18 @@ public class Ingredient extends BoxObstacle implements GameObject{
         boolean isChopped = json.get("chopped").asBoolean();
         this.chopped = isChopped;
 
-        if(type.equals("tomato")){
+        if(type.equals("tomato")) {
             this.type = IngType.TOMATO;
         }
-        else if(type.equals("onion")){
+        else if(type.equals("onion")) {
             this.type = IngType.ONION;
         }
-
-        else{
+        else {
             this.type = IngType.EGGPLANT;
         }
+
+        setType(2); //Collisions with both hand and feet
+
         String key = json.get("texture").asString();
         TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
         setTexture(texture);

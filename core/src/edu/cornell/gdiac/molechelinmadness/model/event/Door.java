@@ -1,10 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model.event;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
-import edu.cornell.gdiac.assets.AssetDirectory;
-import edu.cornell.gdiac.molechelinmadness.model.GameObject;
-import edu.cornell.gdiac.molechelinmadness.model.RotatingPlatform;
 
 public class Door implements Event{
 
@@ -14,9 +10,10 @@ public class Door implements Event{
         degree = 0f;
     }
 
+    public float getDegree() {return degree;}
 
     @Override
-    public void initialize(AssetDirectory directory, JsonValue json) {
+    public void initialize(JsonValue json) {
         degree = json.get("angle").asFloat();
     }
 }

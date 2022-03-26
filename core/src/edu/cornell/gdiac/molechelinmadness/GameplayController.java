@@ -3,7 +3,6 @@ package edu.cornell.gdiac.molechelinmadness;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
@@ -229,7 +228,7 @@ public class GameplayController implements Screen {
                 moles.get(i).setMovement(InputController.getInstance().getHorizontal() * moles.get(i).getForce());
                 moles.get(i).setJumping(InputController.getInstance().didPrimary());
                 moles.get(i).setInteracting(InputController.getInstance().didTertiary());
-                moles.get(i).dropToWorld(InputController.getInstance().didDrop());
+                moles.get(i).setDropping(InputController.getInstance().didDrop());
             }
             else {
                 AIController ai = moles.get(i).getAIController();

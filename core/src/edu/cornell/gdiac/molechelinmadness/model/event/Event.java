@@ -7,6 +7,6 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
 public interface Event {
 
-    public void initialize(AssetDirectory directory, JsonValue json);
+    public void initialize(JsonValue json);
 
 }

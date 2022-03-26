@@ -91,6 +91,9 @@ public class Mole extends CapsuleObstacle {
     /** Mole trying to jump */
     private boolean jumping;
 
+    /** Mole trying to drop */
+    private boolean dropping;
+
     /** Sensors for this specific mole */
     private ObjectSet<Fixture> sensorFixtures;
 
@@ -376,14 +379,13 @@ public class Mole extends CapsuleObstacle {
         return temp;
     }
 
-    public void dropToWorld(boolean bool) {
-        if (bool) {
-            Ingredient ingr = drop();
-            float offset = faceRight ? 1.25f : -1.25f;
-            if (ingr != null) {
-                ingr.holdPos(getX() + offset, getY());
-            }
-        }
+    /**
+     * Set whether mole is trying to drop an item or not
+     *
+     * @param bool whether dropping or not
+     */
+    public void setDropping(boolean bool) {
+        dropping = bool;
     }
 
     /** Return whether inventory is empty or not */

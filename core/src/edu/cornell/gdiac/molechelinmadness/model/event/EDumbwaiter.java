@@ -11,8 +11,12 @@ public class EDumbwaiter implements Event{
         up = true;
     }
 
+    public boolean getDir() {
+        return up;
+    }
+
     @Override
-    public void initialize(AssetDirectory directory, JsonValue json) {
+    public void initialize(JsonValue json) {
         up = json.get("effect").asBoolean();
     }
 }

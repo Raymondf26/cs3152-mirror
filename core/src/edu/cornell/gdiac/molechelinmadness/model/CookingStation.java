@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,7 +12,7 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class CookingStation extends BoxObstacle implements Interactive, GameObject{
+public class CookingStation extends BoxObstacle implements GameObject{
 
     /** Whether it's in the state of being interacted with */
     private boolean interacting;
@@ -22,13 +23,22 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
     /** Required time to cook */
     private float timeReq;
 
-    /** Reference to interacting mole */
-    private Mole mole;
-
     /** Ingredients currently at the cooking station*/
     private Array<Ingredient> ingredients;
 
     protected BitmapFont displayFont;
+
+    /**
+     * Handles the telegram just received.
+     *
+     * @param msg The telegram
+     * @return {@code true} if the telegram has been successfully handled; {@code false} otherwise.
+     */
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        System.err.println("No events currently affecting CookingStation");
+        return false;
+    }
 
     /**What type of station is this */
     public enum stationType{
@@ -59,22 +69,12 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
     public int getType() {return 0;}
 
     @Override
-    public void resolveBegin(Mole mole) {
-        this.mole = mole;
-    }
-
-    @Override
-    public void resolveEnd(Mole mole) {
-        this.mole = null;
-    }
-
-    @Override
     public void refresh(float dt) {
         if (this.type == stationType.CHOPPING) {
-            if (mole != null && mole.isInteracting() && !mole.isEmpty() && !mole.getInventory().getChopped()) {
+            if (isContacting() && getContactMole().isInteracting() && !getContactMole().isEmpty() && !getContactMole().getInventory().getChopped()) {
                 interacting = true;
                 if (progress > timeReq) {
-                    mole.getInventory().setChopped(true);
+                    getContactMole().getInventory().setChopped(true);
                     System.out.println("veggie chopped");
                     progress = 0;
                 }
@@ -88,8 +88,8 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
             }
         }
         else if (this.type == stationType.COOKING) {
-            if (mole != null && mole.isInteracting() && !mole.isEmpty() && mole.getInventory().getChopped()) {
-                this.ingredients.add(mole.drop());
+            if (isContacting() && getContactMole().isContacting() && !getContactMole().isEmpty() && getContactMole().getInventory().getChopped()) {
+                this.ingredients.add(getContactMole().drop());
             }
         }
     }

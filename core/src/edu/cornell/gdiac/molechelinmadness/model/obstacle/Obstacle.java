@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
+import edu.cornell.gdiac.molechelinmadness.model.Mole;
 
 /**
  * Base model class to support collisions.
@@ -1005,5 +1006,49 @@ public abstract class Obstacle {
 
 	//OUR OBSTACLE METHODS
 
+	private Mole mole;
+	private boolean contacted;
+	private boolean interactable;
+	private int type;
+
+	public void contactBegan(Mole mole) {
+		this.mole = mole;
+		contacted = true;
+	}
+
+	public void contactEnded(Mole mole) {
+		this.mole = mole;
+		contacted = false;
+	}
+
+	public Mole getContactMole() {
+		return mole;
+	}
+
+	public boolean isContacting() {
+		return contacted;
+	}
+
+	public boolean canInteract() {
+		return interactable;
+	}
+
+	public void setInteract(boolean interactable) {
+		this.interactable = interactable;
+	}
+
+	/**
+	 * Returns whether this interactive should trigger on contact with hand, foot, or both.
+	 * Represented with the ints 0, 1, and 2 respectively.
+	 * */
+	public int getType() {return type;}
+
+	/**
+	 * Set whether this interactive should trigger on contact with hand, foot, or both.
+	 * Represented with the ints 0, 1, and 2 respectively.
+	 *
+	 * @param type 0 for hand, 1 for foot, 2 for both
+	 */
+	public void setType(int type) {this.type = type;}
 
 }
