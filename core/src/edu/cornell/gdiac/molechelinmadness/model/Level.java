@@ -2,6 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -53,6 +54,12 @@ public class Level {
     private Array<Ingredient> ingredients;
     /** Reference to the cooking stations */
     private Array<CookingStation> stations;
+    /** Displays win condition recipe*/
+    private Recipe recipe;
+    /** Ingredients for memory display*/
+    private Array<Ingredient> recipeIngs;
+    /** Display font */
+    private BitmapFont font;
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
     /** Reference to interactive objects as a map*/
@@ -146,6 +153,20 @@ public class Level {
             gameObjects.put(i.getString("type"), ingredient);
             activate(ingredient);
         }
+
+        //Adding recipe
+
+        recipeIngs = new Array<>();
+        JsonValue rIngs = levelFormat.get("ingredient");
+        for (JsonValue rI : rIngs) {
+            Ingredient ingredient = new Ingredient();
+            ingredient.initialize(directory, rI);
+            ingredient.setDrawScale(scale);
+            recipeIngs.add(ingredient);
+        }
+        recipe = new Recipe(recipeIngs, 640, 680);
+        recipe.setFont(directory.getEntry("shared:retro", BitmapFont.class));
+
 
 
         stations = new Array<>();
@@ -350,6 +371,7 @@ public class Level {
         for(Obstacle obj : objects) {
             obj.draw(canvas);
         }
+        recipe.draw(canvas);
         canvas.end();
 
         if (debug) {
@@ -357,6 +379,7 @@ public class Level {
             for(Obstacle obj : objects) {
                 obj.drawDebug(canvas);
             }
+            recipe.drawDebug(canvas);
             canvas.endDebug();
         }
     }
