@@ -63,9 +63,8 @@ public class Recipe{
     }
     public void setRecipeIngredients(Array<Ingredient> ings){
         for (int i=0; i < ings.size; i++ ){
-            int iX = bottomLeft + tL + i*ingOffset;
-            ings.get(i).setPosition( iX/40, cY/40);
-            System.out.println(iX);
+            float iX = bottomLeft + tL + i*ingOffset;
+            ings.get(i).setPosition( iX/40, (float) cY/40);
         }
     }
 
