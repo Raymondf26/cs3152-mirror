@@ -24,21 +24,95 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
+import edu.cornell.gdiac.molechelinmadness.model.Mole;
 
 /**
- * Base model class to support collisions.
- *
- * Instances represents a body and/or a group of bodies.
- * There should be NO game controlling logic code in a physics objects, 
- * that should reside in the Controllers.
- *
- * This abstract class has no Body or Shape information and should never 
- * be instantiated directly. Instead, you should instantiate either
- * SimplePhysicsObject or ComplexPhysicsObject.  This class only exists
- * to unify common functionality. In particular, it wraps the body and 
- * and fixture information into a single interface.
+ * The base Box2D physics object we use. Comes equipped with methods specifically to deal with
+ * mole collisions.
  */
 public abstract class Obstacle {
+
+	//OUR OWN RELEVANT METHODS
+
+	private Mole mole;
+	private boolean contacted;
+	private boolean interactable;
+	private int type;
+
+	/**
+	 * Called when beginContact() detects a collision.
+	 * This method is already being fully used. No need to worry about it.
+	 *
+	 * @param mole the mole this obstacle collided with
+	 */
+	public void contactBegan(Mole mole) {
+		this.mole = mole;
+		contacted = true;
+	}
+
+	/**
+	 * Called when endContact() detects a collision.
+	 * This method is already being fully used. No need to worry about it.
+	 *
+	 * @param mole the mole this obstacle collided with
+	 */
+	public void contactEnded(Mole mole) {
+		this.mole = mole;
+		contacted = false;
+	}
+
+	/**
+	 * @return the mole that was contacting this obstacle
+	 */
+	public Mole getContactMole() {
+		return mole;
+	}
+
+	/**
+	 * @return Whether this obstacle is currently in contact with something
+	 */
+	public boolean isContacting() {
+		return contacted;
+	}
+
+	/**
+	 * Currently unused and unnecessary method.
+	 *
+	 * @return Whether this obstacle is something the mole can directly interact with by pressing "F" on the keyboard.
+	 */
+	public boolean canInteract() {
+		return interactable;
+	}
+
+	/**
+	 * Currently unused and unnecessary method.
+	 *
+	 * @param interactable Sets whether this object is something the mole can directly interact with.
+	 */
+	public void setInteract(boolean interactable) {
+		this.interactable = interactable;
+	}
+
+	/**
+	 * Returns whether this interactive should trigger on contact with hand, foot, or both.
+	 * Represented with the ints 0, 1, and 2 respectively.
+	 * */
+	public int getType() {return type;}
+
+	/**
+	 * Set whether this interactive should trigger on contact with hand, foot, or both.
+	 * Represented with the ints 0, 1, and 2 respectively.
+	 *
+	 * @param type 0 for hand, 1 for foot, 2 for both
+	 */
+	public void setType(int type) {this.type = type;}
+
+
+	//Normal obstacle class methods below
+
+
+
+
 	/// Initialization structures to store body information
 	/** Stores the body information for this shape */
 	protected BodyDef bodyinfo;

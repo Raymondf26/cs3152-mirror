@@ -1,0 +1,265 @@
+{
+  "physicsSize":    [32,18],
+  "graphicSize":    [ 1280, 720],
+  "gravity":  	  -14.9,
+  "goal":
+  {
+    "pos": [8.5, 2],
+    "win condition" :
+    [
+      "tomato",
+      "fried egg",
+      "noodles",
+      "scallion"
+    ],
+    "texture" : "goal:pot"
+  },
+
+  "moles" :
+  {
+    "starting" : 1,
+    "list" :
+    [
+      {
+        "idle behavior" : ["left", 0.5, "idle", 0.25, "right", 0.5, "idle", 0.25],
+        "pos":           [ 28,  5.0],
+        "size":          [ 1.1, 1.5],
+        "bodytype":      "dynamic",
+        "density":        0.333,
+        "friction":       0.0,
+        "restitution":    0.0,
+        "force": 		 10.0,
+        "damping": 		 10.0,
+        "maxspeed": 	  5.0,
+        "jumppulse": 	  8.5,
+        "jumplimit": 	 30,
+        "texture":       "mole:chef1",
+        "control":       "mole:indicator",
+        "debugcolor":    "white",
+        "debugopacity":  192,
+        "sensorsize": 	 [ 0.183, 0.05 ],
+        "sensorname": 	 "dudeGroundSensor",
+        "sensorcolor":   "red",
+        "sensoropacity": 192
+      },
+      {
+        "pos" : [14.5, 8.0],
+        "texture" : "mole:chef2",
+        "control":       "mole:indicator",
+        "idle behavior" : ["idle", 1.5, "jump", 0.01],
+        "size":          [ 1.1, 1.5],
+        "bodytype":      "dynamic",
+        "density":        0.333,
+        "friction":       0.0,
+        "restitution":    0.0,
+        "force": 		 10.0,
+        "damping": 		 10.0,
+        "maxspeed": 	  5.0,
+        "jumppulse": 	  8.5,
+        "jumplimit": 	 30,
+        "debugcolor":    "white",
+        "debugopacity":  192,
+        "sensorsize": 	 [ 0.183, 0.05 ],
+        "sensorname": 	 "dudeGroundSensor",
+        "sensorcolor":   "red",
+        "sensoropacity": 192
+      }
+    ]
+  },
+
+  "interactive elements" :
+  [
+    {
+      "name" : "rotating_platform2",
+	  "type" : "rotating_platform",
+      "pos" : [23, 11],
+      "size" : [3.5, 0.2],
+      "pin_pos" : [7.5, 9.5],
+      "pin_radius" : 0.1,
+	  "orientation" : 180,
+      "texture" : "interactive:rotatingplatform"
+    },
+    {
+      "name" : "rotating_platform1",
+      "type" : "rotating_platform",
+      "pos" : [21, 6],
+      "size" : [0.2, 1.5],
+      "pin_pos" : [7.5, 9.5],
+      "pin_radius" : 0.1,
+      "orientation" : 180,
+      "texture" : "interactive:rotatingplatform"
+    }
+  ],
+  "interactors" :
+  [
+    {
+      "name" : "button2",
+      "pos" : [11.5, 9],
+      "type" : "button",
+      "size" : [0.75, 0.75],
+      "texture" : "interactive:button1",
+      "link" :
+      [
+        {
+          "name" : "rotating_platform1",
+          "event" : "door:open"
+        }
+      ],
+      "linkEnd" :
+      [
+        {
+          "name" : "rotating_platform1",
+          "event" : "door:close"
+        }
+      ]
+    },
+    {
+      "name" : "button1",
+      "pos" : [28, 1],
+      "type" : "button",
+      "size" : [0.75, 0.75],
+      "texture" : "interactive:button2",
+      "link" :
+      [
+        {
+          "name" : "rotating_platform2",
+          "event" : "door:open"
+        }
+      ],
+      "linkEnd" :
+      [
+        {
+          "name" : "rotating_platform2",
+          "event" : "door:close"
+        }
+      ]
+    }
+
+  ],
+  "platforms": {
+    "floor1": {
+      "pos":           [ 16f, 0f],
+      "size":          [  31f,  1f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor2": {
+      "pos":           [ 26f, 4f],
+      "size":          [ 12f, 0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor3": {
+      "pos":           [ 18f, 8f],
+      "size":          [  16f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor4": {
+      "pos":           [ 10f, 9.5f],
+      "size":          [  0.5f,  3.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor5": {
+      "pos":           [ 15f, 11f],
+      "size":          [  10.5f,  0.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "floor6": {
+      "pos":           [ 26f, 15f],
+      "size":          [  0.5f, 14.5f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    }
+  },
+  "walls": {
+    "wall1": {
+      "vertices": 12,
+      "boundary": [ 8.0f, 18.0f,  8.0f, 17.5f,  0.5f, 17.5f,
+        0.5f,  0.0f,  0.0f,  0.0f,  0.0f, 18.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.2,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    },
+    "wall2": {
+      "vertices": 12,
+      "boundary": [32.0f, 18.0f, 32.0f,  0.0f, 31.5f,  0.0f,
+        31.5f, 17.5f,  8f, 17.5f,  8f, 18.0f],
+      "bodytype":      "static",
+      "density":        0.0,
+      "friction":       0.4,
+      "restitution":    0.1,
+      "texture":       "earth",
+      "debugcolor":    "yellow",
+      "debugopacity":  200
+    }
+  },
+  "cooking" :
+  [
+    {
+      "name" : "cooking1",
+      "type" : "cooking",
+      "pos" : [13.5, 1.0],
+      "size" : [1.5, 1.25],
+      "cooking_time" : 0.5,
+      "texture": "interactive:cookingtable"
+    }
+
+  ],
+  "ingredient" : [
+    {
+      "type" : "tomato",
+      "texture": "tomato",
+      "pos" : [12.5, 14],
+      "chopped" : true
+    },
+    {
+      "type" : "onion",
+      "texture": "onion",
+      "pos" : [26.0, 2.0],
+      "chopped" : true
+    },
+    {
+      "type" : "eggplant",
+      "texture": "eggplant",
+      "pos" : [18.0, 15.0],
+      "chopped" : true
+    }
+  ]
+}

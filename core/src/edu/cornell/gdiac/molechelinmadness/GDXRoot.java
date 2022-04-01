@@ -6,6 +6,9 @@ import com.badlogic.gdx.Screen;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.util.ScreenListener;
 
+/**
+ * The root controller. Instantiates GameplayController, LevelSelector, and LoadingMode.
+ */
 public class GDXRoot extends Game implements ScreenListener {
 	/** AssetManager to load game assets (textures, sounds, etc.) */
 	AssetDirectory directory;

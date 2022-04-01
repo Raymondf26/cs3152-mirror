@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,7 +12,7 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
-public class CookingStation extends BoxObstacle implements Interactive, GameObject{
+public class CookingStation extends BoxObstacle implements GameObject{
 
     /** Whether it's in the state of being interacted with */
     private boolean interacting;
@@ -22,29 +23,30 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
     /** Required time to cook */
     private float timeReq;
 
-    /** Reference to interacting mole */
-    private Mole mole;
-
     /** Ingredients currently at the cooking station*/
     private Array<Ingredient> ingredients;
 
     protected BitmapFont displayFont;
 
-    /**What type of station is this */
+    /**
+     * Handles the telegram just received.
+     *
+     * @param msg The telegram
+     * @return {@code true} if the telegram has been successfully handled; {@code false} otherwise.
+     */
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        System.err.println("No events currently affecting CookingStation");
+        return false;
+    }
+
+    /** What type of station is this */
     public enum stationType{
         CHOPPING,
         COOKING
     }
 
     private stationType type;
-    /**
-     * Creates a new box at the origin.
-     * <p>
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
-     *
-     */
 
     /** Get the ingredients in this stations*/
     public Array<Ingredient> getIngredients(){
@@ -56,25 +58,13 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
         return this.type;
     }
 
-    public int getType() {return 0;}
-
-    @Override
-    public void resolveBegin(Mole mole) {
-        this.mole = mole;
-    }
-
-    @Override
-    public void resolveEnd(Mole mole) {
-        this.mole = null;
-    }
-
     @Override
     public void refresh(float dt) {
         if (this.type == stationType.CHOPPING) {
-            if (mole != null && mole.isInteracting() && !mole.isEmpty() && !mole.getInventory().getChopped()) {
+            if (isContacting() && getContactMole().isInteracting() && !getContactMole().isEmpty() && !getContactMole().getInventory().getChopped()) {
                 interacting = true;
                 if (progress > timeReq) {
-                    mole.getInventory().setChopped(true);
+                    getContactMole().getInventory().setChopped(true);
                     System.out.println("veggie chopped");
                     progress = 0;
                 }
@@ -88,33 +78,23 @@ public class CookingStation extends BoxObstacle implements Interactive, GameObje
             }
         }
         else if (this.type == stationType.COOKING) {
-            if (mole != null && mole.isInteracting() && !mole.isEmpty() && mole.getInventory().getChopped()) {
-                this.ingredients.add(mole.drop());
+            if (isContacting() && getContactMole().isContacting() && !getContactMole().isEmpty() && getContactMole().getInventory().getChopped()) {
+                this.ingredients.add(getContactMole().drop());
             }
         }
     }
 
-    public void Cook (Mole m){
-        if(this.type == stationType.CHOPPING){
-            if (m.getInventory() != null) {
-                m.getInventory().setChopped(true);
-            }
-        }
-        if(this.type == stationType.COOKING){
-            if (m.getInventory() != null) {
-                if(m.getInventory().getChopped()){
-                    this.ingredients.add(m.getInventory());
-                    m.drop();
-                }
-            }
-        }
-    }
-
+    /**
+     * Creates degenerate cooking station.
+     * Sets body type to 0, which means only detects hand collisions.
+     */
     public CookingStation() {
-        super(0, 0, 0.45f, 0.65f);
+        super(0, 0, 1f, 1f);
         this.type = null;
         ingredients = new Array<>();
+        setType(0);
     }
+
     public void initialize(AssetDirectory directory, JsonValue json) {
         setName(json.name());
         String type = json.get("type").asString();

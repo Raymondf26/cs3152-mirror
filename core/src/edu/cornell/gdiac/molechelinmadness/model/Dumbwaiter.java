@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
+import edu.cornell.gdiac.molechelinmadness.model.event.EDumbwaiter;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.ComplexObstacle;
 
@@ -15,58 +17,79 @@ import java.lang.reflect.Field;
 
 public class Dumbwaiter extends ComplexObstacle implements GameObject{
 
+    /**
+     * This method is called every frame in the main update loop of the game.
+     *
+     * @param dt the time passed in seconds since the previous frame
+     */
     @Override
     public void refresh(float dt) {
         head.refresh(dt);
         tail.refresh(dt);
     }
 
-    private class DumbHead extends BoxObstacle implements Interactive, GameObject {
+    /**
+     * Handles the telegram just received.
+     *
+     * @param msg The telegram
+     * @return {@code true} if the telegram has been successfully handled; {@code false} otherwise.
+     */
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        try {
+            EDumbwaiter event = (EDumbwaiter) msg.extraInfo;
+            if (event.getDir()) {
+                sendUp();
+            }
+            else {
+                sendDown();
+            }
+            return true;
+        }
+        catch(Exception e) {
+            System.err.println("Unable to cast to dumbwaiter related event");
+            return false;
+        }
+    }
+
+    /**
+     * The object used to represent the head, and the tail, of the dumbwaiter.
+     */
+    private class DumbHead extends BoxObstacle {
 
         Ingredient ingr;
-        Boolean contact;
-        Mole contactMole;
         float timeLeft;
         float cooldown;
 
+        /**
+         * Degenerate dumbwaiter head.
+         * Sets body type to 0, which means only detects hand collisions.
+         */
         public DumbHead() {
             super(0,0,1,1);
-            contact = false;
-            contactMole = null;
             cooldown = 0f;
             timeLeft = 0f;
+            setType(0);
         }
 
         /**
-         * 0 refers to hands, 1 refers to feet
+         * This method is called every frame in the main update loop of the game.
+         *
+         * @param dt the time passed in seconds since the previous frame
          */
-        @Override
-        public int getType() {
-            return 0;
-        }
-
-        @Override
-        public void resolveBegin(Mole mole) {
-
-            contact = true;
-            contactMole = mole;
-
-        }
-
-        @Override
         public void refresh(float dt) {
             if (timeLeft < 0) {
-                if (contact) {
-                    if (contactMole.isInteracting()) {
-                        if (!contactMole.isEmpty()) {
+                if (isContacting()) {
+                    if (getContactMole().isInteracting()) {
+                        if (!getContactMole().isEmpty()) {
                             if (ingr == null) {
-                                ingr = contactMole.drop();
+                                ingr = getContactMole().drop();
                                 timeLeft = cooldown;
                             }
                         }
                         else {
                             if (ingr != null) {
-                                contactMole.addToInventory(ingr);
+                                getContactMole().addToInventory(ingr);
                                 ingr = null;
                                 timeLeft = cooldown;
                             }
@@ -80,12 +103,6 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
         }
 
         @Override
-        public void resolveEnd(Mole mole) {
-            contact = false;
-            contactMole = null;
-        }
-
-        @Override
         public void draw(GameCanvas canvas) {
             super.draw(canvas);
             if (ingr != null) {
@@ -96,19 +113,35 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
 
     }
 
-    /** Send ingredient from tail to head event */
+    /**
+     * Send ingredient from tail to head event
+     */
     public void sendUp() {
         if (tail.ingr != null) {
-            head.ingr = tail.ingr;
-            tail.ingr = null;
+            if (head.ingr == null) {
+                head.ingr = tail.ingr;
+                tail.ingr = null;
+            }
+            else {
+                //Let the player know the dumbwaiter must be empty before sending up
+                System.err.println("We should probably send an event to the gameplay controller here to play some different type of audio");
+            }
         }
     }
 
-    /** Send ingredient from tail to head event */
+    /**
+     * Send ingredient from tail to head event
+     */
     public void sendDown() {
         if (head.ingr != null) {
-            tail.ingr = head.ingr;
-            head.ingr = null;
+            if (tail.ingr == null) {
+                tail.ingr = head.ingr;
+                head.ingr = null;
+            }
+            else {
+                //Let the player know the dumbwaiter must be empty before sending down
+                System.err.println("We should probably send an event to the gameplay controller here to play some different type of audio");
+            }
         }
     }
 

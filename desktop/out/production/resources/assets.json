@@ -1,77 +1,54 @@
 {
-	"textures": {
-        "shared:earth" : {
-            "file":  "shared/earthtile.png",
+	"textures":
+    {
+        "earth" :
+        {
+            "file":  "textures/earthtile.png",
             "wrapU": "repeated",
             "wrapV": "repeated"
         },
-        "shared:goal":   "shared/goaldoor.png",
-        "rocket:rocket": "rocket/rocket.png",
-        "rocket:main":  {
-            "file" : "rocket/flames.png",
-            "sprites" : {
-                "fire": {
-                    "rows": 1,
-                    "cols": 4
-                }
-            }
-        },
-        "rocket:left": {
-            "file" : "rocket/flames-left.png",
-            "sprites" : {
-                "fire": {
-                    "rows": 1,
-                    "cols": 4
-                }
-            }
-        },
-        "rocket:right": {
-            "file" : "rocket/flames-right.png",
-            "sprites" : {
-                "fire": {
-                    "rows": 1,
-                    "cols": 4
-                }
-            }
-        },
-        "rocket:crate01": "rocket/crate01.png",
-        "rocket:crate02": "rocket/crate02.png",
-        "platform:dude":  "platform/dude.png",
-        "platform:rope":  "platform/ropebridge.png",
-        "platform:barrier": "platform/barrier.png",
-        "platform:bullet":  "platform/bullet.png",
-        "ragdoll:bubble": "ragdoll/bubble.png",
-        "ragdoll:torso":  "ragdoll/tux_body.png",
-        "ragdoll:head":   "ragdoll/ProfWhite.png",
-        "ragdoll:thigh":  "ragdoll/tux_thigh.png",
-        "ragdoll:shin":   "ragdoll/tux_shin.png",
-        "ragdoll:arm":    "ragdoll/tux_arm.png",
-        "ragdoll:forearm":    "ragdoll/tux_forearm.png",
-        "ragdoll:crosshair":  "ragdoll/crosshair.png",
-        "ragdoll:foreground": "ragdoll/foreground.png",
-        "ragdoll:background": "ragdoll/background.png"
+        "shared:goal":   "textures/goaldoor.png",
+        "interactive:dumbwaiter" : "textures/dumbwaiter.png",
+        "mole:chef1" : "textures/whitemole.png",
+        "mole:chef2" : "textures/pinkmole.png",
+        "mole:chef3" : "textures/purplemole.png",
+        "mole:chef4" : "textures/bluemole.png",
+        "mole:chef5" : "textures/redmole.png",
+        "mole:indicator" : "textures/molemarker.png",
+        "mole:indicator2" : "textures/molemarker.png",
+        "veggies" : "textures/v.png",
+        "tomato" : "textures/tomato.png",
+        "onion" : "textures/onion.png",
+        "eggplant" : "textures/eggplant.png",
+        "lemon" : "textures/lemon.png",
+        "level:top" : "textures/topforlevel.png",
+        "interactive:pressureplate" : "textures/crate01.png",
+        "interactive:rotatingplatform" : "textures/crate02.png",
+        "interactive:choppingtable" : "textures/choppingtable.png",
+        "interactive:cookingtable" : "textures/cookingpot.png",
+        "interactive:buttonplain" : "textures/buttonplain.png",
+        "interactive:button1" : "textures/button1.png",
+        "interactive:button2" : "textures/button2.png",
+        "interactive:button3" : "textures/button3.png",
+        "background" : "textures/environment_background_2.png"
     },
-    "jsons"  : {
-        "rocket:constants":  "rocket/constants.json",
-        "platform:constants": "platform/constants.json",
-        "ragdoll:constants":  "ragdoll/constants.json"
+    "jsons"  :
+    {
+        "level":  "levels/level1.json",
+        "level_tutorial" : "levels/levelTutorial.json",
+        "level_medium" : "levels/levelMedium.json",
+        "level1":  "levels/levelTutorial.json",
+        "level2": "levels/levelMedium.json"
     },
-    "sounds" : {
-        "rocket:bump" : "rocket/bump.mp3",
-        "rocket:mainburn" : "rocket/afterburner.mp3",
-        "rocket:leftburn" : "rocket/sideburner-left.mp3",
-        "rocket:rightburn": "rocket/sideburner-right.mp3",
-        "platform:jump" : "platform/jump.mp3",
-        "platform:pew"  : "platform/pew.mp3",
-        "platform:plop" : "platform/plop.mp3",
-        "ragdoll:glub1" : "ragdoll/bubble01.mp3",
-        "ragdoll:glub2" : "ragdoll/bubble02.mp3",
-        "ragdoll:glub3" : "ragdoll/bubble03.mp3",
-        "ragdoll:glub4" : "ragdoll/bubble04.mp3"
+    "sounds" :
+    {
+
     },
-    "fonts": {
-        "shared:retro": {
-            "file": "shared/RetroGame.ttf",
+    "fonts":
+    {
+        "shared:retro":
+        {
+            "file": "fonts/RetroGame.ttf",
             "size": 14
         }
     }

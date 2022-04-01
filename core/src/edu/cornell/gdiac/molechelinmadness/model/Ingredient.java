@@ -1,19 +1,32 @@
 package edu.cornell.gdiac.molechelinmadness.model;
 
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
+import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
 public class Ingredient extends BoxObstacle implements GameObject{
     private static float SIZE = 5.0f;
-    private float holdX;
-    private float holdY;
-    public Boolean moved = false;
 
     //True if this ingredient chopped
     public Boolean chopped;
+
+    private boolean inWorld;
+
+    /**
+     * Handles the telegram just received.
+     *
+     * @param msg The telegram
+     * @return {@code true} if the telegram has been successfully handled; {@code false} otherwise.
+     */
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        System.err.println("There should be no events affecting Ingredient");
+        return false;
+    }
 
     public enum IngType {
         TOMATO,
@@ -29,7 +42,6 @@ public class Ingredient extends BoxObstacle implements GameObject{
         return this.type;
     }
 
-
     //Sets the ingredients type
     public void setIngType(IngType ing){
         this.type = ing;
@@ -43,35 +55,32 @@ public class Ingredient extends BoxObstacle implements GameObject{
         chopped = c;
     }
 
-    public void holdPos(float x, float y){
-        this.holdX = x;
-        this.holdY = y;
-        this.moved = true;
-    }
-
+    /**
+     * This method is called every frame in the main update loop of the game.
+     *
+     * @param dt the time passed in seconds since the previous frame
+     */
     @Override
     public void refresh(float dt) {
-        if (moved) {
-            setPosition(holdX, holdY);
-            this.moved = false;
+        if (isContacting()) {
+            if (getContactMole().isEmpty()) {
+                getContactMole().addToInventory(this);
+                setActive(false);
+                inWorld = false;
+            }
+        }
+        else if (inWorld) {
+            setActive(true);
         }
     }
 
     /**
-     * Creates a new box at the origin.
-     * <p>
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
+     * Set whether the ingredient is in the world or not.
      *
-     *
+     * @param bool whether the ingredient is in the world or in something's inventory
      */
-    public Ingredient() {
-        super(0, 0, 0.45f, 0.65f);
-        this.holdX = 0;
-        this.holdY = 0;
-        chopped = false;
-
+    public void setInWorld(boolean bool) {
+        inWorld = bool;
     }
     public Ingredient(int x, int y) {
         super(x, y, 0.45f, 0.65f);
@@ -81,6 +90,27 @@ public class Ingredient extends BoxObstacle implements GameObject{
 
     }
 
+    /**
+     * Creates a degenerate ingredient.
+     * Sets body type to 2, which means detects both hand and feet collisions.
+     */
+    public Ingredient() {
+        super(0, 0, 1f, 1f);
+        chopped = false;
+        inWorld = true;
+        setType(2);
+    }
+
+    /**
+     * Initializes this game object via the given JSON value
+     *
+     * The JSON value has been parsed and is part of a bigger level file.  However,
+     * this JSON value is limited to the exit subtree
+     *
+     * @param directory the asset manager
+     * @param json		the JSON subtree defining the exit
+     */
+    @Override
     public void initialize(AssetDirectory directory, JsonValue json) {
         setName(json.name());
         String type = json.get("type").asString();
@@ -99,18 +129,29 @@ public class Ingredient extends BoxObstacle implements GameObject{
         }
 
 
-        if(type.equals("tomato")){
+        if(type.equals("tomato")) {
             this.type = IngType.TOMATO;
         }
-        else if(type.equals("onion")){
+        else if(type.equals("onion")) {
             this.type = IngType.ONION;
         }
-
-        else{
+        else {
             this.type = IngType.EGGPLANT;
         }
+
         String key = json.get("texture").asString();
         TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
         setTexture(texture);
+    }
+
+    /**
+     * Ensures we only draw the ingredient if it isn't being held by a mole or some other object.
+     * @param canvas Drawing context
+     */
+    @Override
+    public void draw(GameCanvas canvas) {
+        if (isActive()) {
+            super.draw(canvas);
+        }
     }
 }
