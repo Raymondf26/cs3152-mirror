@@ -9,8 +9,6 @@ import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
 public class Ingredient extends BoxObstacle implements GameObject{
-    private static float SIZE = 5.0f;
-
     //True if this ingredient chopped
     public Boolean chopped;
 
@@ -81,13 +79,6 @@ public class Ingredient extends BoxObstacle implements GameObject{
      */
     public void setInWorld(boolean bool) {
         inWorld = bool;
-    }
-    public Ingredient(int x, int y) {
-        super(x, y, 0.45f, 0.65f);
-        this.holdX = 0;
-        this.holdY = 0;
-        chopped = false;
-
     }
 
     /**
