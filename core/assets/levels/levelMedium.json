@@ -93,7 +93,7 @@
   [
     {
       "name" : "rotating_platform2",
-      "type" : "rotating_platform_v2",
+      "type" : "rotating_platform",
       "pos" : [17.5, 12.5],
       "size" : [0.2, 1.0],
       "pin_offset" : [0, -1.0],
@@ -105,7 +105,7 @@
     },
     {
       "name" : "rotating_platform1",
-      "type" : "rotating_platform_v2",
+      "type" : "rotating_platform",
       "pos" : [18.25, 9.75],
       "size" : [0.2, 1.5],
       "pin_offset" : [0, -1],
@@ -117,7 +117,7 @@
     },
     {
       "name" : "rotating_platform3",
-      "type" : "rotating_platform_v2",
+      "type" : "rotating_platform",
       "pos" : [28.85, 2.25],
       "size" : [1, 0.2],
       "pin_offset" : [-0.6, 0],
@@ -155,10 +155,10 @@
       [
         {
           "name" : "dumbwaiter1",
-          "event" : "dumbwaiter:up"
+          "event" : "dumbwaiter",
+          "effect" : true
         }
-      ],
-      "linkEnd" : []
+      ]
     },
     {
       "name" : "button2",
@@ -170,24 +170,13 @@
       [
         {
           "name" : "rotating_platform3",
-          "event" : "doorv2:open",
-          "effect" : 1.57
+          "event" : "door",
+          "angle" : 1.57
         },
         {
           "name" : "rotating_platform2",
-          "event" : "doorv2:open",
-          "effect" : -1.57
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform3",
-          "event" : "doorv2:close"
-        },
-        {
-          "name" : "rotating_platform2",
-          "event" : "doorv2:close"
+          "event" : "door",
+          "angle" : -1.57
         }
       ]
     },
@@ -201,15 +190,8 @@
       [
         {
           "name" : "rotating_platform1",
-          "event" : "doorv2:open",
-          "effect" : -1.57
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform1",
-          "event" : "doorv2:close"
+          "event" : "door",
+          "angle" : -1.57
         }
       ]
     }

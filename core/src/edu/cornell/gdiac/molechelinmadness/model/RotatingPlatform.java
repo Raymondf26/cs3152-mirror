@@ -11,8 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
-import edu.cornell.gdiac.molechelinmadness.GameCanvas;
-import edu.cornell.gdiac.molechelinmadness.model.event.Door;
+import edu.cornell.gdiac.molechelinmadness.model.event.ERotatingPlatform;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.ComplexObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.WheelObstacle;
@@ -26,16 +25,25 @@ public class RotatingPlatform extends ComplexObstacle implements GameObject {
     private float angle;
     Vector2 anchor;
 
+    /**
+     * Create degenerate rotating platform
+     */
     public RotatingPlatform() {
         platform = new BoxObstacle(0, 0, 1, 1);
         pin = new WheelObstacle(0);
         bodies.add(platform);
         bodies.add(pin);
         anchor = new Vector2();
-        angle = 0;
+        angle = -360;
         pin.setSensor(true);
     }
 
+    /**
+     * This method is called every frame in the main update loop of the game.
+     *
+     * @param dt the time passed in seconds since the previous frame
+     */
+    @Override
     public void refresh(float dt) {
         if (angle != -360) {
            platform.setAngle(angle);
@@ -123,17 +131,6 @@ public class RotatingPlatform extends ComplexObstacle implements GameObject {
 
     }
 
-    /**
-     * Draws the outline of the physics body.
-     *
-     * @param canvas Drawing context
-     */
-    public void draw(GameCanvas canvas) {
-
-        //temporary code
-        canvas.draw(platform.getTexture(), Color.WHITE, platform.getTexture().getRegionWidth()/2.0f, platform.getTexture().getRegionHeight()/2.0f, platform.getX()*drawScale.x,platform.getY()*drawScale.y, platform.getAngle(), platform.getDimension().x, platform.getDimension().y);
-    }
-
 
     /**
      * Handles the telegram just received.
@@ -145,8 +142,13 @@ public class RotatingPlatform extends ComplexObstacle implements GameObject {
     public boolean handleMessage(Telegram msg) {
         int message = msg.message;
         try {
-            Door event = (Door) msg.extraInfo;
-            angle = event.getDegree();
+            ERotatingPlatform event = (ERotatingPlatform) msg.extraInfo;
+            if (message > 0) {
+                angle = event.getDegree();
+            }
+            else {
+                angle = 0;
+            }
             return true;
         }
         catch(Exception e) {

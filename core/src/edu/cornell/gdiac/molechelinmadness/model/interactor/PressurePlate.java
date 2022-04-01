@@ -10,17 +10,30 @@ import edu.cornell.gdiac.molechelinmadness.model.GameObject;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
-public class PressurePlate extends Interactor implements GameObject {
+public class PressurePlate extends Interactor {
 
     BoxObstacle body;
 
+    /**
+     * Degenerate pressure plate.
+     * Sets body type to 1, which means only detects feet collisions.
+     */
     public PressurePlate(){
+        super();
         body = new BoxObstacle(0, 0, 1, 1);
+        body.setType(1);
     }
 
+    /**
+     * This method is called every frame in the main update loop of the game.
+     *
+     * In the case of an Interactor, all this has to handle is when to call triggerOn() and when to call triggerOff().
+     *
+     * @param dt the time passed in seconds since the previous frame
+     */
     @Override
     public void refresh(float dt) {
-        if (contact) {
+        if (body.isContacting()) {
             triggerOn();
         }
         else {
@@ -28,16 +41,34 @@ public class PressurePlate extends Interactor implements GameObject {
         }
     }
 
+    /**
+     * Sets the drawscale of the attached Box2D Body
+     *
+     * @param scale the drawscale
+     */
     @Override
     public void setDrawScale(Vector2 scale) {
         body.setDrawScale(scale);
     }
 
+    /**
+     * @return the Box2D Body attached to this Interactor object.
+     */
     @Override
     public Obstacle getBody() {
         return body;
     }
 
+    /**
+     * Initializes this pressure plate via the given JSON value
+     *
+     * The JSON value has been parsed and is part of a bigger level file.  However,
+     * this JSON value is limited to the exit subtree
+     *
+     * @param directory the asset manager
+     * @param json      the JSON subtree defining the exit
+     */
+    @Override
     public void initialize(AssetDirectory directory, JsonValue json) {
 
         //Parameters adjustable per level

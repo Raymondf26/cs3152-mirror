@@ -40,21 +40,13 @@ public class CookingStation extends BoxObstacle implements GameObject{
         return false;
     }
 
-    /**What type of station is this */
+    /** What type of station is this */
     public enum stationType{
         CHOPPING,
         COOKING
     }
 
     private stationType type;
-    /**
-     * Creates a new box at the origin.
-     * <p>
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
-     *
-     */
 
     /** Get the ingredients in this stations*/
     public Array<Ingredient> getIngredients(){
@@ -65,8 +57,6 @@ public class CookingStation extends BoxObstacle implements GameObject{
     public stationType getStationType(){
         return this.type;
     }
-
-    public int getType() {return 0;}
 
     @Override
     public void refresh(float dt) {
@@ -94,27 +84,17 @@ public class CookingStation extends BoxObstacle implements GameObject{
         }
     }
 
-    public void Cook (Mole m){
-        if(this.type == stationType.CHOPPING){
-            if (m.getInventory() != null) {
-                m.getInventory().setChopped(true);
-            }
-        }
-        if(this.type == stationType.COOKING){
-            if (m.getInventory() != null) {
-                if(m.getInventory().getChopped()){
-                    this.ingredients.add(m.getInventory());
-                    m.drop();
-                }
-            }
-        }
-    }
-
+    /**
+     * Creates degenerate cooking station.
+     * Sets body type to 0, which means only detects hand collisions.
+     */
     public CookingStation() {
-        super(0, 0, 0.45f, 0.65f);
+        super(0, 0, 1f, 1f);
         this.type = null;
         ingredients = new Array<>();
+        setType(0);
     }
+
     public void initialize(AssetDirectory directory, JsonValue json) {
         setName(json.name());
         String type = json.get("type").asString();

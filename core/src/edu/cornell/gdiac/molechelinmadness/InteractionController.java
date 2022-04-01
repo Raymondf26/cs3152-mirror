@@ -5,6 +5,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.gdiac.molechelinmadness.model.*;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
+/**
+ * Essentially a collision controller.
+ */
 public class InteractionController implements ContactListener{
 
     /**

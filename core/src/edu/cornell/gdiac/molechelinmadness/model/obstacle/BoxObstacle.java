@@ -224,5 +224,17 @@ public class BoxObstacle extends SimpleObstacle {
 		canvas.drawPhysics(shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
 	}
 
+	/**
+	 * Draws the box object.
+	 * Note we scale by its dimension to collapse the texture if we stretch it.
+	 *
+	 * @param canvas Drawing context
+	 */
+	@Override
+	public void draw(GameCanvas canvas) {
+		if (texture != null) {
+			canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),getDimension().x,getDimension().y);
+		}
+	}
 
 }

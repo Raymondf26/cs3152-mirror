@@ -368,10 +368,8 @@ public class Mole extends CapsuleObstacle {
     }
 
     /**
-     *
      * Return the ingredient that is currently in inventory
      * and remove it from inventory.
-     *
      */
     public Ingredient drop() {
         Ingredient temp = this.inventory;
@@ -388,12 +386,31 @@ public class Mole extends CapsuleObstacle {
         dropping = bool;
     }
 
-    /** Return whether inventory is empty or not */
+    /**
+     * Possibly drop what the mole is holding to the world
+     * depending on whether we are trying to drop
+     */
+    public void applyDrop() {
+        if (dropping) {
+            Ingredient ingr = drop();
+            float offset = faceRight ? 1.25f : -1.25f;
+            if (ingr != null) {
+                ingr.setPosition(getX() + offset, getY());
+                ingr.setInWorld(true);
+            }
+        }
+    }
+
+    /**
+     * @return Whether inventory is empty or not
+     */
     public boolean isEmpty() {
         return (inventory == null);
     }
 
-    /** */
+    /**
+     * Updates whether hand sensor should be facing left or right of mole
+     */
     public void updateHand() {
         Vector2 sensorCenter = new Vector2(getWidth() / 2, 0);
         if (this.faceRight) {
@@ -405,15 +422,7 @@ public class Mole extends CapsuleObstacle {
     }
 
     /**
-     * Creates a new capsule object.
-     * <p>
-     * The orientation of the capsule will be a full capsule along the
-     * major axis.  If width == height, it will default to a vertical
-     * orientation.
-     * <p>
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
+     * Creates a degenerate Mole with default settings
      */
     public Mole() {
         super(0, 0, 1, 1);
@@ -426,6 +435,12 @@ public class Mole extends CapsuleObstacle {
         sensorFixtures = new ObjectSet<>();
     }
 
+    /**
+     * Parse the given string array from the JSON file into meaningful IdleUnit objects
+     *
+     * @param idle Example: [left, 0.5, idle, 0.05, right, 0.5, idle, 0.05]
+     * @return Example: [(left, 0.5), (idle, 0.05), (right, 0.5), (idle, 0.05)]
+     */
     private IdleUnit[] parseIdleBehavior (String[] idle) {
         assert idle.length % 2 == 0;
 
@@ -601,36 +616,6 @@ public class Mole extends CapsuleObstacle {
 
         AIController ai = new AIController(idleBehavior);
         this.ai = ai;
-
-        /*String[] idle = json.get("idle behavior").asStringArray();
-        int length = idle.length / 2;
-        Mole.IdleUnit[] idleUnit = new Mole.IdleUnit[length];
-        for (int i = 0; i < idle.length; i++) {
-            Mole.IdleAction action = Mole.IdleAction.IDLE;
-            Float time;
-            if (i % 2 == 0) {
-                if (idle[i].equals("left")) {
-                    action = Mole.IdleAction.LEFT;
-                }
-                else if (idle[i].equals("right")) {
-                    action = Mole.IdleAction.RIGHT;
-                }
-                else if (idle[i].equals("jump")) {
-                    action = Mole.IdleAction.JUMP;
-                }
-                else if (idle[i].equals("interact")) {
-                    action = Mole.IdleAction.INTERACT;
-                }
-                else {
-                    action = Mole.IdleAction.IDLE;
-                }
-            }
-            else {
-                time = Float.valueOf(idle[i]);
-                idleUnit[i-1] = new Mole.IdleUnit(action, time);
-            }
-        }
-        AIController ai = new AIController();*/
 
     }
 

@@ -10,6 +10,9 @@ import edu.cornell.gdiac.molechelinmadness.model.*;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.ScreenListener;
 
+/**
+ * The main controller for the core gameplay. Instantiates Level and InteractionController.
+ */
 public class GameplayController implements Screen {
 
 
@@ -249,7 +252,8 @@ public class GameplayController implements Screen {
         for (int i = 0; i < moles.size; i++) {
             moles.get(i).applyForce();
             moles.get(i).updateHand();
-            //Play sounds relevant sounds
+            moles.get(i).applyDrop();
+            //Play relevant sounds
         }
 
         //check win

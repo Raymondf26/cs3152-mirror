@@ -1,9 +1,9 @@
 {
 	"textures": {
-        "background": "shared/loading.png",
-		"play": "shared/play.png",
+        "background": "textures/loading(1280x720).png",
+		"play": "textures/play.png",
         "progress": {
-            "file":      "shared/progressbar.png",
+            "file":      "textures/progressbar.png",
             "atlas":     {
                 "background" : [16,   0, 216, 30],
                 "backleft"   : [0,    0,  15, 30],

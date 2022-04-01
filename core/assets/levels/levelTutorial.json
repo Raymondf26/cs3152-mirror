@@ -73,10 +73,12 @@
       "name" : "rotating_platform2",
 	  "type" : "rotating_platform",
       "pos" : [23, 11],
-      "size" : [3.5, 0.2],
-      "pin_pos" : [7.5, 9.5],
+      "size" : [3, 0.2],
+      "pin_offset" : [0, 0],
       "pin_radius" : 0.1,
 	  "orientation" : 180,
+      "debugopacity":  192,
+      "debugcolor":    "white",
       "texture" : "interactive:rotatingplatform"
     },
     {
@@ -84,9 +86,11 @@
       "type" : "rotating_platform",
       "pos" : [21, 6],
       "size" : [0.2, 1.5],
-      "pin_pos" : [7.5, 9.5],
+      "pin_offset" : [0, 0],
       "pin_radius" : 0.1,
       "orientation" : 180,
+      "debugopacity":  192,
+      "debugcolor":    "white",
       "texture" : "interactive:rotatingplatform"
     }
   ],
@@ -102,14 +106,8 @@
       [
         {
           "name" : "rotating_platform1",
-          "event" : "door:open"
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform1",
-          "event" : "door:close"
+          "event" : "door",
+          "angle" : 1.57
         }
       ]
     },
@@ -123,14 +121,8 @@
       [
         {
           "name" : "rotating_platform2",
-          "event" : "door:open"
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform2",
-          "event" : "door:close"
+          "event" : "door",
+          "angle" : 1.57
         }
       ]
     }

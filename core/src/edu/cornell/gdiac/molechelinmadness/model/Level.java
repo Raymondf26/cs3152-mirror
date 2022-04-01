@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.event.*;
-import edu.cornell.gdiac.molechelinmadness.model.event.Door;
+import edu.cornell.gdiac.molechelinmadness.model.event.ERotatingPlatform;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.PressurePlate;
@@ -169,6 +169,9 @@ public class Level {
         }
     }
 
+    /**
+     * @return All game objects that were added via the populate method.
+     */
     public ObjectMap.Values<GameObject> getGameObjects() {return gameObjects.values();}
 
 
@@ -239,7 +242,7 @@ public class Level {
         Event event;
 
         if (string.equals("door")) {
-            event = new Door();
+            event = new ERotatingPlatform();
         }
         else if (string.equals("dumbwaiter")) {
             event = new EDumbwaiter();

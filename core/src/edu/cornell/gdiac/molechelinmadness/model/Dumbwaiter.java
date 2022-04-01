@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
-import edu.cornell.gdiac.molechelinmadness.model.event.Door;
 import edu.cornell.gdiac.molechelinmadness.model.event.EDumbwaiter;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.ComplexObstacle;
@@ -18,6 +17,11 @@ import java.lang.reflect.Field;
 
 public class Dumbwaiter extends ComplexObstacle implements GameObject{
 
+    /**
+     * This method is called every frame in the main update loop of the game.
+     *
+     * @param dt the time passed in seconds since the previous frame
+     */
     @Override
     public void refresh(float dt) {
         head.refresh(dt);
@@ -32,7 +36,6 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
      */
     @Override
     public boolean handleMessage(Telegram msg) {
-        int message = msg.message;
         try {
             EDumbwaiter event = (EDumbwaiter) msg.extraInfo;
             if (event.getDir()) {
@@ -49,26 +52,31 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
         }
     }
 
+    /**
+     * The object used to represent the head, and the tail, of the dumbwaiter.
+     */
     private class DumbHead extends BoxObstacle {
 
         Ingredient ingr;
         float timeLeft;
         float cooldown;
 
+        /**
+         * Degenerate dumbwaiter head.
+         * Sets body type to 0, which means only detects hand collisions.
+         */
         public DumbHead() {
             super(0,0,1,1);
             cooldown = 0f;
             timeLeft = 0f;
+            setType(0);
         }
 
         /**
-         * 0 refers to hands, 1 refers to feet
+         * This method is called every frame in the main update loop of the game.
+         *
+         * @param dt the time passed in seconds since the previous frame
          */
-        @Override
-        public int getType() {
-            return 0;
-        }
-
         public void refresh(float dt) {
             if (timeLeft < 0) {
                 if (isContacting()) {
@@ -105,7 +113,9 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
 
     }
 
-    /** Send ingredient from tail to head event */
+    /**
+     * Send ingredient from tail to head event
+     */
     public void sendUp() {
         if (tail.ingr != null) {
             if (head.ingr == null) {
@@ -119,7 +129,9 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
         }
     }
 
-    /** Send ingredient from tail to head event */
+    /**
+     * Send ingredient from tail to head event
+     */
     public void sendDown() {
         if (head.ingr != null) {
             if (tail.ingr == null) {
@@ -127,7 +139,7 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
                 head.ingr = null;
             }
             else {
-                //Let the player know the dumbwatier must be empty before sending down
+                //Let the player know the dumbwaiter must be empty before sending down
                 System.err.println("We should probably send an event to the gameplay controller here to play some different type of audio");
             }
         }
