@@ -84,10 +84,20 @@ public class Ingredient extends BoxObstacle implements GameObject{
     public void initialize(AssetDirectory directory, JsonValue json) {
         setName(json.name());
         String type = json.get("type").asString();
-        float[] pos = json.get("pos").asFloatArray();
-        this.setPosition(pos[0],pos[1]);
-        boolean isChopped = json.get("chopped").asBoolean();
-        this.chopped = isChopped;
+        try{
+            float[] pos = json.get("pos").asFloatArray();
+            this.setPosition(pos[0],pos[1]);
+        } catch(Exception e){
+            this.setPosition(0,0);
+        }
+
+        try {
+            boolean isChopped = json.get("chopped").asBoolean();
+            this.chopped = isChopped;
+        }catch(Exception e){
+            this.chopped = false;
+        }
+
 
         if(type.equals("tomato")){
             this.type = IngType.TOMATO;
