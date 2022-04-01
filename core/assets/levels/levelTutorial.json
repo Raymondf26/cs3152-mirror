@@ -5,12 +5,20 @@
   "goal":
   {
     "pos": [8.5, 2],
-    "win condition" :
+    "winCondition" :
     [
-      "tomato",
-      "fried egg",
-      "noodles",
-      "scallion"
+      {
+        "type" : "tomato",
+        "texture": "tomato"
+      },
+      {
+        "type" : "onion",
+        "texture": "onion"
+      },
+      {
+        "type" : "eggplant",
+        "texture": "eggplant"
+      }
     ],
     "texture" : "goal:pot"
   },

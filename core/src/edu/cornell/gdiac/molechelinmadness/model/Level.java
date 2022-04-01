@@ -164,8 +164,8 @@ public class Level {
         //Adding recipe
 
         recipeIngs = new Array<>();
-        JsonValue rIngs = levelFormat.get("ingredient");
-        for (JsonValue rI : rIngs) {
+        JsonValue winC = levelFormat.get("goal").get("winCondition");
+        for (JsonValue rI : winC) {
             Ingredient ingredient = new Ingredient();
             ingredient.initialize(directory, rI);
             ingredient.setDrawScale(scale);
@@ -173,6 +173,8 @@ public class Level {
         }
         recipe = new Recipe(recipeIngs, 640, 680);
         recipe.setFont(directory.getEntry("shared:retro", BitmapFont.class));
+        recipe.setKnife(new TextureRegion(directory.getEntry("knife", Texture.class)));
+
 
 
 
@@ -345,7 +347,7 @@ public class Level {
             for(Obstacle obj : objects) {
                 obj.drawDebug(canvas);
             }
-            recipe.drawDebug(canvas);
+            recipe.draw(canvas);
             canvas.endDebug();
         }
     }
