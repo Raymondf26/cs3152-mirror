@@ -1,0 +1,7 @@
+{
+  "levels"  :
+  {
+    "level1":  "levels/levelTutorial.json",
+    "level2": "levels/levelMedium.json"
+  }
+}
