@@ -9,6 +9,11 @@
         },
         "shared:goal":   "textures/goaldoor.png",
         "interactive:dumbwaiter" : "textures/dumbwaiter.png",
+        "molefilmstrip" : {
+            "file": "textures/redfilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
         "mole:chef1" : "textures/whitemole.png",
         "mole:chef2" : "textures/pinkmole.png",
         "mole:chef3" : "textures/purplemole.png",
@@ -31,7 +36,8 @@
         "interactive:button2" : "textures/button2.png",
         "interactive:button3" : "textures/button3.png",
         "background" : "textures/environment_background_2.png",
-        "knife" : "textures/knife.png"
+        "knife" : "textures/knife.png",
+        "fire" : "textures/fire.png"
     },
     "jsons"  :
     {

@@ -41,14 +41,15 @@
         "maxspeed": 	  5.0,
         "jumppulse": 	  8.5,
         "jumplimit": 	 30,
-        "texture":       "mole:chef1",
+        "texture":       "mole:chef5",
         "control":       "mole:indicator",
         "debugcolor":    "white",
         "debugopacity":  192,
         "sensorsize": 	 [ 0.183, 0.05 ],
         "sensorname": 	 "dudeGroundSensor",
         "sensorcolor":   "red",
-        "sensoropacity": 192
+        "sensoropacity": 192,
+        "filmstrip" : "molefilmstrip"
       },
       {
         "pos" : [14.5, 8.0],

@@ -2,6 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,6 +12,7 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.AIController;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.util.FilmStrip;
 
 import java.lang.reflect.Field;
 
@@ -96,6 +98,11 @@ public class Mole extends CapsuleObstacle {
 
     /** Sensors for this specific mole */
     private ObjectSet<Fixture> sensorFixtures;
+
+    /** Reference to mole's sprite for drawing */
+    private FilmStrip moleStrip;
+    /** Reference to mole's sprite for drawing */
+    private Texture moleTexture;
 
     /** Get interacting */
     public boolean isInteracting() {return interacting;}
@@ -433,6 +440,7 @@ public class Mole extends CapsuleObstacle {
         faceRight = true;
         jumpCooldown = 0;
         sensorFixtures = new ObjectSet<>();
+        moleStrip = null;
     }
 
     /**
@@ -590,9 +598,19 @@ public class Mole extends CapsuleObstacle {
         setDebugColor(debugColor);
 
         // Now get the texture from the AssetManager singleton
-        String key = json.get("texture").asString();
-        TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
-        setTexture(texture);
+        try {
+            directory.loadAssets();
+            String key = json.get("filmstrip").asString();
+            moleTexture = directory.getEntry(key, Texture.class);
+            moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, 300, 300);
+            moleStrip.setFrame(0);
+            setTexture(moleStrip);
+
+        } catch (Exception e) {
+            String key = json.get("texture").asString();
+            TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
+            setTexture(texture);
+        }
         String key2 = json.get("control").asString();
         controlTexture = new TextureRegion(directory.getEntry(key2, Texture.class));
 
@@ -625,6 +643,11 @@ public class Mole extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
+        if (moleStrip != null) {
+            float ox = 0.5f * moleStrip.getRegionWidth();
+            float oy = 0.5f * moleStrip.getRegionHeight();
+            canvas.draw(moleStrip,ox, oy);
+        }
         if (texture != null) {
             float effect = faceRight ? -1.0f : 1.0f;
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
