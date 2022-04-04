@@ -103,6 +103,9 @@ public class Mole extends CapsuleObstacle {
     private FilmStrip moleStrip;
     /** Reference to mole's sprite for drawing */
     private Texture moleTexture;
+    /** Reference to mole's sprite for drawing */
+    private int currFrame;
+
 
     /** Get interacting */
     public boolean isInteracting() {return interacting;}
@@ -347,9 +350,9 @@ public class Mole extends CapsuleObstacle {
         movement = value;
         // Change facing if appropriate
         if (movement < 0) {
-            faceRight = false;
-        } else if (movement > 0) {
             faceRight = true;
+        } else if (movement > 0) {
+            faceRight = false;
         }
     }
 
@@ -420,7 +423,7 @@ public class Mole extends CapsuleObstacle {
      */
     public void updateHand() {
         Vector2 sensorCenter = new Vector2(getWidth() / 2, 0);
-        if (this.faceRight) {
+        if (!this.faceRight) {
             sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter, 0f);
         }
         else {
@@ -441,6 +444,7 @@ public class Mole extends CapsuleObstacle {
         jumpCooldown = 0;
         sensorFixtures = new ObjectSet<>();
         moleStrip = null;
+        currFrame = 0;
     }
 
     /**
@@ -529,7 +533,13 @@ public class Mole extends CapsuleObstacle {
     public float getMaxSpeed() {
         return maxspeed;
     }
-
+    /**
+     * Returns the current frame
+     * @return the current frame.
+     */
+    public float getCurrFrame() {
+        return currFrame;
+    }
     /**
      * Sets the upper limit on dude left-right movement.
      *
@@ -603,7 +613,7 @@ public class Mole extends CapsuleObstacle {
             String key = json.get("filmstrip").asString();
             moleTexture = directory.getEntry(key, Texture.class);
             moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, 300, 300);
-            moleStrip.setFrame(0);
+            moleStrip.setFrame(currFrame);
             setTexture(moleStrip);
 
         } catch (Exception e) {
@@ -672,5 +682,25 @@ public class Mole extends CapsuleObstacle {
         super.drawDebug(canvas);
         canvas.drawPhysics(sensorShapeF,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
         canvas.drawPhysics(sensorShapeH,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+    }
+
+    /**
+     * returns frame to corresponding walk cycle
+     */
+    public void setFrame(float dt){
+        System.out.print("setting frame");
+        if(moleStrip!= null && dt % 0.25 == 0) {
+            if (this.jumping || this.movement == 0) {
+                currFrame = 0;
+                moleStrip.setFrame(currFrame);
+            } else if (currFrame + 1 < 9) {
+                currFrame++;
+                moleStrip.setFrame(currFrame);
+            } else {
+                currFrame = 0;
+                moleStrip.setFrame(currFrame);
+            }
+
+        }
     }
 }

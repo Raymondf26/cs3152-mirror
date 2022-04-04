@@ -7,6 +7,12 @@
             "wrapU": "repeated",
             "wrapV": "repeated"
         },
+        "blank" :
+        {
+            "file":  "textures/blank.png",
+            "wrapU": "repeated",
+            "wrapV": "repeated"
+        },
         "shared:goal":   "textures/goaldoor.png",
         "interactive:dumbwaiter" : "textures/dumbwaiter.png",
         "molefilmstrip" : {
