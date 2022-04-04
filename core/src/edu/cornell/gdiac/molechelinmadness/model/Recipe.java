@@ -54,8 +54,9 @@ public class Recipe{
         for (Ingredient i: ingredients){
             i.draw(canvas);
             if (i.chopped){
-                canvas.draw(knife, i.getX()*scale, (float)(i.getY()-0.75)*scale);
-                System.out.print("drawing knife");
+                float knifeX = i.getX()*scale - 10;
+                float knifeY = (float)(i.getY()-0.75)*scale - 10;
+                canvas.draw(knife, knifeX, knifeY);
             }
         }
     }
