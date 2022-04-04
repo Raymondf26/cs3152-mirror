@@ -105,6 +105,8 @@ public class Mole extends CapsuleObstacle {
     private Texture moleTexture;
     /** Reference to mole's sprite for drawing */
     private int currFrame;
+    /** Reference to mole's sprite for drawing */
+    private float tSince;
 
 
     /** Get interacting */
@@ -445,6 +447,7 @@ public class Mole extends CapsuleObstacle {
         sensorFixtures = new ObjectSet<>();
         moleStrip = null;
         currFrame = 0;
+        tSince = 0;
     }
 
     /**
@@ -537,7 +540,7 @@ public class Mole extends CapsuleObstacle {
      * Returns the current frame
      * @return the current frame.
      */
-    public float getCurrFrame() {
+    public int getCurrFrame() {
         return currFrame;
     }
     /**
@@ -688,18 +691,32 @@ public class Mole extends CapsuleObstacle {
      * returns frame to corresponding walk cycle
      */
     public void setFrame(float dt){
-        System.out.print("setting frame");
-        if(moleStrip!= null && dt % 0.25 == 0) {
-            if (this.jumping || this.movement == 0) {
+        tSince += dt;
+        if(moleStrip!= null) {
+            if (movement == 0){
                 currFrame = 0;
                 moleStrip.setFrame(currFrame);
-            } else if (currFrame + 1 < 9) {
+            } else if (currFrame < 8 && tSince > 0.15) {
                 currFrame++;
                 moleStrip.setFrame(currFrame);
-            } else {
+                tSince += -0.15;
+            } else if (currFrame == 8){
                 currFrame = 0;
                 moleStrip.setFrame(currFrame);
             }
+            /*if (this.jumping || this.movement == 0) {
+                currFrame = 0;
+                moleStrip.setFrame(currFrame);
+                tSince = 0;
+            } else if (currFrame + 1 < 9 && tSince > 0.25) {
+                currFrame++;
+                moleStrip.setFrame(currFrame);
+                tSince += -0.25;
+            } else {
+                currFrame = 0;
+                moleStrip.setFrame(currFrame);
+                tSince = 0;
+            }*/
 
         }
     }
