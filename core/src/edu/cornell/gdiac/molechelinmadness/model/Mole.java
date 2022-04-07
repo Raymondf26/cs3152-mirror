@@ -107,6 +107,10 @@ public class Mole extends CapsuleObstacle {
     private int currFrame;
     /** Reference to mole's sprite for drawing */
     private float tSince;
+    /** filmstrip width/height */
+    private int fSize;
+
+
 
 
     /** Get interacting */
@@ -448,6 +452,7 @@ public class Mole extends CapsuleObstacle {
         moleStrip = null;
         currFrame = 0;
         tSince = 0;
+        fSize = 300;
     }
 
     /**
@@ -615,7 +620,7 @@ public class Mole extends CapsuleObstacle {
             directory.loadAssets();
             String key = json.get("filmstrip").asString();
             moleTexture = directory.getEntry(key, Texture.class);
-            moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, 300, 300);
+            moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, fSize, fSize);
             moleStrip.setFrame(currFrame);
             setTexture(moleStrip);
 
