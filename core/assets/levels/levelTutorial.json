@@ -49,7 +49,7 @@
         "sensorname": 	 "dudeGroundSensor",
         "sensorcolor":   "red",
         "sensoropacity": 192,
-        "filmstrip" : "molefilmstrip"
+        "filmstrip" : "redfilmstrip"
       },
       {
         "pos" : [14.5, 8.0],
@@ -71,7 +71,8 @@
         "sensorsize": 	 [ 0.183, 0.05 ],
         "sensorname": 	 "dudeGroundSensor",
         "sensorcolor":   "red",
-        "sensoropacity": 192
+        "sensoropacity": 192,
+        "filmstrip" : "pinkfilmstrip"
       }
     ]
   },

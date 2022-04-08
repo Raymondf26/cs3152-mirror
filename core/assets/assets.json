@@ -15,11 +15,27 @@
         },
         "shared:goal":   "textures/goaldoor.png",
         "interactive:dumbwaiter" : "textures/dumbwaiter.png",
-        "molefilmstrip" : {
+        "redfilmstrip" : {
             "file": "textures/redfilmstrip.png",
             "minFilter" : "linear",
             "magFilter" : "linear"
         },
+        "pinkfilmstrip" : {
+            "file": "textures/pinkfilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "bluefilmstrip" : {
+            "file": "textures/bluefilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "purplefilmstrip" : {
+            "file": "textures/purplefilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+
         "mole:chef1" : "textures/whitemole.png",
         "mole:chef2" : "textures/pinkmole.png",
         "mole:chef3" : "textures/purplemole.png",
