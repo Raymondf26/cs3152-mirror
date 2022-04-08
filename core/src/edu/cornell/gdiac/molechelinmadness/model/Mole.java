@@ -212,7 +212,7 @@ public class Mole extends CapsuleObstacle {
         sensorDef.density = 1.0f;
         sensorDef.isSensor = true;
         sensorShapeF = new PolygonShape();
-        sensorShapeF.setAsBox(0.6f*getWidth(), 0.05f, sensorCenter, 0.0f);
+        sensorShapeF.setAsBox(0.45f*getWidth(), 0.05f, sensorCenter, 0.0f);
         sensorDef.shape = sensorShapeF;
 
         // Ground sensor to represent our feet
