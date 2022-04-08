@@ -232,14 +232,12 @@ public class GameplayController implements Screen {
                 moles.get(i).setJumping(InputController.getInstance().didPrimary());
                 moles.get(i).setInteracting(InputController.getInstance().didTertiary());
                 moles.get(i).setDropping(InputController.getInstance().didDrop());
-                moles.get(i).setFrame(dt);
             }
             else {
                 AIController ai = moles.get(i).getAIController();
                 moles.get(i).setMovement(ai.getHorizontal() * moles.get(i).getForce());
                 moles.get(i).setJumping(ai.getJump());
                 moles.get(i).setInteracting(ai.getInteract());
-                moles.get(i).setFrame(dt);
                 ai.update(dt);
             }
 
@@ -255,6 +253,7 @@ public class GameplayController implements Screen {
             moles.get(i).applyForce();
             moles.get(i).updateHand();
             moles.get(i).applyDrop();
+            moles.get(i).setFrame(dt);
             //Play relevant sounds
         }
 

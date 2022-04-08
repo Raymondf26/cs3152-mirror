@@ -10,9 +10,13 @@ import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 
 public class Ingredient extends BoxObstacle implements GameObject{
     //True if this ingredient chopped
-    public Boolean chopped;
+    private Boolean chopped;
 
     private boolean inWorld;
+
+    private float cooldown;
+
+    private float COOLDOWN;
 
     /**
      * Handles the telegram just received.
@@ -60,7 +64,7 @@ public class Ingredient extends BoxObstacle implements GameObject{
      */
     @Override
     public void refresh(float dt) {
-        if (isContacting()) {
+        if (isContacting() && cooldown <= 0) {
             if (getContactMole().isEmpty()) {
                 getContactMole().addToInventory(this);
                 setActive(false);
@@ -69,6 +73,9 @@ public class Ingredient extends BoxObstacle implements GameObject{
         }
         else if (inWorld) {
             setActive(true);
+            if (cooldown > 0) {
+                cooldown -= dt;
+            }
         }
     }
 
@@ -79,6 +86,7 @@ public class Ingredient extends BoxObstacle implements GameObject{
      */
     public void setInWorld(boolean bool) {
         inWorld = bool;
+        cooldown = COOLDOWN;
     }
 
     /**
@@ -129,6 +137,8 @@ public class Ingredient extends BoxObstacle implements GameObject{
         else {
             this.type = IngType.EGGPLANT;
         }
+
+        COOLDOWN = 0.25f;
 
         String key = json.get("texture").asString();
         TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));

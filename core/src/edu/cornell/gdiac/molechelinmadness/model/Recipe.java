@@ -53,7 +53,7 @@ public class Recipe{
         canvas.drawText("Recipe:", displayFont, bottomLeft, cY);
         for (Ingredient i: ingredients){
             i.draw(canvas);
-            if (i.chopped){
+            if (i.getChopped()){
                 float knifeX = i.getX()*scale - 10;
                 float knifeY = (float)(i.getY()-0.75)*scale - 10;
                 canvas.draw(knife, knifeX, knifeY);

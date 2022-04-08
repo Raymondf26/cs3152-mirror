@@ -347,7 +347,6 @@ public class Level {
             for(Obstacle obj : objects) {
                 obj.drawDebug(canvas);
             }
-            recipe.draw(canvas);
             canvas.endDebug();
         }
     }

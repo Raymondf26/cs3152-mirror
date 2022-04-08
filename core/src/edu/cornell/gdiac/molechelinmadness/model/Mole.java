@@ -28,7 +28,7 @@ public class Mole extends CapsuleObstacle {
 
     }
 
-    public class IdleUnit {
+    public static class IdleUnit {
         public IdleAction idle;
         public float time;
     }
@@ -37,11 +37,9 @@ public class Mole extends CapsuleObstacle {
     /** Possibly temporary storage for ai controller*/
     AIController ai;
     /** Cache for internal force calculations */
-    private Vector2 forceCache = new Vector2();
-    /** The name of the sensor for detection purposes */
-    private String sensorName;
-    /** The color to paint the sensor in debug mode */
-    private Color sensorColor;
+    private final Vector2 forceCache = new Vector2();
+    /** Name of sensor object*/
+    String sensorName;
     /** The sensor shape for the feet*/
     PolygonShape sensorShapeF;
     /** The sensor shape for the hands*/
@@ -64,7 +62,7 @@ public class Mole extends CapsuleObstacle {
     private float jumppulse;
 
     /** How long until we can jump again */
-    private int jumpCooldown;
+    private final int jumpCooldown;
 
     /** The factor to multiply by the input */
     private float force;
@@ -77,9 +75,6 @@ public class Mole extends CapsuleObstacle {
 
     /** Whether it's in the state of interacting or not*/
     private boolean interacting;
-
-    /** The idle behavior of this mole */
-    private IdleUnit[] idleBehavior;
 
     /** Currently being controlled */
     private boolean controlled;
@@ -97,12 +92,10 @@ public class Mole extends CapsuleObstacle {
     private boolean dropping;
 
     /** Sensors for this specific mole */
-    private ObjectSet<Fixture> sensorFixtures;
+    private final ObjectSet<Fixture> sensorFixtures;
 
     /** Reference to mole's sprite for drawing */
     private FilmStrip moleStrip;
-    /** Reference to mole's sprite for drawing */
-    private Texture moleTexture;
     /** Reference to mole's sprite for drawing */
     private int currFrame;
     /** Reference to mole's sprite for drawing */
@@ -352,9 +345,9 @@ public class Mole extends CapsuleObstacle {
         movement = value;
         // Change facing if appropriate
         if (movement < 0) {
-            faceRight = true;
-        } else if (movement > 0) {
             faceRight = false;
+        } else if (movement > 0) {
+            faceRight = true;
         }
     }
 
@@ -407,7 +400,8 @@ public class Mole extends CapsuleObstacle {
             Ingredient ingr = drop();
             float offset = faceRight ? 1.25f : -1.25f;
             if (ingr != null) {
-                ingr.setPosition(getX() + offset, getY());
+                ingr.setPosition(getX(), getY() + 0.25f); //for now the vertical offset is just a hard-coded 0.25f value
+                ingr.getBody().applyLinearImpulse(3.0f * offset + body.getLinearVelocity().x, 0, 0, 0, true); //same for the impulse, essentially hard-coded rn
                 ingr.setInWorld(true);
             }
         }
@@ -425,7 +419,7 @@ public class Mole extends CapsuleObstacle {
      */
     public void updateHand() {
         Vector2 sensorCenter = new Vector2(getWidth() / 2, 0);
-        if (!this.faceRight) {
+        if (this.faceRight) {
             sensorShapeH.setAsBox(0.05f, 0.6f*getWidth(), sensorCenter, 0f);
         }
         else {
@@ -594,7 +588,7 @@ public class Mole extends CapsuleObstacle {
         //Idle behavior
         String[] idle = json.get("idle behavior").asStringArray();
         IdleUnit[] behavior = parseIdleBehavior(idle);
-        idleBehavior = behavior;
+        /** The idle behavior of this mole */
 
 
         // Reflection is best way to convert name to color
@@ -614,7 +608,7 @@ public class Mole extends CapsuleObstacle {
         try {
             directory.loadAssets();
             String key = json.get("filmstrip").asString();
-            moleTexture = directory.getEntry(key, Texture.class);
+            Texture moleTexture = directory.getEntry(key, Texture.class);
             moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, 300, 300);
             moleStrip.setFrame(currFrame);
             setTexture(moleStrip);
@@ -634,6 +628,7 @@ public class Mole extends CapsuleObstacle {
         sensorShape.setAsBox(sSize[0], sSize[1], sensorCenter, 0.0f);*/
 
         // Reflection is best way to convert name to color
+        Color sensorColor;
         try {
             String cname = json.get("sensorcolor").asString().toUpperCase();
             Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
@@ -642,11 +637,11 @@ public class Mole extends CapsuleObstacle {
             sensorColor = null; // Not defined
         }
         opacity = json.get("sensoropacity").asInt();
+        assert sensorColor != null;
         sensorColor.mul(opacity/255.0f);
         sensorName = json.get("sensorname").asString();
 
-        AIController ai = new AIController(idleBehavior);
-        this.ai = ai;
+        this.ai = new AIController(behavior);
 
     }
 
@@ -656,13 +651,8 @@ public class Mole extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        if (moleStrip != null) {
-            float ox = 0.5f * moleStrip.getRegionWidth();
-            float oy = 0.5f * moleStrip.getRegionHeight();
-            canvas.draw(moleStrip,ox, oy);
-        }
         if (texture != null) {
-            float effect = faceRight ? -1.0f : 1.0f;
+            float effect = faceRight ? 1.0f : -1.0f;
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
             if (this.controlled) {
                 canvas.draw(controlTexture, Color.WHITE, origin.x / 2, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
