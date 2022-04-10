@@ -709,6 +709,7 @@ public class Mole extends CapsuleObstacle {
             moleStrip.setFrame(currFrame);
             tSince -= frameRate;
         }
+            // Alternative
             /*if (this.jumping || this.movement == 0) {
                 currFrame = 0;
                 moleStrip.setFrame(currFrame);
