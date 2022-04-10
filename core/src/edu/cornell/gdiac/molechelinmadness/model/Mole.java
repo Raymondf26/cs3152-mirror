@@ -102,6 +102,8 @@ public class Mole extends CapsuleObstacle {
     private float tSince;
     /** filmstrip width/height */
     private int fSize;
+    /** filmstrip width/height */
+    private Double frameRate;
 
 
 
@@ -447,6 +449,7 @@ public class Mole extends CapsuleObstacle {
         currFrame = 0;
         tSince = 0;
         fSize = 300;
+        frameRate = 0.12;
     }
 
     /**
@@ -610,23 +613,23 @@ public class Mole extends CapsuleObstacle {
         setDebugColor(debugColor);
 
         // Now get the texture from the AssetManager singleton
-        try {
-            directory.loadAssets();
-            String key = json.get("filmstrip").asString();
+        //  Setting filmstrip
+        directory.loadAssets();
+        String key = json.get("filmstrip").asString();
 
-            Texture moleTexture = directory.getEntry(key, Texture.class);
-            moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, fSize, fSize);
+        Texture moleTexture = directory.getEntry(key, Texture.class);
+        moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, fSize, fSize);
 
-            moleStrip.setFrame(currFrame);
-            setTexture(moleStrip);
+        moleStrip.setFrame(currFrame);
+        setTexture(moleStrip);
 
-        } catch (Exception e) {
-            String key = json.get("texture").asString();
-            TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
-            setTexture(texture);
-        }
         String key2 = json.get("control").asString();
         controlTexture = new TextureRegion(directory.getEntry(key2, Texture.class));
+
+        // Regular texture
+        /*String key3 = json.get("texture").asString();
+        TextureRegion texture = new TextureRegion(directory.getEntry(key3, Texture.class));
+        setTexture(texture);*/
 
         // Get the sensor information
         /*Vector2 sensorCenter = new Vector2(0, -getHeight()/2);
@@ -689,18 +692,23 @@ public class Mole extends CapsuleObstacle {
      */
     public void setFrame(float dt){
         tSince += dt;
-        if(moleStrip!= null) {
-            if (movement == 0){
-                currFrame = 0;
-                moleStrip.setFrame(currFrame);
-            } else if (currFrame < 8 && tSince > 0.15) {
-                currFrame++;
-                moleStrip.setFrame(currFrame);
-                tSince += -0.15;
-            } else if (currFrame == 8){
-                currFrame = 0;
-                moleStrip.setFrame(currFrame);
-            }
+        if (movement == 0) {
+            currFrame = 0;
+            moleStrip.setFrame(currFrame);
+        } else if (this.isJumping()){
+            // Jumping animation needs to be added
+            currFrame = 0;
+            moleStrip.setFrame(currFrame);
+            tSince -= frameRate;
+        } else if (currFrame < 8 && tSince > frameRate) {
+            currFrame++;
+            moleStrip.setFrame(currFrame);
+            tSince -= frameRate;
+        } else if (currFrame == 8){
+            currFrame = 0;
+            moleStrip.setFrame(currFrame);
+            tSince -= frameRate;
+        }
             /*if (this.jumping || this.movement == 0) {
                 currFrame = 0;
                 moleStrip.setFrame(currFrame);
@@ -714,7 +722,5 @@ public class Mole extends CapsuleObstacle {
                 moleStrip.setFrame(currFrame);
                 tSince = 0;
             }*/
-
-        }
     }
 }

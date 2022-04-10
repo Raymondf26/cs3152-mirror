@@ -146,7 +146,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -157,7 +157,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -168,7 +168,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -179,7 +179,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -190,7 +190,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -201,7 +201,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     }

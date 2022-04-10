@@ -7,6 +7,12 @@
             "wrapU": "repeated",
             "wrapV": "repeated"
         },
+        "temptile" :
+        {
+            "file":  "textures/temptile.png",
+            "wrapU": "repeated",
+            "wrapV": "repeated"
+        },
         "blank" :
         {
             "file":  "textures/blank.png",
@@ -15,6 +21,7 @@
         },
         "shared:goal":   "textures/goaldoor.png",
         "interactive:dumbwaiter" : "textures/dumbwaiter.png",
+
         "redfilmstrip" : {
             "file": "textures/redfilmstrip.png",
             "minFilter" : "linear",
@@ -32,6 +39,11 @@
         },
         "purplefilmstrip" : {
             "file": "textures/purplefilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "whitefilmstrip" : {
+            "file": "textures/bluefilmstrip.png",
             "minFilter" : "linear",
             "magFilter" : "linear"
         },
