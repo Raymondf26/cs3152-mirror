@@ -5,7 +5,6 @@ import edu.cornell.gdiac.molechelinmadness.model.*;
 /**
  * Updates the idle actions for the Mole characters while the player is not controlling them.
  */
-
 public class AIController {
 
     /** Set of ordered IdleUnits to loop through*/

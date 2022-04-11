@@ -2,6 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +13,10 @@ import com.badlogic.gdx.utils.ObjectMap;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.event.*;
+import edu.cornell.gdiac.molechelinmadness.model.event.ERotatingPlatform;
 import edu.cornell.gdiac.molechelinmadness.model.interactor.Button;
+import edu.cornell.gdiac.molechelinmadness.model.interactor.Interactor;
+import edu.cornell.gdiac.molechelinmadness.model.interactor.PressurePlate;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 import edu.cornell.gdiac.util.PooledList;
 
@@ -53,6 +57,12 @@ public class Level {
     private Array<Ingredient> ingredients;
     /** Reference to the cooking stations */
     private Array<CookingStation> stations;
+    /** Displays win condition recipe*/
+    private Recipe recipe;
+    /** Ingredients for memory display*/
+    private Array<Ingredient> recipeIngs;
+    /** Display font */
+    private BitmapFont font;
     /** Reference to the final cooking station to win the level */
     private FinalStation goal;
     /** Reference to interactive objects as a map*/
@@ -84,7 +94,6 @@ public class Level {
         scale.x = gSize[0] / pSize[0];
         scale.y = gSize[1] / pSize[1];
 
-        assert (directory != null);
 
         //Add all platforms
         JsonValue floor = levelFormat.get("platforms").child();
@@ -96,6 +105,7 @@ public class Level {
             floor = floor.next();
         }
 
+
         //Add all walls
         JsonValue wall = levelFormat.get("walls").child();
         while (wall != null) {
@@ -106,6 +116,7 @@ public class Level {
             wall = wall.next();
         }
 
+
         //Add all interactive elements
         JsonValue interactable = levelFormat.get("interactive elements").child();
         while (interactable != null) {
@@ -113,12 +124,14 @@ public class Level {
             interactable = interactable.next();
         }
 
-        //Add all interactors elements
+
+        //Add all interactors
         JsonValue interactors = levelFormat.get("interactors").child();
         while (interactors != null) {
             initializeInteractors(directory, interactors);
             interactors = interactors.next();
         }
+
 
         //Add all moles
         moles = new Array<>();
@@ -134,6 +147,7 @@ public class Level {
         controlMole = levelFormat.get("moles").getInt("starting");
         moles.get(controlMole).setControlled(true);
 
+
         //Add all ingredients
         ingredients = new Array<>();
         JsonValue ings = levelFormat.get("ingredient");
@@ -147,7 +161,24 @@ public class Level {
             activate(ingredient);
         }
 
+        //Adding recipe
 
+        recipeIngs = new Array<>();
+        JsonValue winC = levelFormat.get("goal").get("winCondition");
+        for (JsonValue rI : winC) {
+            Ingredient ingredient = new Ingredient();
+            ingredient.initialize(directory, rI);
+            ingredient.setDrawScale(scale);
+            recipeIngs.add(ingredient);
+        }
+        recipe = new Recipe(recipeIngs, 640, 680);
+        recipe.setFont(directory.getEntry("shared:retro", BitmapFont.class));
+        recipe.setKnife(new TextureRegion(directory.getEntry("knife", Texture.class)));
+
+
+
+
+        //Add all cooking stations
         stations = new Array<>();
         JsonValue cooking = levelFormat.get("cooking");
         for (JsonValue c : cooking) {
@@ -161,7 +192,9 @@ public class Level {
         }
     }
 
-    public Array<Ingredient> getIngredients () {return ingredients;}
+    /**
+     * @return All game objects that were added via the populate method.
+     */
     public ObjectMap.Values<GameObject> getGameObjects() {return gameObjects.values();}
 
 
@@ -182,19 +215,10 @@ public class Level {
             gameObjects.put(json.getString("name"), rotatingPlatform);
             activate(rotatingPlatform);
         }
-        else if (type.equals("rotating_platform_v2")) {
-            RotatingPlatformV2 rotatingPlatform = new RotatingPlatformV2();
-            rotatingPlatform.initialize(directory, json);
-            rotatingPlatform.setDrawScale(scale);
-            gameObjects.put(json.getString("name"), rotatingPlatform);
-            activate(rotatingPlatform);
+        else {
+            System.err.println("Not interactive element of the type provided found: " + type);
         }
     }
-
-
-    Array<Button> buttons = new Array<>();
-
-    public Array<Button> getButtons() {return buttons;}
 
     /** Initialize all interactor elements like pressure plates, etc. */
     private void initializeInteractors(AssetDirectory directory, JsonValue json) {
@@ -203,92 +227,57 @@ public class Level {
             PressurePlate pressureplate = new PressurePlate();
             pressureplate.initialize(directory, json);
             pressureplate.setDrawScale(scale);
-            JsonValue link = json.get("link").child();
-            while (link != null) {
-                String name = link.getString("name");
-                System.out.println(name);
-                GameObject obs = gameObjects.get(name);
-                Event event = parseEvent(link.getString("event"), link);
-                assert (event != null);
-                event.linkObject(obs);
-                pressureplate.addTriggerEvent(event);
-                pressureplate.addTriggerEvent(event);
-                link = link.next();
-            }
-            JsonValue endLink = json.get("linkEnd").child();
-            while (endLink != null) {
-                String name = endLink.getString("name");
-                System.out.println(name);
-                GameObject obs = gameObjects.get(name);
-                Event event = parseEvent(endLink.getString("event"), link);
-                assert (event != null);
-                event.linkObject(obs);
-                pressureplate.addDetriggerEvent(event);
-                endLink = endLink.next();
-            }
+            initializeEvents(pressureplate, json);
             gameObjects.put(json.getString("name"), pressureplate);
-            activate(pressureplate);
+            activate(pressureplate.getBody());
         }
 
-        if (type.equals("button")) {
+        else if (type.equals("button")) {
             Button button = new Button();
             button.initialize(directory, json);
             button.setDrawScale(scale);
-            JsonValue link = json.get("link").child();
-            while (link != null) {
-                String name = link.getString("name");
-                System.out.println(name);
-                GameObject obs = gameObjects.get(name);
-                Event event = parseEvent(link.getString("event"), link);
-                assert (event != null);
-                event.linkObject(obs);
-                button.addTriggerEvent(event);
-                button.addTriggerEvent(event);
-                link = link.next();
-            }
-            JsonValue endLink = json.get("linkEnd").child();
-            while (endLink != null) {
-                String name = endLink.getString("name");
-                System.out.println(name);
-                GameObject obs = gameObjects.get(name);
-                Event event = parseEvent(endLink.getString("event"), link);
-                assert (event != null);
-                event.linkObject(obs);
-                button.addDetriggerEvent(event);
-                endLink = endLink.next();
-            }
-            buttons.add(button);
+            initializeEvents(button, json);
             gameObjects.put(json.getString("name"), button);
-            activate(button);
+            activate(button.getBody());
+        }
+
+        else {
+            System.err.println("No interactor of the type provided found: " + type);
+        }
+    }
+
+    private void initializeEvents(Interactor messenger, JsonValue json) {
+        JsonValue link = json.get("link").child();
+        int msg = 1; //Note: the order of adding these events matter. Interactors will dispatch using msgs based on the order added here.
+        while (link != null) {
+            String listenerName = link.getString("name");
+            GameObject listener = gameObjects.get(listenerName);
+            Event event = parseEvent(link.getString("event"), link);
+            messenger.addEvent(event);
+            messenger.addListeners(listener, msg, -msg);
+            msg += 1;
+            link = link.next();
         }
     }
 
     private Event parseEvent(String string, JsonValue link) {
-        if (string.equals("door:open")) {
-            return new DoorOpen();
+
+        Event event;
+
+        if (string.equals("door")) {
+            event = new ERotatingPlatform();
         }
-        else if (string.equals("door:close")) {
-            return new DoorClose();
+        else if (string.equals("dumbwaiter")) {
+            event = new EDumbwaiter();
         }
-        else if (string.equals("door:close_middle")) {
-            return new DoorCloseMiddle();
+        else {
+            System.err.println("no event of that name");
+            event = null;
         }
-        else if (string.equals("door:open_middle")) {
-            return new DoorOpenMiddle();
-        }
-        else if (string.equals("dumbwaiter:up")) {
-            return new DumbwaiterUp();
-        }
-        else if (string.equals("doorv2:open")) {
-            float angle = link.getFloat("effect");
-            DoorV2Open event = new DoorV2Open();
-            event.setAngle(angle);
-            return event;
-        }
-        else if (string.equals("doorv2:close")) {
-            return new DoorV2Close();
-        }
-        else return null;
+        assert event != null;
+        event.initialize(link);
+        return event;
+
     }
 
     public void dispose() {
@@ -350,6 +339,7 @@ public class Level {
         for(Obstacle obj : objects) {
             obj.draw(canvas);
         }
+        recipe.draw(canvas);
         canvas.end();
 
         if (debug) {

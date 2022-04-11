@@ -2,6 +2,7 @@ package edu.cornell.gdiac.molechelinmadness.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,6 +12,7 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.AIController;
 import edu.cornell.gdiac.molechelinmadness.GameCanvas;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.util.FilmStrip;
 
 import java.lang.reflect.Field;
 
@@ -26,7 +28,7 @@ public class Mole extends CapsuleObstacle {
 
     }
 
-    public class IdleUnit {
+    public static class IdleUnit {
         public IdleAction idle;
         public float time;
     }
@@ -35,11 +37,9 @@ public class Mole extends CapsuleObstacle {
     /** Possibly temporary storage for ai controller*/
     AIController ai;
     /** Cache for internal force calculations */
-    private Vector2 forceCache = new Vector2();
-    /** The name of the sensor for detection purposes */
-    private String sensorName;
-    /** The color to paint the sensor in debug mode */
-    private Color sensorColor;
+    private final Vector2 forceCache = new Vector2();
+    /** Name of sensor object*/
+    String sensorName;
     /** The sensor shape for the feet*/
     PolygonShape sensorShapeF;
     /** The sensor shape for the hands*/
@@ -62,7 +62,7 @@ public class Mole extends CapsuleObstacle {
     private float jumppulse;
 
     /** How long until we can jump again */
-    private int jumpCooldown;
+    private final int jumpCooldown;
 
     /** The factor to multiply by the input */
     private float force;
@@ -76,9 +76,6 @@ public class Mole extends CapsuleObstacle {
     /** Whether it's in the state of interacting or not*/
     private boolean interacting;
 
-    /** The idle behavior of this mole */
-    private IdleUnit[] idleBehavior;
-
     /** Currently being controlled */
     private boolean controlled;
 
@@ -91,8 +88,25 @@ public class Mole extends CapsuleObstacle {
     /** Mole trying to jump */
     private boolean jumping;
 
+    /** Mole trying to drop */
+    private boolean dropping;
+
     /** Sensors for this specific mole */
-    private ObjectSet<Fixture> sensorFixtures;
+    private final ObjectSet<Fixture> sensorFixtures;
+
+    /** Reference to mole's sprite for drawing */
+    private FilmStrip moleStrip;
+    /** Reference to mole's sprite for drawing */
+    private int currFrame;
+    /** Reference to mole's sprite for drawing */
+    private float tSince;
+    /** filmstrip width/height */
+    private int fSize;
+    /** filmstrip width/height */
+    private Double frameRate;
+
+
+
 
     /** Get interacting */
     public boolean isInteracting() {return interacting;}
@@ -200,7 +214,7 @@ public class Mole extends CapsuleObstacle {
         sensorDef.density = 1.0f;
         sensorDef.isSensor = true;
         sensorShapeF = new PolygonShape();
-        sensorShapeF.setAsBox(0.6f*getWidth(), 0.05f, sensorCenter, 0.0f);
+        sensorShapeF.setAsBox(0.45f*getWidth(), 0.05f, sensorCenter, 0.0f);
         sensorDef.shape = sensorShapeF;
 
         // Ground sensor to represent our feet
@@ -365,10 +379,8 @@ public class Mole extends CapsuleObstacle {
     }
 
     /**
-     *
      * Return the ingredient that is currently in inventory
      * and remove it from inventory.
-     *
      */
     public Ingredient drop() {
         Ingredient temp = this.inventory;
@@ -376,22 +388,41 @@ public class Mole extends CapsuleObstacle {
         return temp;
     }
 
-    public void dropToWorld(boolean bool) {
-        if (bool) {
+    /**
+     * Set whether mole is trying to drop an item or not
+     *
+     * @param bool whether dropping or not
+     */
+    public void setDropping(boolean bool) {
+        dropping = bool;
+    }
+
+    /**
+     * Possibly drop what the mole is holding to the world
+     * depending on whether we are trying to drop
+     */
+    public void applyDrop() {
+        if (dropping) {
             Ingredient ingr = drop();
             float offset = faceRight ? 1.25f : -1.25f;
             if (ingr != null) {
-                ingr.holdPos(getX() + offset, getY());
+                ingr.setPosition(getX(), getY() + 0.25f); //for now the vertical offset is just a hard-coded 0.25f value
+                ingr.getBody().applyLinearImpulse(3.0f * offset + body.getLinearVelocity().x, 0, 0, 0, true); //same for the impulse, essentially hard-coded rn
+                ingr.setInWorld(true);
             }
         }
     }
 
-    /** Return whether inventory is empty or not */
+    /**
+     * @return Whether inventory is empty or not
+     */
     public boolean isEmpty() {
         return (inventory == null);
     }
 
-    /** */
+    /**
+     * Updates whether hand sensor should be facing left or right of mole
+     */
     public void updateHand() {
         Vector2 sensorCenter = new Vector2(getWidth() / 2, 0);
         if (this.faceRight) {
@@ -403,15 +434,7 @@ public class Mole extends CapsuleObstacle {
     }
 
     /**
-     * Creates a new capsule object.
-     * <p>
-     * The orientation of the capsule will be a full capsule along the
-     * major axis.  If width == height, it will default to a vertical
-     * orientation.
-     * <p>
-     * The size is expressed in physics units NOT pixels.  In order for
-     * drawing to work properly, you MUST set the drawScale. The drawScale
-     * converts the physics units to pixels.
+     * Creates a degenerate Mole with default settings
      */
     public Mole() {
         super(0, 0, 1, 1);
@@ -422,8 +445,19 @@ public class Mole extends CapsuleObstacle {
         faceRight = true;
         jumpCooldown = 0;
         sensorFixtures = new ObjectSet<>();
+        moleStrip = null;
+        currFrame = 0;
+        tSince = 0;
+        fSize = 300;
+        frameRate = 0.12;
     }
 
+    /**
+     * Parse the given string array from the JSON file into meaningful IdleUnit objects
+     *
+     * @param idle Example: [left, 0.5, idle, 0.05, right, 0.5, idle, 0.05]
+     * @return Example: [(left, 0.5), (idle, 0.05), (right, 0.5), (idle, 0.05)]
+     */
     private IdleUnit[] parseIdleBehavior (String[] idle) {
         assert idle.length % 2 == 0;
 
@@ -504,7 +538,13 @@ public class Mole extends CapsuleObstacle {
     public float getMaxSpeed() {
         return maxspeed;
     }
-
+    /**
+     * Returns the current frame
+     * @return the current frame.
+     */
+    public int getCurrFrame() {
+        return currFrame;
+    }
     /**
      * Sets the upper limit on dude left-right movement.
      *
@@ -556,7 +596,7 @@ public class Mole extends CapsuleObstacle {
         //Idle behavior
         String[] idle = json.get("idle behavior").asStringArray();
         IdleUnit[] behavior = parseIdleBehavior(idle);
-        idleBehavior = behavior;
+        /** The idle behavior of this mole */
 
 
         // Reflection is best way to convert name to color
@@ -573,11 +613,23 @@ public class Mole extends CapsuleObstacle {
         setDebugColor(debugColor);
 
         // Now get the texture from the AssetManager singleton
-        String key = json.get("texture").asString();
-        TextureRegion texture = new TextureRegion(directory.getEntry(key, Texture.class));
-        setTexture(texture);
+        //  Setting filmstrip
+        directory.loadAssets();
+        String key = json.get("filmstrip").asString();
+
+        Texture moleTexture = directory.getEntry(key, Texture.class);
+        moleStrip = new FilmStrip(moleTexture, 4, 4, 16, 0, 0, fSize, fSize);
+
+        moleStrip.setFrame(currFrame);
+        setTexture(moleStrip);
+
         String key2 = json.get("control").asString();
         controlTexture = new TextureRegion(directory.getEntry(key2, Texture.class));
+
+        // Regular texture
+        /*String key3 = json.get("texture").asString();
+        TextureRegion texture = new TextureRegion(directory.getEntry(key3, Texture.class));
+        setTexture(texture);*/
 
         // Get the sensor information
         /*Vector2 sensorCenter = new Vector2(0, -getHeight()/2);
@@ -586,6 +638,7 @@ public class Mole extends CapsuleObstacle {
         sensorShape.setAsBox(sSize[0], sSize[1], sensorCenter, 0.0f);*/
 
         // Reflection is best way to convert name to color
+        Color sensorColor;
         try {
             String cname = json.get("sensorcolor").asString().toUpperCase();
             Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
@@ -594,41 +647,11 @@ public class Mole extends CapsuleObstacle {
             sensorColor = null; // Not defined
         }
         opacity = json.get("sensoropacity").asInt();
+        assert sensorColor != null;
         sensorColor.mul(opacity/255.0f);
         sensorName = json.get("sensorname").asString();
 
-        AIController ai = new AIController(idleBehavior);
-        this.ai = ai;
-
-        /*String[] idle = json.get("idle behavior").asStringArray();
-        int length = idle.length / 2;
-        Mole.IdleUnit[] idleUnit = new Mole.IdleUnit[length];
-        for (int i = 0; i < idle.length; i++) {
-            Mole.IdleAction action = Mole.IdleAction.IDLE;
-            Float time;
-            if (i % 2 == 0) {
-                if (idle[i].equals("left")) {
-                    action = Mole.IdleAction.LEFT;
-                }
-                else if (idle[i].equals("right")) {
-                    action = Mole.IdleAction.RIGHT;
-                }
-                else if (idle[i].equals("jump")) {
-                    action = Mole.IdleAction.JUMP;
-                }
-                else if (idle[i].equals("interact")) {
-                    action = Mole.IdleAction.INTERACT;
-                }
-                else {
-                    action = Mole.IdleAction.IDLE;
-                }
-            }
-            else {
-                time = Float.valueOf(idle[i]);
-                idleUnit[i-1] = new Mole.IdleUnit(action, time);
-            }
-        }
-        AIController ai = new AIController();*/
+        this.ai = new AIController(behavior);
 
     }
 
@@ -639,7 +662,7 @@ public class Mole extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            float effect = faceRight ? -1.0f : 1.0f;
+            float effect = faceRight ? 1.0f : -1.0f;
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
             if (this.controlled) {
                 canvas.draw(controlTexture, Color.WHITE, origin.x / 2, origin.y-texture.getRegionHeight()*1.2f, getX()*drawScale.x, getY()*drawScale.y, getAngle(), 1f, 1f);
@@ -662,5 +685,43 @@ public class Mole extends CapsuleObstacle {
         super.drawDebug(canvas);
         canvas.drawPhysics(sensorShapeF,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
         canvas.drawPhysics(sensorShapeH,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+    }
+
+    /**
+     * returns frame to corresponding walk cycle
+     */
+    public void setFrame(float dt){
+        tSince += dt;
+        if (movement == 0) {
+            currFrame = 0;
+            moleStrip.setFrame(currFrame);
+        } else if (this.isJumping()){
+            // Jumping animation needs to be added
+            currFrame = 0;
+            moleStrip.setFrame(currFrame);
+            tSince -= frameRate;
+        } else if (currFrame < 8 && tSince > frameRate) {
+            currFrame++;
+            moleStrip.setFrame(currFrame);
+            tSince -= frameRate;
+        } else if (currFrame == 8){
+            currFrame = 0;
+            moleStrip.setFrame(currFrame);
+            tSince -= frameRate;
+        }
+            // Alternative
+            /*if (this.jumping || this.movement == 0) {
+                currFrame = 0;
+                moleStrip.setFrame(currFrame);
+                tSince = 0;
+            } else if (currFrame + 1 < 9 && tSince > 0.25) {
+                currFrame++;
+                moleStrip.setFrame(currFrame);
+                tSince += -0.25;
+            } else {
+                currFrame = 0;
+                moleStrip.setFrame(currFrame);
+                tSince = 0;
+            }*/
     }
 }

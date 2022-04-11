@@ -5,12 +5,20 @@
   "goal":
   {
     "pos": [8.5, 2],
-    "win condition" :
+    "winCondition" :
     [
-      "tomato",
-      "fried egg",
-      "noodles",
-      "scallion"
+      {
+        "type" : "tomato",
+        "texture": "tomato"
+      },
+      {
+        "type" : "onion",
+        "texture": "onion"
+      },
+      {
+        "type" : "eggplant",
+        "texture": "eggplant"
+      }
     ],
     "texture" : "goal:pot"
   },
@@ -33,14 +41,15 @@
         "maxspeed": 	  5.0,
         "jumppulse": 	  8.5,
         "jumplimit": 	 30,
-        "texture":       "mole:chef1",
+        "texture":       "mole:chef5",
         "control":       "mole:indicator",
         "debugcolor":    "white",
         "debugopacity":  192,
         "sensorsize": 	 [ 0.183, 0.05 ],
         "sensorname": 	 "dudeGroundSensor",
         "sensorcolor":   "red",
-        "sensoropacity": 192
+        "sensoropacity": 192,
+        "filmstrip" : "redfilmstrip"
       },
       {
         "pos" : [14.5, 8.0],
@@ -62,7 +71,8 @@
         "sensorsize": 	 [ 0.183, 0.05 ],
         "sensorname": 	 "dudeGroundSensor",
         "sensorcolor":   "red",
-        "sensoropacity": 192
+        "sensoropacity": 192,
+        "filmstrip" : "pinkfilmstrip"
       }
     ]
   },
@@ -73,10 +83,12 @@
       "name" : "rotating_platform2",
 	  "type" : "rotating_platform",
       "pos" : [23, 11],
-      "size" : [3.5, 0.2],
-      "pin_pos" : [7.5, 9.5],
+      "size" : [3, 0.2],
+      "pin_offset" : [0, 0],
       "pin_radius" : 0.1,
 	  "orientation" : 180,
+      "debugopacity":  192,
+      "debugcolor":    "white",
       "texture" : "interactive:rotatingplatform"
     },
     {
@@ -84,9 +96,11 @@
       "type" : "rotating_platform",
       "pos" : [21, 6],
       "size" : [0.2, 1.5],
-      "pin_pos" : [7.5, 9.5],
+      "pin_offset" : [0, 0],
       "pin_radius" : 0.1,
       "orientation" : 180,
+      "debugopacity":  192,
+      "debugcolor":    "white",
       "texture" : "interactive:rotatingplatform"
     }
   ],
@@ -102,14 +116,8 @@
       [
         {
           "name" : "rotating_platform1",
-          "event" : "door:open"
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform1",
-          "event" : "door:close"
+          "event" : "door",
+          "angle" : 1.57
         }
       ]
     },
@@ -123,14 +131,8 @@
       [
         {
           "name" : "rotating_platform2",
-          "event" : "door:open"
-        }
-      ],
-      "linkEnd" :
-      [
-        {
-          "name" : "rotating_platform2",
-          "event" : "door:close"
+          "event" : "door",
+          "angle" : 1.57
         }
       ]
     }
@@ -144,7 +146,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -155,7 +157,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -166,7 +168,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -177,7 +179,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -188,7 +190,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -199,7 +201,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "temptile",
       "debugcolor":    "yellow",
       "debugopacity":  200
     }
@@ -213,7 +215,7 @@
       "density":        0.0,
       "friction":       0.2,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "blank",
       "debugcolor":    "yellow",
       "debugopacity":  200
     },
@@ -225,7 +227,7 @@
       "density":        0.0,
       "friction":       0.4,
       "restitution":    0.1,
-      "texture":       "earth",
+      "texture":       "blank",
       "debugcolor":    "yellow",
       "debugopacity":  200
     }

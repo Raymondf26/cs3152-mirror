@@ -9,8 +9,7 @@ import edu.cornell.gdiac.util.*;
 /**
  * Class for reading player input.
  *
- * This supports both a keyboard and X-Box controller. In previous solutions, we only
- * detected the X-Box controller on start-up.  This class allows us to hot-swap in
+ * This supports both a keyboard and X-Box controller. This class allows us to hot-swap in
  * a controller via the new XBox360Controller class.
  */
 public class InputController {

@@ -7,8 +7,47 @@
             "wrapU": "repeated",
             "wrapV": "repeated"
         },
+        "temptile" :
+        {
+            "file":  "textures/temptile.png",
+            "wrapU": "repeated",
+            "wrapV": "repeated"
+        },
+        "blank" :
+        {
+            "file":  "textures/blank.png",
+            "wrapU": "repeated",
+            "wrapV": "repeated"
+        },
         "shared:goal":   "textures/goaldoor.png",
         "interactive:dumbwaiter" : "textures/dumbwaiter.png",
+
+        "redfilmstrip" : {
+            "file": "textures/redfilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "pinkfilmstrip" : {
+            "file": "textures/pinkfilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "bluefilmstrip" : {
+            "file": "textures/bluefilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "purplefilmstrip" : {
+            "file": "textures/purplefilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+        "whitefilmstrip" : {
+            "file": "textures/bluefilmstrip.png",
+            "minFilter" : "linear",
+            "magFilter" : "linear"
+        },
+
         "mole:chef1" : "textures/whitemole.png",
         "mole:chef2" : "textures/pinkmole.png",
         "mole:chef3" : "textures/purplemole.png",
@@ -30,7 +69,9 @@
         "interactive:button1" : "textures/button1.png",
         "interactive:button2" : "textures/button2.png",
         "interactive:button3" : "textures/button3.png",
-        "background" : "textures/environment_background_2.png"
+        "background" : "textures/environment_background_2.png",
+        "knife" : "textures/knife.png",
+        "fire" : "textures/fire.png"
     },
     "jsons"  :
     {

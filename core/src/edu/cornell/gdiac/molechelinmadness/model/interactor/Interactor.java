@@ -1,41 +1,107 @@
 package edu.cornell.gdiac.molechelinmadness.model.interactor;
 
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ArrayMap;
+import com.badlogic.gdx.utils.ObjectMap;
+import edu.cornell.gdiac.molechelinmadness.model.GameObject;
 import edu.cornell.gdiac.molechelinmadness.model.event.Event;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
-public interface Interactor {
+/**
+ * A generic Interactor object with no Box2D body attached. All Interactors should extend this class.
+ */
+public abstract class Interactor extends MessageDispatcher implements GameObject{
 
-    public enum InteractorType {
-        BUTTON,
-        PRESSURE_PLATE
+    private Array<Event> events;
+    private boolean triggered;
+    private boolean contact;
+
+    public Interactor() {
+        events = new Array<>();
+        triggered = false;
+        contact = false;
     }
 
     /**
+     * This method is called every frame in the main update loop of the game.
      *
-     * Give the Array of trigger linked events.
+     * In the case of an Interactor, all this has to handle is when to call triggerOn() and when to call triggerOff().
      *
+     * @param dt the time passed in seconds since the previous frame
      */
-    public Array<Event> getTriggerLinks();
+    @Override
+    public abstract void refresh(float dt);
+
+    /**
+     * Sets the drawscale of the attached Box2D Body
+     *
+     * @param scale the drawscale
+     */
+    public abstract void setDrawScale(Vector2 scale);
 
     /**
      *
-     * Give the Array of detrigger linked events.
-     *
+     * @return the Box2D Body attached to this Interactor object.
      */
-    public Array<Event> getDetriggerLinks();
+    public abstract Obstacle getBody();
 
     /**
-     * Trigger represents the event that occurs when the interactor starts being interacted with.
+     * Adds an event to the list of events that will be fired when this Interactor is triggered.
      *
-     * @param toAdd Event to be added to the trigger events.
+     * @param event the event to be added
      */
-    public void addTriggerEvent(Event toAdd);
+    public void addEvent(Event event) {
+        events.add(event);
+    }
 
     /**
-     * Detrigger represents the event that occurs when the interactor stops being interacted with.
+     * Fires all the events attached to this Interactor if we are not already in the triggered state.
      *
-     * @param toAdd Event to be added to the detrigger events.
+     * Call this method in the refresh(dt) method.
      */
-    public void addDetriggerEvent(Event toAdd);
+    protected void triggerOn() {
+        if (!triggered) {
+            triggered = true;
+            activate();
+        }
+    }
 
+    /**
+     * Fires all the "reverse" events attached to this Interactor if we are not already in the un-triggered state.
+     * For example, if the event is to open a door by 90 degrees, this will dispatch the message to return the door to its original rotation.
+     *
+     * Call this method in the refresh(dt) method.
+     */
+    protected void triggerOff() {
+        if (triggered) {
+            triggered = false;
+            deactivate();
+        }
+    }
+
+    /**
+     * This private method actually dispatches the messages to the registered listeners.
+     * No need to worry about this method.
+     */
+    private void activate() {
+        int i = 1;
+        for (Event event : events) {
+            dispatchMessage(this, i, event); //Event numbers 1 and up. Positive means activate.
+            i++;
+        }
+    }
+
+    /**
+     * This private method actually dispatches the "deactivate" messages to the registered listeners.
+     * No need to worry about this method.
+     */
+    private void deactivate() {
+        int i = 1;
+        for (Event event : events) {
+            dispatchMessage(this, -i, event); //Event numbers -1 and down. Negative means deactivate.
+            i++;
+        }
+    }
 }
