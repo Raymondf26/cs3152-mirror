@@ -51,6 +51,9 @@ public class InputController {
     private boolean secondPrevious;
     /** Whether the teritiary action button was pressed. */
     private boolean tertiaryPressed;
+    /** Whether fourth is pressed*/
+    private boolean fourthPressed;
+
     /** Whether the debug toggle was pressed. */
     private boolean debugPressed;
     private boolean debugPrevious;
@@ -145,6 +148,10 @@ public class InputController {
      */
     public boolean didTertiary() {
         return tertiaryPressed;
+    }
+
+    public boolean didFourth(){
+        return fourthPressed;
     }
 
     /**
@@ -318,6 +325,7 @@ public class InputController {
         }
 
         tertiaryPressed = Gdx.input.isKeyPressed(Input.Keys.F);
+        fourthPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
         didDrop = Gdx.input.isKeyPressed(Input.Keys.G);
 

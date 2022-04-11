@@ -272,13 +272,6 @@ public class ObstacleSelector implements QueryCallback  {
 		world.QueryAABB(this, pointer.x,pointer.y,pointer.x+pointer.width,pointer.y+pointer.height);
 		if (selection != null) {
 			Body body = selection.getBody();
-			mouseJointDef.bodyA = ground;
-			mouseJointDef.bodyB = body;
-			mouseJointDef.target.set(x,y);
-			mouseJointDef.frequencyHz = 5.0f;
-			mouseJointDef.dampingRatio = 0.7f;
-			mouseJointDef.maxForce = 1000 * body.getMass();
-			mouseJoint = (MouseJoint)world.createJoint(mouseJointDef);
 			body.setAwake(true);
 		}
 	    return selection != null; 
