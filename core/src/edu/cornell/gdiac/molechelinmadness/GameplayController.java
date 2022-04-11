@@ -15,7 +15,6 @@ public class GameplayController implements Screen, ContactListener {
 
 
     //START: Constants we can extract into data later
-
     /** Array of level names to be extracted */
     public static String[] levels = {"level1", "level2"};
 
@@ -286,7 +285,7 @@ public class GameplayController implements Screen, ContactListener {
 
 
     public GameplayController() {
-        levelIndex = 0;
+        this.levelIndex = 0;
         level = new Level();
         complete = false;
         failed = false;
@@ -296,6 +295,8 @@ public class GameplayController implements Screen, ContactListener {
         setComplete(false);
         setFailure(false);
     }
+
+    public void setLevel (int levelIndex) { this.levelIndex = levelIndex; }
 
     public void gatherAssets (AssetDirectory directory) {
         this.directory = directory;

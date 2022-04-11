@@ -34,9 +34,6 @@
     },
     "jsons"  :
     {
-        "level":  "levels/level1.json",
-        "level_tutorial" : "levels/levelTutorial.json",
-        "level_medium" : "levels/levelMedium.json",
         "level1":  "levels/levelTutorial.json",
         "level2": "levels/levelMedium.json"
     },

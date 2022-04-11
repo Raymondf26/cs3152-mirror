@@ -1,7 +1,20 @@
 {
-  "levels"  :
+  "textures":
   {
-    "level1":  "levels/levelTutorial.json",
-    "level2": "levels/levelMedium.json"
+    "background" : "textures/environment_background_2.png",
+    "play": "textures/play.png",
+  },
+  "jsons" :
+  {
+      "level:level1":  "levels/levelTutorial.json",
+      "level:level2": "levels/levelMedium.json"
+  },
+  "fonts":
+  {
+    "shared:retro":
+    {
+      "file": "fonts/RetroGame.ttf",
+      "size": 14
+    }
   }
 }
