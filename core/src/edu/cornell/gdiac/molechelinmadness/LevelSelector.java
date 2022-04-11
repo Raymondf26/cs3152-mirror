@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
-import edu.cornell.gdiac.molechelinmadness.model.Interactive;
 import edu.cornell.gdiac.molechelinmadness.model.Level;
 import edu.cornell.gdiac.util.ScreenListener;
 
