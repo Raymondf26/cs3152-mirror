@@ -693,6 +693,7 @@ public class Mole extends CapsuleObstacle {
     public void setFrame(float dt){
         tSince += dt;
         if (movement == 0) {
+            tSince = (float) 0.10;
             currFrame = 0;
             moleStrip.setFrame(currFrame);
         } else if (this.isJumping()){
