@@ -18,4 +18,5 @@ public class FinalStation extends BoxObstacle {
     public FinalStation(float width, float height) {
         super(width, height);
     }
+
 }

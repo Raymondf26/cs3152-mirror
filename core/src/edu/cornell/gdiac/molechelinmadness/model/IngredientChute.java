@@ -16,6 +16,11 @@ import java.lang.reflect.Field;
 
 public class IngredientChute extends ComplexObstacle {
 
+    public class IngredientChuteObstacle extends BoxObstacle{
+        public IngredientChuteObstacle(float x, float y, float width, float height) {
+            super(x, y, width, height);
+        }
+    }
     /** References to the head and tail */
     protected BoxObstacle head;
     protected BoxObstacle tail;
@@ -24,8 +29,8 @@ public class IngredientChute extends ComplexObstacle {
      * Create a new IngredientChute with degenerate settings
      * */
     public IngredientChute() {
-        head = new BoxObstacle(0, 0, 1f, 1f);
-        tail = new BoxObstacle(0, 0, 1, 1);
+        head = new IngredientChuteObstacle(0, 0, 1f, 1f);
+        tail = new IngredientChuteObstacle(0, 0, 1, 1);
         bodies.add(head, tail);
     }
 

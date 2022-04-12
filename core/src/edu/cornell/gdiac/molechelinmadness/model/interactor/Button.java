@@ -9,9 +9,17 @@ import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.BoxObstacle;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
 
+
+
 public class Button extends Interactor {
 
     BoxObstacle body;
+    public class ButtonObstacle extends BoxObstacle{
+
+        public ButtonObstacle(float x, float y, float width, float height) {
+            super(x, y, width, height);
+        }
+    }
 
     /**
      * Degenerate button.
@@ -19,7 +27,7 @@ public class Button extends Interactor {
      */
     public Button() {
         super();
-        body = new BoxObstacle(0, 0, 1, 1);
+        body = new ButtonObstacle(0, 0, 1, 1);
         body.setType(0);
     }
 

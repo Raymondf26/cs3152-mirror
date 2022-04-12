@@ -55,7 +55,7 @@ public class Dumbwaiter extends ComplexObstacle implements GameObject{
     /**
      * The object used to represent the head, and the tail, of the dumbwaiter.
      */
-    private class DumbHead extends BoxObstacle {
+    public class DumbHead extends BoxObstacle {
 
         Ingredient ingr;
         float timeLeft;
