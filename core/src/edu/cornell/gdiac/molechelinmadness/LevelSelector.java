@@ -23,12 +23,8 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 
     /** Array of level names to be extracted */
     public static String[] levels;
-
-    /** Play button to display */
-    private Texture playButton;
-
+    /** Map of level indices and where the corresponding play button is placed*/
     private ArrayMap<Integer, Vector2> levelButtonPositions;
-
     /** Current index in level array */
     private int levelIndex;
 
@@ -37,6 +33,8 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
 
     /** The current state of the play button */
     private int   pressState;
+    /** Play button to display */
+    private Texture playButton;
 
     /** Standard window size (for scaling) */
     private static int STANDARD_WIDTH  = 800;
@@ -48,8 +46,6 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     // Assets:
     /** Need an ongoing reference to the asset directory */
     protected AssetDirectory directory;
-    /** The JSON defining the level model */
-    private JsonValue  levelFormat;
     /** The font for giving messages to the player */
     protected BitmapFont displayFont;
     /** Background texture for start-up */
@@ -86,7 +82,6 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         // Compute the dimensions from the canvas
         resize(canvas.getWidth(),canvas.getHeight());
 
-        // Deal with assets later, menu.json to be created
 //         We need these files loaded immediately
         internal = new AssetDirectory( "menu.json" );
         internal.loadAssets();
@@ -105,10 +100,6 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         pressState = 0; // no button pressed
 
         Gdx.input.setInputProcessor( this );
-
-//        assets = new AssetDirectory( file );
-//        assets.loadAssets();
-//        active = true;
     }
 
     /**
@@ -133,14 +124,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
      * @param delta Number of seconds since last animation frame
      */
     private void update(float delta) {
-//        if (playButton == null) {
-//            assets.update(budget);
-//            this.progress = assets.getProgress();
-//            if (progress >= 1.0f) {
-//                this.progress = 1.0f;
-//                playButton = internal.getEntry("play", Texture.class);
-//            }
-//        }
+
     }
 
     /**
@@ -151,13 +135,13 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     private void drawLevel(int level) {
         String levelName = levels[level];
 
-        float y = canvas.getHeight() / 2 + playButton.getHeight() /2;
+        float y = canvas.getHeight() / 2 - playButton.getHeight() /2;
         float x = canvas.getWidth() / 4 * (level + 1);
-        canvas.drawText(levelName, displayFont, x, y);
         Color tint = ((pressState == 1 && levelIndex == level)? Color.GRAY: Color.WHITE);
         canvas.draw(playButton, tint, playButton.getWidth()/2, playButton.getHeight()/2,
-                x, y - playButton.getHeight() / 2, 0, BUTTON_SCALE * scale, BUTTON_SCALE * scale);
-        if (!levelButtonPositions.containsKey(level)) levelButtonPositions.insert(level, level, new Vector2(x, y - playButton.getHeight()/2));
+                x, canvas.getHeight()/2, 0, BUTTON_SCALE/2 * scale, BUTTON_SCALE/2 * scale);
+        canvas.drawText(levelName, displayFont, x- 30.0f, canvas.getHeight()/2 + playButton.getHeight()/2);
+        if (!levelButtonPositions.containsKey(level)) levelButtonPositions.insert(level, level, new Vector2(x, canvas.getHeight()/2));
     }
 
     /**
@@ -170,6 +154,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
     private void draw() {
         canvas.begin();
         canvas.draw(background, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.drawTextCentered("Select a Level!", displayFont, 150.0f);
         for (int i = 0; i < levels.length; i ++) {
             drawLevel(i);
         }
@@ -189,7 +174,6 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
      */
     public void render(float delta) {
       if (active) {
-//          //  update(delta);
            draw();
 
             // We are are ready, notify our listener
@@ -213,7 +197,7 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
      * @param height The new height in pixels
      */
     public void resize(int width, int height) {
-// Compute the drawing scale
+        // Compute the drawing scale
         float sx = ((float)width)/STANDARD_WIDTH;
         float sy = ((float)height)/STANDARD_HEIGHT;
         scale = (sx < sy ? sx : sy);
@@ -270,17 +254,10 @@ public class LevelSelector implements Screen, InputProcessor, ControllerListener
         this.listener = listener;
     }
 
-
-
-
-
     public void gatherAssets (AssetDirectory directory) {
         this.directory = directory;
         // Access the assets used directly by this controller
         displayFont = directory.getEntry("shared:retro", BitmapFont.class);
-
-        // This represents the level but does not BUILD it
-        levelFormat = directory.getEntry( levels[levelIndex], JsonValue.class );
     }
 
 
