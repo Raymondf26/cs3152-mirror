@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.assets.AssetDirectory;
 import edu.cornell.gdiac.molechelinmadness.model.*;
 import edu.cornell.gdiac.molechelinmadness.model.obstacle.Obstacle;
+import edu.cornell.gdiac.molechelinmadness.model.obstacle.ObstacleSelector;
 import edu.cornell.gdiac.util.ScreenListener;
 
 /**
@@ -17,12 +18,12 @@ public class GameplayController implements Screen {
 
 
     //START: Constants we can extract into data later
-
     /** Array of level names to be extracted */
     public static String[] levels = {"level1", "level2"};
 
     /** Current index in level array */
     private int levelIndex;
+
 
 
     /** Exit code for quitting the game */
@@ -61,8 +62,15 @@ public class GameplayController implements Screen {
     /** Listener that will update the player mode when we are done */
     private ScreenListener listener;
 
+
     /** Reference to the game level */
     protected Level level;
+
+    /** Selector for left click selecting*/
+    private ObstacleSelector selector;
+
+    /** Handles left click info*/
+    private LeftClickController left;
 
     /** Reference to the Interaction Controller */
     InteractionController interaction;
@@ -79,17 +87,19 @@ public class GameplayController implements Screen {
 
 
     public GameplayController() {
-        levelIndex = 0;
+        this.levelIndex = 0;
         level = new Level();
         complete = false;
         failed = false;
         active = false;
         countdown = -1;
         interaction = new InteractionController();
-
+        left = new LeftClickController();
         setComplete(false);
         setFailure(false);
     }
+
+    public void setLevel (int levelIndex) { this.levelIndex = levelIndex; }
 
     public void gatherAssets (AssetDirectory directory) {
         this.directory = directory;
@@ -218,6 +228,7 @@ public class GameplayController implements Screen {
      */
     public void update(float dt) {
         //Process actions in models
+        selector = new ObstacleSelector(level.getWorld());
         Array<Mole> moles = level.getMoles();
         Array<CookingStation> stations = level.getStations();
         if (InputController.getInstance().didSecondary()){
@@ -246,6 +257,18 @@ public class GameplayController implements Screen {
         //Updating all game objects
         for (GameObject obj : level.getGameObjects()) {
             obj.refresh(dt);
+        }
+
+        //LeftControllerSelector
+        InputController input = InputController.getInstance();
+        if (input.didFourth() && !selector.isSelected()) {
+            selector.select(input.getCrossHair().x,input.getCrossHair().y);
+            left.setSelected(selector.getObstacle());
+        } else if (input.didFourth() && selector.isSelected()) {
+            selector.deselect();
+
+        } else {
+
         }
 
         //Apply forces and sounds
@@ -308,7 +331,7 @@ public class GameplayController implements Screen {
         canvas.clear();
 
         level.draw(canvas);
-
+        left.draw(canvas, displayFont, directory);
         // Final message
         if (complete && !failed) {
             displayFont.setColor(Color.YELLOW);

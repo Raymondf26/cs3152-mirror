@@ -38,7 +38,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void create() {
 		canvas  = new GameCanvas();
 		loading = new LoadingMode("assets.json",canvas,1);
-		menu = new LevelSelector();
 
 		// Initialize the game world
 		controller = new GameplayController();
@@ -82,6 +81,13 @@ public class GDXRoot extends Game implements ScreenListener {
 		super.resize(width,height);
 	}
 
+	public void exitScreen(Screen screen, int exitCode, int levelIndex) {
+		if(screen == menu) {
+			controller.setLevel(levelIndex);
+			this.exitScreen(screen, exitCode);
+		}
+	}
+
 	/**
 	 * The given screen has made a request to exit its player mode.
 	 *
@@ -93,19 +99,32 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void exitScreen(Screen screen, int exitCode) {
 		if (screen == loading) {
 			directory = loading.getAssets();
+			menu = new LevelSelector(canvas);
+
+			menu.gatherAssets(directory);
+			menu.setScreenListener(this);
+			System.out.println("here");
+
+			setScreen(menu);
+
+			loading.dispose();
+			loading = null;
+		} else if (screen == menu) {
 			controller.gatherAssets(directory);
 			controller.setScreenListener(this);
 			controller.setCanvas(canvas);
 			controller.reset();
 			setScreen(controller);
+			menu.dispose();
+			menu = null;
 
-			loading.dispose();
-			loading = null;
 		} else if (exitCode == GameplayController.EXIT_QUIT) {
 			// We quit the main application
 			Gdx.app.exit();
 		} else if (exitCode == GameplayController.EXIT_NEXT) {
 			
+		} else if (exitCode == GameplayController.EXIT_PREV) {
+
 		}
 	}
 

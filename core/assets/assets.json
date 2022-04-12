@@ -71,13 +71,11 @@
         "interactive:button3" : "textures/button3.png",
         "background" : "textures/environment_background_2.png",
         "knife" : "textures/knife.png",
-        "fire" : "textures/fire.png"
+        "fire" : "textures/fire.png",
+        "whitebox" : "textures/whitebox.png"
     },
     "jsons"  :
     {
-        "level":  "levels/level1.json",
-        "level_tutorial" : "levels/levelTutorial.json",
-        "level_medium" : "levels/levelMedium.json",
         "level1":  "levels/levelTutorial.json",
         "level2": "levels/levelMedium.json"
     },

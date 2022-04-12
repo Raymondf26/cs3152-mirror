@@ -11,6 +11,8 @@ import com.badlogic.gdx.Screen;
  */
 public interface ScreenListener {
 
+    public void exitScreen(Screen screen, int exitCode, int levelIndex);
+
     /**
      * The given screen has made a request to exit its player mode.
      *
